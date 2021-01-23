@@ -99,6 +99,9 @@ public class TransporterCW extends SubsystemBase{
         
 
         int x = (int) Math.round(rotateMotor.getPosition() / tCals.countsPerIndex);
+        if(x < 0) x = 5 - Math.abs(x%5);
+
+
         if(ballpositions[(x + 4) % 5] && launcher.get()){
             ballnumber--;
             ballpositions[(x + 4) % 5] = false;

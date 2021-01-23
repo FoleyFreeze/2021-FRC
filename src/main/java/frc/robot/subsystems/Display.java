@@ -64,30 +64,6 @@ public class Display extends SubsystemBase{
         doubleMap = new HashMap<>();
         stringMap = new HashMap<>();
 
-        Thread t = new Thread(new Runnable(){
-            public void run(){
-                while(true){
-                    for(Entry<String,TableEntry<Boolean>> e : boolMap.entrySet()){
-                        e.getValue().nt.setBoolean(e.getValue().value);
-                    }
-                    for(Entry<String,TableEntry<Double>> e : doubleMap.entrySet()){
-                        e.getValue().nt.setDouble(e.getValue().value);
-                    }
-                    for(Entry<String,TableEntry<String>> e : stringMap.entrySet()){
-                        e.getValue().nt.setString(e.getValue().value);
-                    }
-
-                    try{
-                        Thread.sleep(20);
-                    } catch(Exception e){
-
-                    }
-                }
-            }
-        });
-
-        t.start();
-
         ShuffleboardTab tab = Shuffleboard.getTab("Comp");
             addToTab(tab, "Selected Auton", "default", 1, 0);
             addToTab(tab, "Pi Alive", false, 2, 0);
@@ -179,6 +155,31 @@ public class Display extends SubsystemBase{
             addToTab(tab, "Color Info", "RGB, Ir, p", 1, 0);
             addToTab(tab, "Field Given Color", "null", 2, 0);
             addToTab(tab, "Detected Color", "null", 3, 0);
+
+
+        Thread t = new Thread(new Runnable(){
+            public void run(){
+                while(true){
+                    for(Entry<String,TableEntry<Boolean>> e : boolMap.entrySet()){
+                        e.getValue().nt.setBoolean(e.getValue().value);
+                    }
+                    for(Entry<String,TableEntry<Double>> e : doubleMap.entrySet()){
+                        e.getValue().nt.setDouble(e.getValue().value);
+                    }
+                    for(Entry<String,TableEntry<String>> e : stringMap.entrySet()){
+                        e.getValue().nt.setString(e.getValue().value);
+                    }
+
+                    try{
+                        Thread.sleep(20);
+                    } catch(Exception e){
+
+                    }
+                }
+            }
+        });
+
+        t.start();
     }
 
     public static void put(String name, double data){
