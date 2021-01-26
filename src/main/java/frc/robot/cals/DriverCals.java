@@ -21,14 +21,14 @@ public class DriverCals extends CalSet {
 
     public double turnTicksPerRev = 60.0;
 
-    public double driveTicksPerIn = 64.0/18.0 * 18.0/32.0 * 45.0/15.0 / (/*4.0*/Math.PI);
+    public double driveInPerTick = 64.0/18.0 * 18.0/32.0 * 45.0/15.0 / (/*4.0*/Math.PI);
     public double[] wheelDiam = {4, 4, 4, 4};
 
     public double pausePwrPne = 0.9;//driving over this power will pause compressor
 
     public double parkOffset = 6000;//0.5;
 
-    public double driveStraightKp = 0.05;//100% after abt 100deg of error
+    public double driveStraightKp = -0.015;//100% after abt 100deg of error
     
     public double trenchRunAngKp = 0.01;
     public double trenchRunDistKp = 0.01;
@@ -38,11 +38,11 @@ public class DriverCals extends CalSet {
     public double autoBallAngKp = 0;
     public double autoBallDistKp = 0;
 
-    public double autoDriveStrafeKp = 0.1; //full power in 10in
+    public double autoDriveStrafeKp = 0.15; //full power in 10in
     public double autoDriveAngKp = 0.02; //50deg is full power
-    public double autoDriveStrafeRange = 3;
+    public double autoDriveStrafeRange = 5;
     public double autoDriveAngRange = 5;
-    public double autoDriveMaxPwr = 0.15;
+    public double autoDriveMaxPwr = 0.75;
     public double autoDriveStartPwr = 0.15;
     public double autoDriveEndPwr = 0.15;
     public double autoDriveStartDist = 36;
@@ -88,7 +88,7 @@ public class DriverCals extends CalSet {
                 turnEncoderIds[2] = 2;
                 turnEncoderIds[3] = 3;
 
-                driveTicksPerIn = 24.0/10.0 * 2.0/1.0 /(3*Math.PI) ;
+                driveInPerTick = 24.0/10.0 * 2.0/1.0 /(3*Math.PI) ;
                 turnTicksPerRev = 60.0/20.0 * 60.0/20.0 * 64.0/40.0 ;
             break;
 

@@ -4,7 +4,7 @@ public class TransporterCals extends CalSet {
 
     public boolean disabled = false;
     //public MotorCal rotateMotor = MotorCal.spark(12).pid(0.2, 0, 0.2, 0).invert().limit(0.6).ramp(0.3).currLim(30).currLimCount(25).currLimTime(1);
-    public MotorCal rotateMotor = MotorCal.spark(12).pid(0.2, 0, 0.2, 0).invert().limit(0.25).ramp(0.3).currLim(30).currLimCount(25).currLimTime(1); //MrC
+    public MotorCal rotateMotor = MotorCal.spark(12).pid(0.2, 0, 0.2, 0).invert().limit(0.30).ramp(0.3).currLim(30).currLimCount(25).currLimTime(1); //MrC
     public MotorCal loadMotor = MotorCal.srx(13).invert(); //this is the gate wheels and the CW motor
     public int CWNotTransport = 5;//3 4 or 5
     public int sensorValue = 5;
@@ -13,7 +13,7 @@ public class TransporterCals extends CalSet {
     public int launcherValue = 2;
     public double countsPerIndex = 24/40.0 * 52/36.0 * 64/20.0 * 64/13.0;
     public double allowedIndexError = 0.2 * countsPerIndex;
-    public final double TN_LOADSPEED = .85;//0.85;//.5
+    public final double TN_LOADSPEED = .95;//0.85;//.5
     public final double TN_STOPSPEED = -0.0;
     public double gateRestTime = 2;
     public double maxGateCurr = 29; //MrC 7.5;

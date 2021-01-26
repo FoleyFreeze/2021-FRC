@@ -19,7 +19,7 @@ public class Waypoint{
     }
 
     public String toString(){
-        return String.format("%.0fin  %.0fin  %.0fdeg",x,y,theta);
+        return String.format("%.1fin  %.1fin  %.0fdeg",x,y,theta);
     }
 
     public static Waypoint[] fromFile(String filename){

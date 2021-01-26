@@ -99,6 +99,9 @@ public class TransporterCW extends SubsystemBase{
         
 
         int x = (int) Math.round(rotateMotor.getPosition() / tCals.countsPerIndex);
+        if(x < 0) x = 5 - Math.abs(x%5);
+
+
         if(ballpositions[(x + 4) % 5] && launcher.get()){
             ballnumber--;
             ballpositions[(x + 4) % 5] = false;
@@ -116,6 +119,7 @@ public class TransporterCW extends SubsystemBase{
             }
         } else gatePower(0.0);
 
+        /*
         detectedColor = colorSensor.getColor();
         ColorMatchResult match = colorMatch.matchClosestColor(detectedColor);
         if(match.color == cCals.Blue){
@@ -127,6 +131,7 @@ public class TransporterCW extends SubsystemBase{
         } else if(match.color == cCals.Yellow){
             colorString = "Yellow";
         } else colorString = "N/A";
+        */
 
         Display.put("Current Pos", rotateMotor.getPosition() / tCals.countsPerIndex);
         Display.put("Ball Number", ballnumber);
@@ -142,8 +147,8 @@ public class TransporterCW extends SubsystemBase{
         Display.put("Color Info", String.format("R: %d G: %d B: %d IR: %d Prox: %d", 
             colorSensor.getRed(), colorSensor.getGreen(), colorSensor.getBlue(), 
             colorSensor.getIR(), colorSensor.getProximity()));
-        Display.put("Detected Color", String.format("Color Guess: " + colorString + 
-            " Confidence: %f", match.confidence));
+        /* Display.put("Detected Color", String.format("Color Guess: " + colorString + 
+            " Confidence: %f", match.confidence)); */
         lastColor = detectedColor;
     }
 

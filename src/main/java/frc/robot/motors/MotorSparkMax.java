@@ -20,6 +20,7 @@ public class MotorSparkMax extends Motor{
             com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
         motor.restoreFactoryDefaults();
 
+        brakeOn = cal.brake;
         if(cal.brake){
             motor.setIdleMode(IdleMode.kBrake);
         }else{

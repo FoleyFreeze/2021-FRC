@@ -181,6 +181,14 @@ public class Inputs{
         
     }
 
+    public boolean driveStraight(){
+        if(flySky){
+            return joy.getRawButton(cals.FS_DRIVESTRAIGHT);
+        } else {
+            return joy.getRawButton(cals.XB_DRIVESTRAIGHT);
+        }
+    }
+
     public double getX(){
         double val;
         if(flySky) val = expo(threshDeadband(joy.getRawAxis(

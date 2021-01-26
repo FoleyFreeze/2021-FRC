@@ -37,12 +37,13 @@ public class AutoPath extends CommandBase{
         mCals = m_subsystem.m_drivetrain.k;
         this.path = path;
         this.lookAhead = lookAhead;
-        ratios = new double[path.length - 1];
     }
 
     @Override
     public void initialize(){
         if(path == null) return;
+
+        m_subsystem.m_drivetrain.setStartPosition(path[0].x, path[0].y);
 
         pathIdx = 1;
         Pose2d pose = m_subsystem.m_drivetrain.drivePos;
@@ -50,13 +51,17 @@ public class AutoPath extends CommandBase{
             startX = fakeX;
             startY = fakeY;
         } else {
-            startX = pose.getTranslation().getX() + path[0].x;
-            startY = pose.getTranslation().getY() + path[0].y;
+            startX = pose.getTranslation().getX();// + path[0].x;
+            startY = pose.getTranslation().getY();// + path[0].y;
         }
         
+        tgtPt = path[1];
 
         //SmartDashboard.putNumber("AutoXtgt",tgtX);
         //SmartDashboard.putNumber("AutoYtgt",tgtY);
+
+        SmartDashboard.putNumber("Lookahead",lookAhead);
+        System.out.println("lookahead: " + lookAhead);
     }
 
     @Override
@@ -107,79 +112,60 @@ public class AutoPath extends CommandBase{
     @Override
     public void end(boolean interrupted){
         m_subsystem.m_drivetrain.drive(new Vector(0, 0), 0, 0, 0, true);
+        m_subsystem.m_drivetrain.setBrake(true);
     }
 
     @Override
     public boolean isFinished(){
+        //dont allow it to return early
+        if(tgtPt != path[path.length-1]) return false;
+        System.out.println("PathIdx: " + pathIdx);
+
         return Math.abs(errorX) < mCals.autoDriveStrafeRange 
             && Math.abs(errorY) < mCals.autoDriveStrafeRange 
             && Math.abs(errorRot) < mCals.autoDriveAngRange;
     }
 
     private Waypoint calcTgt(double botX, double botY){
-        if(pathIdx + 1 == path.length){
-            return path[pathIdx];
-        }
-
+        System.out.format("Bot Pos: %.1f %.1f\n", botX, botY);
         //use to track how far we have looked ahead(use to determine if we've looked ahead enough)
-        double sumDist = calcMidDist(path[pathIdx-1], path[pathIdx], path[pathIdx+1], botX, botY);
+        double sumDist = calcDist(tgtPt, botX, botY);
         int idx = pathIdx;
-        Waypoint tgt = path[pathIdx];
+        Waypoint tgt = tgtPt;
 
-        while(idx+1 < path.length && sumDist < lookAhead){
+        while(idx < path.length-1 && sumDist < lookAhead){
             idx++;
-            double dist = calcDist(path[idx-1], path[idx]);
+            double dist = calcDist(tgt, path[idx]);
             System.out.println("Dist: " + dist);
+            System.out.println("SumDist: " + sumDist);
             if(sumDist + dist >= lookAhead){
+                pathIdx = idx-1;
                 double ratio = (lookAhead - sumDist)/dist;
+                System.out.println("Ratio: " + ratio);
                 tgt = new Waypoint(
-                    (path[idx].x - path[idx-1].x)*ratio + path[idx-1].x,
-                    (path[idx].y - path[idx-1].y)*ratio + path[idx-1].y,
-                    Util.angleDiff(path[idx].theta, path[idx-1].theta)*ratio + path[idx-1].theta
+                    (path[idx].x - tgt.x)*ratio + tgt.x,
+                    (path[idx].y - tgt.y)*ratio + tgt.y,
+                    Util.angleDiff(path[idx].theta, tgt.theta)*ratio + tgt.theta
                 );
+            } else{
+                tgt = path[idx];
+                System.out.println("SumDist: " + sumDist);
             }
             sumDist += dist;
         }
+
+        System.out.println(tgt.toString());
         return tgt;
     }
 
     //distance formula
-    private double calcDist(Waypoint p1, Waypoint p2){
-        return(Math.sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y)));
+    private double calcDist(Waypoint p1, double x, double y){
+        double dx = x - p1.x;
+        double dy = y - p1.y;
+        return(Math.sqrt(dx * dx + dy * dy));
     }
 
-    //finding the distance between robot point and parrallel of line that exists with points p1 and p3
-    double prevShortDist = 0;
-    private double calcMidDist(Waypoint p1, Waypoint p2, Waypoint p3, double botX, double botY){
-        double dx = (p3.x - p1.x);//x component of slope between p1 and p3
-        double dy = (p3.y - p1.y);//y component of slope between p1 and p3
-        double shortDist = (dx*(botX-p2.x) + dy*(botY-p2.y))/Math.sqrt(dx*dx + dy*dy);
-        System.out.println("shortDist: " + shortDist);
-
-        //if less than 0, the sign switched, indicating that we finished this path segment
-        if(prevShortDist != 0 && shortDist * prevShortDist < 0){
-            System.out.println("Segment Finished: " + pathIdx);
-            pathIdx++;//this is how we step through the path, kind of dangerous to do it here
-            prevShortDist = 0;
-
-            //prevent index out of bounds
-            if(pathIdx + 1 < path.length){
-                return calcMidDist(p2,p3,path[pathIdx+1],botX,botY);
-            } else {
-                return 0; //doesn't matter what we return, as the while loop will exit due to index vs length
-            }
-        } else {
-            prevShortDist = shortDist;
-        }
-
-        if(ratios[pathIdx] == 0){
-            double dist = calcDist(p2, p1);
-            ratios[pathIdx] = dist/shortDist;
-            System.out.println("Ratio: " + ratios[pathIdx]);
-            return Math.abs(dist);
-        } else {
-            System.out.println("LongDist: " + shortDist*ratios[pathIdx]);
-            return Math.abs(shortDist*ratios[pathIdx]);
-        }
+    private double calcDist(Waypoint p1, Waypoint p2){
+        return calcDist(p1, p2.x, p2.y);
     }
 }

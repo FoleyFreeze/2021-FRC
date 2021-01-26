@@ -106,7 +106,7 @@ public class Drivetrain extends SubsystemBase{
             double time = Timer.getFPGATimestamp();
             double pos = -driveMotor.getPosition();
             
-            double velocity = (pos - prevPos)/(time - prevTime) / k.driveTicksPerIn / k.wheelDiam[idx];
+            double velocity = (pos - prevPos)/(time - prevTime) / k.driveInPerTick * k.wheelDiam[idx];
             Rotation2d wheelAng = new Rotation2d((enc.getVoltage() - angleOffset) * 2*Math.PI / 5);
             prevTime = time;
             prevPos = pos;
@@ -206,14 +206,17 @@ public class Drivetrain extends SubsystemBase{
         */
         parkMode = false;
 
-        /*
-        driveStraight = (rot == 0 && !parkMode);
+        
+        driveStraight = (rot == 0 && strafe.r != 0 && mSubsystem.m_input.driveStraight());
+        if(rot != 0) goalAng = prevAng;
 
         if(driveStraight){
-            rot = outRot(k.driveStraightKp, goalAng);
-        }*/
+            double error = Util.angleDiff(goalAng, -navX.getAngle());
+            //SmartDashboard.putNumber("Straight Error", error);
+            rot = k.driveStraightKp * error;
+        }
 
-        if(!driveStraight) goalAng = prevAng;
+        
         //SmartDashboard.putNumber("Goal Angle", goalAng);
 
         //SmartDashboard.putNumber("Rot", rot);
@@ -249,11 +252,11 @@ public class Drivetrain extends SubsystemBase{
         
         //double maxPower = 1;
         if(mSubsystem.m_input.pitMode()){
-            maxPower = 0.2;
+            maxPower = Math.min(0.2, maxPower);
         }
 
         if(Math.abs(maxOut.wheelVec.r) > maxPower){
-            double reducRatio = maxPower/maxOut.wheelVec.r;
+            double reducRatio = maxPower/Math.abs(maxOut.wheelVec.r);
 
             strafe.r *= reducRatio;
 
@@ -274,21 +277,13 @@ public class Drivetrain extends SubsystemBase{
             //SmartDashboard.putNumber("Turn Pwr" + w.idx, w.rotVec.r);
         }
 
-        prevAng = navX.getAngle();
-    }
-
-    public double outRot(double pCorrection, double targetAng){
-        double error = Util.angleDiff(targetAng, -navX.getAngle());
-        double kP = pCorrection;
-        //SmartDashboard.putNumber("Straight Error", error);
-        double output = kP * error;
-        return output;
+        prevAng = -navX.getAngle();
     }
 
     public double[] getDist(){
         double[] dists = new double[4];
         for(int i = 0 ; i < wheels.length ; i++){
-            dists[i] = wheels[i].driveMotor.getPosition() / k.driveTicksPerIn / k.wheelDiam[i];
+            dists[i] = wheels[i].driveMotor.getPosition() / k.driveInPerTick * k.wheelDiam[i];
         }
         return dists;
     }
@@ -303,7 +298,7 @@ public class Drivetrain extends SubsystemBase{
 
     public void periodic(){
         if(k.disabled) return;
-        Display.put("NavX Ang", navX.getAngle());
+        
         for(Wheel w: wheels){
             if(w.idx == 0) motorsGood = true;
             Display.put("DMotorCurrent " + w.idx, wheels[w.idx].driveMotor.getCurrent());
@@ -311,8 +306,8 @@ public class Drivetrain extends SubsystemBase{
             Display.put("DMotorTemp " + w.idx, wheels[w.idx].driveMotor.getTemp());
             Display.put("TMotorTemp " + w.idx, wheels[w.idx].turnMotor.getTemp());
             if(wheels[w.idx].driveMotor.getTemp() >= 70) motorsGood = false;
-            SmartDashboard.putNumber("Turn Pwr "+w.idx, wheels[w.idx].turnMotor.getSpeed());
-            SmartDashboard.putNumber("Turn Curr "+w.idx, wheels[w.idx].turnMotor.getCurrent());
+            //SmartDashboard.putNumber("Turn Pwr "+w.idx, wheels[w.idx].turnMotor.getSpeed());
+            //SmartDashboard.putNumber("Turn Curr "+w.idx, wheels[w.idx].turnMotor.getCurrent());
         }
 
         Display.put("DistSenseInfo Re", distSens.getRear().toString());
@@ -320,7 +315,8 @@ public class Drivetrain extends SubsystemBase{
 
         robotAng = -navX.getAngle();
         Rotation2d robotRot2d = new Rotation2d(Math.toRadians(robotAng)/* - Math.PI/2*/);
-        
+        Display.put("NavX Ang", robotAng);
+
         drivePos = driveOdom.update(robotRot2d, wheels[0].getState(), wheels[1].getState(), 
             wheels[2].getState(), wheels[3].getState());
 
@@ -328,6 +324,8 @@ public class Drivetrain extends SubsystemBase{
         double y = drivePos.getTranslation().getY();
         Display.put("Robo Pos", String.format("%.0f, %.0f",x,y));
         Display.put("Motors Good", motorsGood);
+
+        Display.put("Pit Mode", mSubsystem.m_input.pitMode());
     }
 
     public void setStartPosition(double x, double y){

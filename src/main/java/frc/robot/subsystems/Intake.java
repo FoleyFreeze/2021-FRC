@@ -25,6 +25,7 @@ public class Intake extends SubsystemBase {
         if(mCals.disabled) return;
         Display.put("InMotorCurr", spinmotor.getCurrent());
     }
+    
     public void setPower(double power){
         if(mCals.disabled) return;
 

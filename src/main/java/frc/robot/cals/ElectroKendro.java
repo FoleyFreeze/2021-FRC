@@ -7,6 +7,7 @@ public class ElectroKendro extends CalSet{
     public final int FS_ANGRESET = 10;
     public final int FS_AUTOTRENCH = 4;
     public final int FS_EnblBallCam = 1;
+    public final int FS_DRIVESTRAIGHT = 6;
 
     public final int FS_XAXIS = 0;
     public final int FS_YAXIS = 1;
@@ -26,6 +27,7 @@ public class ElectroKendro extends CalSet{
     public final int XB_FIELDORIENT = 3;
     public final int XB_ANGRESET = 5;
     public final int XB_AUTOTRENCH = 4;
+    public final int XB_DRIVESTRAIGHT = -1;
 
     public final int XB_XAXIS = 0;
     public final int XB_YAXIS = 1;

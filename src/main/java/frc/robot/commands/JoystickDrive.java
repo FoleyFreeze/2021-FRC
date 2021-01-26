@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.util.Vector;
@@ -24,6 +25,8 @@ public class JoystickDrive extends CommandBase{
 
     @Override
     public void execute(){
+        if(DriverStation.getInstance().isDisabled()) return;
+
         Vector strafe = m_subsystem.m_input.getXY();
         double rot = m_subsystem.m_input.getRot();
         double pausePwr = m_subsystem.m_drivetrain.k.pausePwrPne;

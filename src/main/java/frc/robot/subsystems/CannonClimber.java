@@ -40,7 +40,7 @@ public class CannonClimber extends SubsystemBase{
 
         shootCals = sCals;
         climbCals = cCals;
-        if(sCals.disabled || cCals.disabled) return;
+        if(sCals.disabled && cCals.disabled) return;
 
         motor = Motor.initMotor(shootCals.ccMotor);
         motor2 = Motor.initMotor(shootCals.ccMotor2);
@@ -140,7 +140,8 @@ public class CannonClimber extends SubsystemBase{
             hTgtPos = HoodPos.HIGH;
         }
 
-        if(climbCals.disabled || shootCals.disabled) return;
+        if(climbCals.disabled && shootCals.disabled) return;
+        
         if(Timer.getFPGATimestamp()>solRestTime){
             switch(hTgtPos){
                 case LOW:
