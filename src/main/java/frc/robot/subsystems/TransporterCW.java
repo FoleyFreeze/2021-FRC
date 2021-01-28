@@ -16,6 +16,7 @@ import frc.robot.RobotContainer;
 import frc.robot.cals.CWheelCals;
 import frc.robot.cals.TransporterCals;
 import frc.robot.motors.Motor;
+import frc.robot.util.LimitedList;
 
 public class TransporterCW extends SubsystemBase{
 
@@ -37,6 +38,7 @@ public class TransporterCW extends SubsystemBase{
     public Color detectedColor;
     public Color lastColor;
     public String gameData;
+    public LimitedList<String> gameDataList;
 
     public TransporterCW(TransporterCals tCals, CWheelCals cCals, RobotContainer subsystem){
         this.tCals = tCals;
@@ -57,27 +59,49 @@ public class TransporterCW extends SubsystemBase{
         colorMatch.addColorMatch(cCals.Green);
         colorMatch.addColorMatch(cCals.Red);
         colorMatch.addColorMatch(cCals.Yellow);
+
+        //this is a hack
+        gameDataList = new LimitedList<>(2);
+        gameDataList.addFirst(DriverStation.getInstance().getGameSpecificMessage());
+        Thread t = new Thread(new Runnable(){
+            public void run(){
+                while(true){
+                    try{
+                        Thread.sleep(1000);
+                        gameDataList.addFirst(DriverStation.getInstance().getGameSpecificMessage());
+                    } catch (Exception e){
+
+                    }
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void autonInit(){
+        first = true;
     }
 
     boolean first = true;
     double jamTime;
     boolean prevJammed;
     public void periodic(){
-        if(DriverStation.getInstance().isAutonomous() && first){
+        if(first && DriverStation.getInstance().isAutonomous()){
             first = false;
+
+            //TODO: This should only be 3 for the skills challenge
+            //but probably doesn't matter that much overall
             ballnumber = 5;
             ballpositions[0] = true;
             ballpositions[1] = true;
             ballpositions[2] = true;
             ballpositions[3] = true;
             ballpositions[4] = true;
-        } else {
-            first = true;
         }
 
+        gameData = gameDataList.getFirst();
+
         if(tCals.disabled && cCals.disabled) return;
-        
-        gameData = DriverStation.getInstance().getGameSpecificMessage();
 
         if(!mSubsystem.m_input.cwActivate()){
             CWNotTransport.set(false);

@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    
   }
 
   @Override
@@ -58,6 +59,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule(false);
     }
+
+    m_robotContainer.m_transporterCW.autonInit();
   }
 
   @Override
@@ -72,6 +75,9 @@ public class Robot extends TimedRobot {
     if(m_robotContainer.m_drivetrain.getBrake()){
       m_robotContainer.m_drivetrain.setBrake(false);
     }
+
+    //sets cals based on connected controller (flysky vs xbox) 
+    m_robotContainer.m_input.onInit();
   }
 
   @Override

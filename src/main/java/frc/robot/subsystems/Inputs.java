@@ -43,7 +43,13 @@ public class Inputs{
 
     public Inputs(ElectroKendro cal){
         SmartDashboard.putString("JoystickName", joy.getName());
-        flySky = joy.getName().contains("FlySky");
+        if(joy.isConnected()){
+            flySky = joy.getName().contains("FlySky");
+        } else {
+            //if the joystick is not yet connected, default to flysky
+            flySky = true;
+        }
+        
 
         cals = cal;
 
@@ -131,6 +137,19 @@ public class Inputs{
         revolve = new JoystickButton(ds, cals.DS_REVOLVE);        
         cwActivate = new JoystickButton(ds, cals.DS_CWACTIVATE);
         shift = new JoystickButton(ds, cals.DS_SHIFT);
+    }
+
+    public void onInit(){
+        SmartDashboard.putString("JoystickName", joy.getName());
+        flySky = joy.getName().contains("FlySky");
+
+        if(flySky){
+            angleReset = new JoystickButton(joy, cals.FS_ANGRESET);
+            autoTrench = new JoystickButton(joy, cals.FS_AUTOTRENCH);
+        }else{
+            angleReset = new JoystickButton(joy, cals.XB_ANGRESET);
+            autoTrench = new JoystickButton(joy, cals.XB_AUTOTRENCH);
+        }
     }
 
     private double threshDeadband(double raw, double limitLow, double limitHigh){
