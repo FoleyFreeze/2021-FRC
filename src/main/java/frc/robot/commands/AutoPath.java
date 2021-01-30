@@ -115,15 +115,28 @@ public class AutoPath extends CommandBase{
         m_subsystem.m_drivetrain.setBrake(true);
     }
 
+
+    double prevFinalDist;
     @Override
     public boolean isFinished(){
         //dont allow it to return early
-        if(tgtPt != path[path.length-1]) return false;
-        System.out.println("PathIdx: " + pathIdx);
+        if(tgtPt != path[path.length-1]) {
+            prevFinalDist = Double.MAX_VALUE;
+            return false;
+        }
 
+        //new stopping strategy is to finish when the dist
+        //to the final point start increasing
+        double dist = Math.abs(errorX) + Math.abs(errorY);
+        boolean done = dist > prevFinalDist;
+        prevFinalDist = dist;
+        return done;
+
+        /* this was a poor stopping strategy
         return Math.abs(errorX) < mCals.autoDriveStrafeRange 
             && Math.abs(errorY) < mCals.autoDriveStrafeRange 
             && Math.abs(errorRot) < mCals.autoDriveAngRange;
+        */
     }
 
     private Waypoint calcTgt(double botX, double botY){

@@ -149,6 +149,9 @@ public class Drivetrain extends SubsystemBase{
         driveKinematics = new SwerveDriveKinematics(fLWheelLoc, fRWheelLoc, rLWheelLoc, rRWheelLoc);
         driveOdom = new SwerveDriveOdometry(driveKinematics, new Rotation2d());
         distSens = new DistanceSensors();
+
+        prevAng = 0;
+        goalAng = 0;
     }
 
     public double parkTime = 9000.0;
@@ -191,7 +194,7 @@ public class Drivetrain extends SubsystemBase{
             //while(strafe.theta < -180) strafe.theta += 360;
         }
         
-        //SmartDashboard.putBoolean("Driving Straigth", driveStraight);
+        //SmartDashboard.putBoolean("Driving Straight", driveStraight);
         
         /*
         if(0 == rot && 0 == strafe.r){
@@ -208,7 +211,7 @@ public class Drivetrain extends SubsystemBase{
 
         
         driveStraight = (rot == 0 && strafe.r != 0 && mSubsystem.m_input.driveStraight());
-        if(rot != 0) goalAng = prevAng;
+        if(resetDriveStraight(rot)) goalAng = prevAng;
 
         if(driveStraight){
             double error = Util.angleDiff(goalAng, -navX.getAngle());
@@ -278,6 +281,11 @@ public class Drivetrain extends SubsystemBase{
         }
 
         prevAng = -navX.getAngle();
+    }
+
+    private boolean resetDriveStraight(double rot){
+        return rot != 0 
+        || Math.abs(Util.angleDiff(prevAng, goalAng)) > k.driveStraightMaxDelta;
     }
 
     public double[] getDist(){
