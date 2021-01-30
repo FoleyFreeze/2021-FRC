@@ -36,7 +36,7 @@ public class CannonCals extends CalSet {
                               { 30.0, 60.0, 70.0},
                               {60.0, 83.0, 500.0}};
     public double allowedRpmError = 150;
-    public double allowedRpmHyst = 5000;
+    public double allowedRpmHyst = 150;
     public final double SOL_RESTTIME = 0.2;                                
 
     public CannonCals(){

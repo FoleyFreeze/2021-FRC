@@ -73,7 +73,6 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public void prime(double distToTgt){
-        distToTgt += shootCals.initJogDist;
         if(shootCals.disabled) return;
         if(!climbCals.disabled) shootVsClimb.set(false);
         
@@ -120,6 +119,7 @@ public class CannonClimber extends SubsystemBase{
     
 
         double speed = Util.interpolate(shootCals.rpm[hTgtPos.ordinal()], shootCals.dist[hTgtPos.ordinal()], distToTgt);
+        speed += shootCals.initJogDist *100;
         setspeed(speed);
     }
 
