@@ -99,7 +99,7 @@ public class TransporterCW extends SubsystemBase{
             ballpositions[4] = true;
         }
 
-        gameData = gameDataList.getFirst();
+        //gameData = gameDataList.getFirst();
 
         if(tCals.disabled && cCals.disabled) return;
 

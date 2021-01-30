@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.cals.VisionCals;
 import frc.robot.util.LimitedList;
 
@@ -27,11 +28,14 @@ public class Vision extends SubsystemBase{
     public LimitedList<VisionData> targetData;
     public LimitedList<VisionData> ballData;
 
-    public Vision(VisionCals cals){
+    RobotContainer m_subsystem;
+
+    public Vision(VisionCals cals, RobotContainer subsystem){
         targetData = new LimitedList<>(cals.historySize);
         ballData = new LimitedList<>(cals.historySize);
         addNTListener();
         this.cals = cals;
+        m_subsystem = subsystem;
     }
 
     public boolean hasTargetImage(){
@@ -51,7 +55,7 @@ public class Vision extends SubsystemBase{
     }
 
     private void addNTListener(){
-        //NetworkTableInstance.getDefault().setUpdateRate(0.01);
+        NetworkTableInstance.getDefault().setUpdateRate(0.03);
         NetworkTable nt = NetworkTableInstance.getDefault().getTable("Vision");
 
         nt.addEntryListener("Target", (table, key, entry, value, flags) -> {
@@ -62,6 +66,7 @@ public class Vision extends SubsystemBase{
 
                 vd.dist = Double.parseDouble(parts[1]);
                 vd.angle = Double.parseDouble(parts[2]);
+                vd.robotangle = m_subsystem.m_drivetrain.robotAng;
 
                 vd.timestamp = Timer.getFPGATimestamp();
                 double dt = vd.timestamp - lastFrameTime;
@@ -90,6 +95,7 @@ public class Vision extends SubsystemBase{
 
                 vd.dist = Double.parseDouble(parts[1]);
                 vd.angle = Double.parseDouble(parts[2]);
+                vd.robotangle = m_subsystem.m_drivetrain.robotAng;
 
                 vd.timestamp = Timer.getFPGATimestamp();
                 double dt = vd.timestamp - lastFrameTime;

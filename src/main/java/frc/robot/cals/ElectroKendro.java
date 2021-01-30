@@ -32,6 +32,7 @@ public class ElectroKendro extends CalSet{
     public final int XB_XAXIS = 0;
     public final int XB_YAXIS = 1;
     public final int XB_ROTAXIS = 4;
+    public final int XB_AUTOGATHER = 2;
 
     public final double XB_LOWDEADBND = 0.1;
     public final double XB_HIGHDEADBND = 0.9;

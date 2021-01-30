@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Vision.VisionData;
@@ -23,13 +24,17 @@ public class AutoGather extends CommandBase {
         auton = DriverStation.getInstance().isAutonomous();
         m_subsystem.m_vision.NTEnablePiBall(true);
         m_subsystem.m_intake.dropIntake(true);
+
+        prevBotAngle = m_subsystem.m_drivetrain.robotAng;
     }
+
+    private double prevBotAngle;
 
     @Override
     public void execute(){
-        double rot;
+        double rot,maxPower;
         Vector strafe;
-        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage()){//robot has control
+        if(/*m_subsystem.m_input.enableBallCam() &&*/ m_subsystem.m_vision.hasBallImage()){//robot has control
 
             VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
 
@@ -39,14 +44,26 @@ public class AutoGather extends CommandBase {
                 strafe.theta -= m_subsystem.m_drivetrain.robotAng;
             }
 
-            double robotAngleDiff = Util.angleDiff(m_subsystem.m_drivetrain.robotAng, ballData.robotangle);
-            rot = Util.angleDiff(ballData.angle, robotAngleDiff) * m_subsystem.m_drivetrain.k.autoBallAngKp;
+            double botAngle = m_subsystem.m_drivetrain.robotAng;
+            double robotAngleDiff = Util.angleDiff(botAngle, ballData.robotangle);
+            double error = Util.angleDiff(ballData.angle, robotAngleDiff);
+            double dError = Util.angleDiff(botAngle, prevBotAngle) / 0.020 /*m_subsystem.dt*/;
+            /*if(Math.abs(dError) > m_subsystem.m_drivetrain.k.autoBallMaxD){
+                dError = m_subsystem.m_drivetrain.k.autoBallMaxD * Math.signum(dError);
+            }*/
+            SmartDashboard.putNumber("Rotspeed",dError);
+            prevBotAngle = botAngle;
+            rot = error * m_subsystem.m_drivetrain.k.autoBallAngKp + dError * m_subsystem.m_drivetrain.k.autoBallAngKd;
+            
 
+            maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
         }else{//driver has control
             strafe = m_subsystem.m_input.getXY();
             rot = m_subsystem.m_input.getRot();
+            maxPower = 1;
+            prevBotAngle = m_subsystem.m_drivetrain.robotAng;
         }
-        m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient());
+        m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient(),maxPower);
         
         if(m_subsystem.m_transporterCW.ballnumber >= 5 && !m_subsystem.m_input.shift()){
             m_subsystem.m_intake.dropIntake(false);

@@ -180,7 +180,12 @@ public class Inputs{
     }
 
     public boolean autoGather(){
-        return joy.getRawAxis(cals.FS_AUTOGATHER) > 0.5;
+        if(flySky){
+            return joy.getRawAxis(cals.FS_AUTOGATHER) > 0.5;
+        }else{
+            return joy.getRawAxis(cals.XB_AUTOGATHER) > 0.5;
+        }
+        
     }
 
     public boolean autoTrench(){

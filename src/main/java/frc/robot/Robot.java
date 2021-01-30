@@ -35,11 +35,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
     double time = Timer.getFPGATimestamp();
-    double dt = time - lastTime;
-    Display.put("DT", dt);
+    m_robotContainer.dt = time - lastTime;
+    Display.put("DT", m_robotContainer.dt);
     lastTime = time;
+    
+    CommandScheduler.getInstance().run();
   }
 
   double lastTime = 0;

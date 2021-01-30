@@ -53,9 +53,11 @@ public class RobotContainer {
   public final Display m_display = new Display();
   public final Pneumatics m_pneumatics = new Pneumatics(new PneumaticsCals());
   public final TransporterCW m_transporterCW = new TransporterCW(new TransporterCals(), new CWheelCals(), this);
-  public final Vision m_vision = new Vision(new VisionCals());
+  public final Vision m_vision = new Vision(new VisionCals(), this);
 
   public SendableChooser<CommandBase> autonChooser;
+
+  public double dt;
   
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(m_drivetrain, m_intake, 
