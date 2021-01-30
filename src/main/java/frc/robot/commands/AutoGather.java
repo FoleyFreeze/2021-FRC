@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -26,19 +27,29 @@ public class AutoGather extends CommandBase {
         m_subsystem.m_intake.dropIntake(true);
 
         prevBotAngle = m_subsystem.m_drivetrain.robotAng;
+        prevPose = m_subsystem.m_drivetrain.drivePos;
     }
 
     private double prevBotAngle;
+    private Pose2d prevPose;
 
     @Override
     public void execute(){
         double rot,maxPower;
         Vector strafe;
+        Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
+        double dXError = botPos.getX()-prevPose.getX();
+        double dYError = botPos.getY()-prevPose.getY();
         if(/*m_subsystem.m_input.enableBallCam() &&*/ m_subsystem.m_vision.hasBallImage()){//robot has control
 
             VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
 
-            strafe = Vector.fromXY(0, ballData.dist * m_subsystem.m_drivetrain.k.autoBallDistKp);
+            double distError = ballData.dist-m_subsystem.m_drivetrain.k.autoBallGthDist;
+            double dDistError = Math.sqrt((dXError*dXError)+(dYError*dYError))/ .020/*m_subsystem.dt*/;//might need to set to .020
+
+            strafe = Vector.fromXY(-distError * m_subsystem.m_drivetrain.k.autoBallDistKp 
+                                     - dDistError*m_subsystem.m_drivetrain.k.autoBallDistKd, 0);
+            prevPose=botPos;
             boolean fieldOrient = m_subsystem.m_input.fieldOrient();
             if(fieldOrient){
                 strafe.theta -= m_subsystem.m_drivetrain.robotAng;
@@ -46,14 +57,14 @@ public class AutoGather extends CommandBase {
 
             double botAngle = m_subsystem.m_drivetrain.robotAng;
             double robotAngleDiff = Util.angleDiff(botAngle, ballData.robotangle);
-            double error = Util.angleDiff(ballData.angle, robotAngleDiff);
-            double dError = Util.angleDiff(botAngle, prevBotAngle) / 0.020 /*m_subsystem.dt*/;
+            double rotError = Util.angleDiff(ballData.angle, robotAngleDiff);
+            double dRotError = Util.angleDiff(botAngle, prevBotAngle) / 0.020 /*m_subsystem.dt*/;
             /*if(Math.abs(dError) > m_subsystem.m_drivetrain.k.autoBallMaxD){
                 dError = m_subsystem.m_drivetrain.k.autoBallMaxD * Math.signum(dError);
             }*/
-            SmartDashboard.putNumber("Rotspeed",dError);
+            SmartDashboard.putNumber("Rotspeed",dRotError);
             prevBotAngle = botAngle;
-            rot = error * m_subsystem.m_drivetrain.k.autoBallAngKp + dError * m_subsystem.m_drivetrain.k.autoBallAngKd;
+            rot = rotError * m_subsystem.m_drivetrain.k.autoBallAngKp + dRotError * m_subsystem.m_drivetrain.k.autoBallAngKd;
             
 
             maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
@@ -62,6 +73,7 @@ public class AutoGather extends CommandBase {
             rot = m_subsystem.m_input.getRot();
             maxPower = 1;
             prevBotAngle = m_subsystem.m_drivetrain.robotAng;
+            prevPose = botPos;
         }
         m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient(),maxPower);
         
