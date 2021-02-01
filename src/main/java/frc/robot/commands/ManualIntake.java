@@ -9,7 +9,7 @@ public class ManualIntake extends CommandBase{
 
     public ManualIntake(RobotContainer subsystem){
         m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_intake);
+        addRequirements(m_subsystem.m_intake, m_subsystem.m_transporterCW);
     }
 
     @Override
@@ -21,8 +21,10 @@ public class ManualIntake extends CommandBase{
     public void execute(){
         if(m_subsystem.m_input.shift()){
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.backwardPower);
+            m_subsystem.m_transporterCW.gatePower(-m_subsystem.m_transporterCW.tCals.TN_LOADSPEED);
         } else{
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.forwardPower);
+            m_subsystem.m_transporterCW.gatePower(m_subsystem.m_transporterCW.tCals.TN_LOADSPEED);
         }
     }
 

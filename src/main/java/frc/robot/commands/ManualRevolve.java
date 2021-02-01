@@ -9,6 +9,8 @@ public class ManualRevolve extends CommandBase{
 
     public ManualRevolve(RobotContainer subsystem){
         m_subsystem = subsystem;
+
+        addRequirements(m_subsystem.m_transporterCW);
     }
 
     @Override

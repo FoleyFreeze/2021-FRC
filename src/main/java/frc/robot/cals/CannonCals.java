@@ -5,7 +5,8 @@ import frc.robot.cals.MotorCal.MotorType;
 public class CannonCals extends CalSet {
 
     public boolean disabled = false;
-    public MotorCal ccMotor = new MotorCal(MotorType.TALON_SRX, 2).limit(1);
+    //public MotorCal ccMotor = new MotorCal(MotorType.TALON_SRX, 2).limit(1);
+    public MotorCal ccMotor = new MotorCal(MotorType.TALON_SRX, 2).limit(1).pid(0.1, 0.0002, 0, 0.05).iLim(409600);
     public MotorCal ccMotor2 = new MotorCal(MotorType.TALON_SRX, 3).invert().follow(2);
     public double falconRpmPerPower = 5400;
     public int hoodSolValue = 1;
@@ -20,6 +21,7 @@ public class CannonCals extends CalSet {
     public double kDDrive = 0.05;
     public double maxRot = 0.2;
     public double tolerance = 3.0;
+    public double initShootSpeed = 4000;
     public double initJogDist = 0.0;
     public double initJogAng = 0.0;
     public double distJog = 0.5;

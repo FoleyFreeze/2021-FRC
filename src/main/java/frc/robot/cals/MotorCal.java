@@ -11,6 +11,7 @@ public class MotorCal {
     public double kD;
     public double kDFilt;
     public double kF;
+    public double ilim;
     public double rampRate;
     public boolean brake;
     public boolean invert = false;
@@ -59,6 +60,11 @@ public class MotorCal {
         kI = i;
         kD = d;
         kF = f;
+        return this;
+    }
+
+    public MotorCal iLim(double ilim){
+        this.ilim = ilim;
         return this;
     }
 

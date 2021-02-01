@@ -36,6 +36,7 @@ public class MotorTalonSRX extends Motor{
             motor.config_kP(0, cal.kP);
             motor.config_kI(0, cal.kI);
             motor.config_kD(0, cal.kD);
+            motor.configMaxIntegralAccumulator(0, cal.ilim);
         }
 
         if(cal.follow){
@@ -74,7 +75,7 @@ public class MotorTalonSRX extends Motor{
             return;
         }
         
-        motor.set(ControlMode.Position, speed * 2048/600.0);
+        motor.set(ControlMode.Velocity, speed * 2048/600.0);
     }
     
     public double getCurrent(){

@@ -11,7 +11,8 @@ public class ManualShoot extends CommandBase{
     public ManualShoot(RobotContainer subsystem){
         m_subsystem = subsystem;
         addRequirements(m_subsystem.m_cannonClimber);
-        addRequirements(m_subsystem.m_transporterCW);
+        //not needed anymore as the kicker no longer exists
+        //addRequirements(m_subsystem.m_transporterCW);
     }
 
     @Override
@@ -29,7 +30,9 @@ public class ManualShoot extends CommandBase{
             if(m_subsystem.m_cannonClimber.ready()){
                 m_subsystem.m_transporterCW.enablefire(true);
             }*/
-            m_subsystem.m_cannonClimber.setspeed(m_subsystem.m_cannonClimber.shootCals.initJogDist * 100 + 2700);
+            double speed = m_subsystem.m_cannonClimber.shootCals.initShootSpeed;
+            speed += m_subsystem.m_cannonClimber.shootCals.initJogDist * 100;
+            m_subsystem.m_cannonClimber.setspeed(speed);
             m_subsystem.m_transporterCW.enablefire(true);
             int jogAng = (int) m_subsystem.m_cannonClimber.shootCals.initJogAng;
             if(jogAng == 0){

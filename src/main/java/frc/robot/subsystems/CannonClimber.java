@@ -66,9 +66,8 @@ public class CannonClimber extends SubsystemBase{
 
     public void setspeed(double speed){
         if(shootCals.disabled) return;
-        //motor.setSpeed(speed);
-        //motor2.setSpeed(speed);
-        motor.setPower(speed / shootCals.falconRpmPerPower);
+        motor.setSpeed(speed);
+        //motor.setPower(speed / shootCals.falconRpmPerPower);
         targetSpeed = speed;
     }
 
@@ -201,6 +200,7 @@ public class CannonClimber extends SubsystemBase{
         Display.put("CC Motor Temp 0", motor.getTemp());
         Display.put("CC Motor Temp 1", motor2.getTemp());
         Display.put("RPM", motor.getSpeed());
+        Display.put("CLError", targetSpeed - motor.getSpeed());
         Display.put("Hood Pos", hCurrPos.toString());
     }
 
