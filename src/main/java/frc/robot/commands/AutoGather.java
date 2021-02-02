@@ -77,10 +77,10 @@ public class AutoGather extends CommandBase {
         }
         m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient(),maxPower);
         
-        if(m_subsystem.m_transporterCW.ballnumber >= 5 && !m_subsystem.m_input.shift()){
+        if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
             m_subsystem.m_intake.dropIntake(false);
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.backwardPower);
-        } else if(m_subsystem.m_transporterCW.isIndexing()){
+        } else if(m_subsystem.m_transporterCW.isIndexing()){//spin intake backwards when spinning tn
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.idxPower);
         } else {
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.forwardPower);
@@ -99,7 +99,7 @@ public class AutoGather extends CommandBase {
     @Override
     public boolean isFinished(){
         if(auton){
-            return m_subsystem.m_transporterCW.ballnumber >= 5;
+            return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
         }
         return false;
     }

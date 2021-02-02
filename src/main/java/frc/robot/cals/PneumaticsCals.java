@@ -6,6 +6,7 @@ public class PneumaticsCals extends CalSet{
     public final double hystPressure = 20;
     public boolean disabled = false;
     public final double pauseTime = 5.0;
+    public boolean hardwarePresent = false;
 
     public final int PNE_PSENSORID = 4;
 

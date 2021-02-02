@@ -45,14 +45,15 @@ import frc.robot.commands.Jog;
 
 
 public class RobotContainer {
+  public PneumaticsCals pCals = new PneumaticsCals();
 
   public final Drivetrain m_drivetrain = new Drivetrain(new DriverCals(), this);
   public final Intake m_intake = new Intake(new IntakeCals());
   public final Inputs m_input = new Inputs(new ElectroKendro());
   public final CannonClimber m_cannonClimber = new CannonClimber(this, new CannonCals(), new ClimberCals());
   public final Display m_display = new Display();
-  public final Pneumatics m_pneumatics = new Pneumatics(new PneumaticsCals());
-  public final TransporterCW m_transporterCW = new TransporterCW(new TransporterCals(), new CWheelCals(), this);
+  public final Pneumatics m_pneumatics = new Pneumatics(pCals);
+  public final TransporterCW m_transporterCW = new TransporterCW(new TransporterCals(pCals), new CWheelCals(), this);
   public final Vision m_vision = new Vision(new VisionCals(), this);
 
   public SendableChooser<CommandBase> autonChooser;

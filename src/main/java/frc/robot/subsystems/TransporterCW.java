@@ -126,7 +126,7 @@ public class TransporterCW extends SubsystemBase{
         if(x < 0) x = 5 - Math.abs(x%5);
 
 
-        if(ballpositions[(x + 4) % 5] && launcher.get()){
+        if(ballpositions[(x + 4) % 5] /*&& launcher.get()*/){
             ballnumber--;
             ballpositions[(x + 4) % 5] = false;
         }
@@ -194,7 +194,7 @@ public class TransporterCW extends SubsystemBase{
         if(tCals.disabled) return;
         double error = targetpos - rotateMotor.getPosition();
         double time = Timer.getFPGATimestamp();
-        if(hasBall() && Math.abs(error) < tCals.countsPerIndex / 2 && ballnumber < 5){ //only spin if not moving & we have an open spot
+        if(hasBall() && Math.abs(error) < tCals.countsPerIndex / 2 && ballnumber < tCals.maxBallCt){ //only spin if not moving & we have an open spot
             waitTime += time - prevTime;
             if(waitTime > tCals.ballSenseDelay){
                 waitTime = 0;
