@@ -39,6 +39,7 @@ public class MotorSparkMax extends Motor{
             motor.getPIDController().setOutputRange(cal.minPower, 
                 cal.maxPower);
             motor.setClosedLoopRampRate(cal.rampRate);
+            motor.getPIDController().setIZone(cal.ilim);
         }
         
         motor.setInverted(cal.invert);
