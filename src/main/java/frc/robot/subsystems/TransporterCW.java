@@ -125,10 +125,9 @@ public class TransporterCW extends SubsystemBase{
         int x = (int) Math.round(rotateMotor.getPosition() / tCals.countsPerIndex);
         if(x < 0) x = 5 - Math.abs(x%5);
 
-
-        if(ballpositions[(x + 4) % 5] /*&& launcher.get()*/){
+        if(ballpositions[(x + 1) % 5] && launcher.get()){
             ballnumber--;
-            ballpositions[(x + 4) % 5] = false;
+            ballpositions[(x + 1) % 5] = false;
         }
 
         if(mSubsystem.m_intake.isOut() && !ballpositions[x%5]){
@@ -199,9 +198,12 @@ public class TransporterCW extends SubsystemBase{
             if(waitTime > tCals.ballSenseDelay){
                 waitTime = 0;
                 ballnumber++;
-                int x = (int) Math.round(targetpos/tCals.countsPerIndex);
+                int x = (int) Math.round(rotateMotor.getPosition() / tCals.countsPerIndex);
+                if(x < 0) x = 5 - Math.abs(x%5);
                 ballpositions[x % 5] = true;
-                index(1);
+                if(ballnumber < tCals.maxBallCt) {
+                    index(1);
+                }
             }
         }
         SmartDashboard.putNumber("waittime",waitTime);

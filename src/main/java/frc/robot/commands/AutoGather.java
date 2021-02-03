@@ -40,7 +40,7 @@ public class AutoGather extends CommandBase {
         Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
-        if(/*m_subsystem.m_input.enableBallCam() &&*/ m_subsystem.m_vision.hasBallImage()){//robot has control
+        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage()){//robot has control
 
             VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
 

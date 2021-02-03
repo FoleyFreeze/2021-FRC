@@ -95,9 +95,9 @@ public class Drivetrain extends SubsystemBase{
             if((Math.abs(wheelVec.r) > 0.05 /*|| parkMode*/) && Math.abs(deltaTicks) > k.DRV_TURNDEADBND){ //don't turn unless we actually want to move
                 targetTicks += deltaTicks;
             } 
-            SmartDashboard.putNumber("TargetTicks" + idx, targetTicks);
-            SmartDashboard.putNumber("DeltaTicks" + idx, deltaTicks);
-            SmartDashboard.putNumber("DrivePwr"+idx,wheelVec.r);
+            //SmartDashboard.putNumber("TargetTicks" + idx, targetTicks);
+            //SmartDashboard.putNumber("DeltaTicks" + idx, deltaTicks);
+            //SmartDashboard.putNumber("DrivePwr"+idx,wheelVec.r);
             driveMotor.setPower(wheelVec.r);
             turnMotor.setPosition(targetTicks);
         }
