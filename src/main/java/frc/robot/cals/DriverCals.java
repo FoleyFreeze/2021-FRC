@@ -36,13 +36,14 @@ public class DriverCals extends CalSet {
     public double trenchRunMaxSpd = 1;
 
     public double autoShootAngKp = 0;
-    public double autoBallAngKp = 1/120.0;
+    public double autoBallAngKp = 1.2/120.0;
     public double autoBallAngKd = 20/60;
     public double autoBallMaxD = 120;
-    public double autoBallDistKp = .20/12;//20% power applied at 12"
-    public double autoBallMaxPwr = .35;
+    public double autoBallDistKp = .30/12;//20% power applied at 12"
+    public double autoBallMaxPwr = .5;
     public double autoBallDistKd = 0;
     public double autoBallGthDist = 10;//distance the gatherer sticks out(inches)
+    //public double 
 
     public double autoDriveStrafeKp = 0.15; //full power in 10in
     public double autoDriveAngKp = 0.02; //50deg is full power

@@ -25,6 +25,7 @@ public class CannonCals extends CalSet {
     public double initJogDist = 0.0;
     public double initJogAng = 0.0;
     public double distJog = 0.5;
+    public double distJogShift = 5;
     public double angJog = 1.0;
     public double shootTime = 1.5;
     public double shootCentX = 0.0;

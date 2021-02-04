@@ -55,6 +55,12 @@ public class AutoGather extends CommandBase {
                 strafe.theta -= m_subsystem.m_drivetrain.robotAng;
             }
 
+            //if we are still gathering/indexing the first ball
+            //dont drive into the second (but maybe still rotate)
+            /*if(m_subsystem.m_transporterCW.isIndexing()){
+                strafe.r = 0;
+            }*/
+
             double botAngle = m_subsystem.m_drivetrain.robotAng;
             double robotAngleDiff = Util.angleDiff(botAngle, ballData.robotangle);
             double rotError = Util.angleDiff(ballData.angle, robotAngleDiff);
@@ -66,7 +72,6 @@ public class AutoGather extends CommandBase {
             prevBotAngle = botAngle;
             rot = rotError * m_subsystem.m_drivetrain.k.autoBallAngKp + dRotError * m_subsystem.m_drivetrain.k.autoBallAngKd;
             
-
             maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
         }else{//driver has control
             strafe = m_subsystem.m_input.getXY();

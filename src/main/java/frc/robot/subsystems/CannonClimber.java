@@ -205,10 +205,17 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public void jogUpDn(boolean up){
+        double delta;
+        if(subsystem.m_input.shift()){
+            delta = shootCals.distJogShift;
+        } else {
+            delta = shootCals.distJog;
+        }
+        
         if(up){
-            shootCals.initJogDist += shootCals.distJog;
+            shootCals.initJogDist += delta;
         }else{
-            shootCals.initJogDist -= shootCals.distJog;
+            shootCals.initJogDist -= delta;
         }
         Display.put("JogUpDn", shootCals.initJogDist);
     }
