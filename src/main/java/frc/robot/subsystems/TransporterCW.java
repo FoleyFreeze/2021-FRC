@@ -167,6 +167,7 @@ public class TransporterCW extends SubsystemBase{
         Display.put("TCMotorCurrent1", loadMotor.getCurrent());
         Display.put("TC Motor Temp 0", rotateMotor.getTemp());
         Display.put("TC Motor Temp 1", loadMotor.getTemp());
+        Display.put("BallSenseV", ballSensor.getAverageVoltage());
         Display.put("Color Info", String.format("R: %d G: %d B: %d IR: %d Prox: %d", 
             colorSensor.getRed(), colorSensor.getGreen(), colorSensor.getBlue(), 
             colorSensor.getIR(), colorSensor.getProximity()));
