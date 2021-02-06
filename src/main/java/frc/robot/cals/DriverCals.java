@@ -18,6 +18,8 @@ public class DriverCals extends CalSet {
     public double[] xPos = {-10.75, 10.75, -10.75, 10.75};
     public double[] yPos = {12.5, 12.5, -12.5, -12.5};
     public double[] angleOffset;
+    
+    public boolean analogVTicks = false;
 
     public double turnTicksPerRev = 60.0;
 

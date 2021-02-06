@@ -34,6 +34,7 @@ public class Drivetrain extends SubsystemBase{
         double prevTime;
         double prevPos;
         SwerveModuleState state;
+        double initialAng;
         
         //create a wheel object to make assigning motor values easier
         public Wheel(DriverCals cals, int idx){
@@ -46,6 +47,7 @@ public class Drivetrain extends SubsystemBase{
             state = new SwerveModuleState();
             prevTime = 0;
             prevPos = 0;
+            initialAng = ((enc.getVoltage() - angleOffset)*2*Math.PI/5);
         }
 
         public double calcRotVec(double centX, double centY){
@@ -62,8 +64,13 @@ public class Drivetrain extends SubsystemBase{
         public void drive(boolean parkMode){
             double encVoltage = enc.getVoltage();
             //SmartDashboard.putNumber("RawEnc" + idx, encVoltage);
-            double currentAngle = ((encVoltage - angleOffset) 
-                *2*Math.PI/5);
+            double currentAngle;
+            if(k.analogVTicks){
+                currentAngle = ((encVoltage - angleOffset) 
+                    *2*Math.PI/5);
+            } else{
+                currentAngle = turnMotor.getPosition()/k.turnTicksPerRev*2*Math.PI + initialAng;
+            }
             double angleDiff = Util.angleDiffRad(wheelVec.theta, currentAngle);
             //SmartDashboard.putNumber("AngleRaw" + idx, 
             //    Math.toDegrees(angleDiff));
