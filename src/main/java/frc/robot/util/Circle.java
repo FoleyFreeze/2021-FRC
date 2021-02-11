@@ -29,7 +29,7 @@ public class Circle {
     public double tangentAngle(double botX, double botY, double botAngle){
         //(botY - center.y)*(botY - center.y)=radius*radius-((botX - center.x)*(botX - center.x));
         double radAngle = Math.atan2(botY-center.y, botX-center.x);
-        double delta = Util.angleDiffRad(radAngle+Math.PI/2, Math.toRadians(botAngle));
+        double delta = Util.angleDiffRad(radAngle+Math.PI/2, botAngle);
         if (delta>Math.PI/2){
             return radAngle - Math.PI/2;
         } else {

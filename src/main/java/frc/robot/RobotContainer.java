@@ -18,6 +18,7 @@ import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ManualRevolve;
 import frc.robot.commands.ManualShoot;
+import frc.robot.commands.NewAutoPath;
 import frc.robot.commands.AutoTrench;
 import frc.robot.subsystems.*;
 import frc.robot.util.Waypoint;
@@ -74,7 +75,7 @@ public class RobotContainer {
     autonChooser.setDefaultOption("DriveAndShoot", new SequentialCommandGroup(new AutoShoot(this),new DriveTime(3, this, 0, -0.4, 0)));
     
     autonChooser.addOption("AutoSquare", new AutonSquare(this));
-    autonChooser.addOption("AutoPath", new AutoPath(this, Waypoint.fromFile("GrayBarrelPath.txt"), m_drivetrain.k.autoDriveLookahead ));
+    autonChooser.addOption("AutoPath", new NewAutoPath(this, "path1.txt"));
     SmartDashboard.putData(autonChooser);
   }
 

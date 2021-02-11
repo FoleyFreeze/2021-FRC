@@ -13,7 +13,7 @@ public class NewAutoPath extends CommandBase{
 
     private int idx;
     public Pose2d botPos;
-    public double robotAngle;
+    public double prevDriveAngle;
     ArrayList<Circle> path;
     double dist;
     double prevDist;
@@ -38,17 +38,17 @@ public class NewAutoPath extends CommandBase{
 
         prevDist = 9999;
         prevSign = 0;
+        prevDriveAngle = Math.PI/2;
     }
 
     @Override
     public void execute(){
         Circle tgt = path.get(idx);
         botPos = m_subsystem.m_drivetrain.drivePos;
-        robotAngle = m_subsystem.m_drivetrain.robotAng;
         Vector tan;
 
         if(tgt.radius > 0){//circle
-            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), robotAngle));
+            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), prevDriveAngle));
             Vector radial = Vector.fromXY(tgt.getCentX()-botPos.getX(), tgt.getCentY()-botPos.getY());
 
             //finishes segment when error less than cal and sign change
@@ -76,19 +76,20 @@ public class NewAutoPath extends CommandBase{
         }
 
         tan.r = k.autoDriveMaxPwr;
-        m_subsystem.m_drivetrain.drive(tan, 0);
         if(tgtReached){//If the target is close enough
             idx++;
             prevDist = 9999;
             prevSign = 0;
         } else{//If the target isn't reached or close enough
-            
+            prevDriveAngle = tan.theta;    
+            m_subsystem.m_drivetrain.drive(tan, 0);
         }
     }
 
     @Override
     public void end(boolean interrupted){
         m_subsystem.m_drivetrain.drive(new Vector(0, 0), 0, 0, 0, true);
+        m_subsystem.m_drivetrain.setBrake(true);
     }
 
     @Override
