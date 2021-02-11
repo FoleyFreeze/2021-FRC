@@ -11,11 +11,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.cals.CalSet;
 import frc.robot.commands.AutoPath;
+import frc.robot.commands.NewAutoPath;
 import frc.robot.subsystems.Display;
 import frc.robot.util.Waypoint;
 
@@ -98,6 +101,42 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationInit(){
 
+    /*
+    NewAutoPath nap = new NewAutoPath(m_robotContainer, "path1.txt");
+    nap.initialize();
+
+    nap.botPos = new Pose2d(0, 0, new Rotation2d());
+    nap.robotAngle = 0;
+    nap.execute();
+
+    nap.botPos = new Pose2d(47, 0, new Rotation2d());
+    nap.execute();
+
+    //should finish first index
+    nap.botPos = new Pose2d(50, 0, new Rotation2d());
+    nap.execute();
+
+    nap.botPos = new Pose2d(84, 30, new Rotation2d());
+    nap.robotAngle = 90;
+    nap.execute();
+
+    nap.botPos = new Pose2d(22, 44, new Rotation2d());
+    nap.robotAngle = 240;
+    nap.execute();
+
+    nap.botPos = new Pose2d(20, 41, new Rotation2d());
+    nap.execute();
+
+    nap.botPos = new Pose2d(0.5, 0.5, new Rotation2d());
+    nap.execute();
+
+    nap.botPos = new Pose2d(-1, -1, new Rotation2d());
+    nap.execute();
+
+    System.out.println(nap.isFinished());
+    System.exit(0);
+    */
+    
     //testing for the auto path spline follower 
     /*Waypoint[] path = Waypoint.fromFile("path1.txt");
     AutoPath pathTest = new AutoPath(m_robotContainer, path, 36);
