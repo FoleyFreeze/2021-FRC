@@ -18,14 +18,25 @@ public class AutoShoot extends CommandBase{
     public double shootFinTime;
     double prevRobotAngle;
     double prevTime;
+    public boolean masked;
+    public double rot;
+    public double centX = 0;
+    public double centY = 0;
     
-    public AutoShoot(RobotContainer subsystem){
+    public AutoShoot(RobotContainer subsystem, boolean masked){
         m_subsystem = subsystem;
+        this.masked = masked;
         m_cals = m_subsystem.m_cannonClimber.shootCals;
 
-        addRequirements(m_subsystem.m_drivetrain);
-        addRequirements(m_subsystem.m_cannonClimber);
-        addRequirements(m_subsystem.m_transporterCW);
+        if(!masked){
+            addRequirements(m_subsystem.m_drivetrain);
+            addRequirements(m_subsystem.m_cannonClimber);
+            addRequirements(m_subsystem.m_transporterCW);
+        }
+    }
+
+    public AutoShoot(RobotContainer subsystem){
+        this(subsystem, false);
     }
 
     @Override
@@ -43,12 +54,9 @@ public class AutoShoot extends CommandBase{
     @Override
     public void execute(){
         double time = Timer.getFPGATimestamp();
-        double rot;
         double error;
         boolean aligned = false;
         double dist;
-        double centX = 0;
-        double centY = 0;
         if(m_subsystem.m_vision.hasTargetImage() && m_subsystem.m_input.cam()){
             VisionData image = m_subsystem.m_vision.targetData.getFirst();
 
@@ -94,8 +102,10 @@ public class AutoShoot extends CommandBase{
         }
         if(Math.abs(error) <= m_cals.tolerance) aligned = true;//make dependent on dist
         
-        m_subsystem.m_drivetrain.drive(m_subsystem.m_input.getXY(), rot, centX, centY, 
+        if(!masked){
+            m_subsystem.m_drivetrain.drive(m_subsystem.m_input.getXY(), rot, centX, centY, 
             m_subsystem.m_input.fieldOrient());
+        }
         
         m_subsystem.m_cannonClimber.prime(dist);
 

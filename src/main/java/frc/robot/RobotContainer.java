@@ -37,6 +37,7 @@ import frc.robot.commands.AutoGather;
 import frc.robot.commands.AutoPath;
 import frc.robot.commands.AutoSC_Test;
 import frc.robot.commands.AutoShoot;
+import frc.robot.commands.AutoShootGather;
 import frc.robot.commands.AutonSquare;
 import frc.robot.commands.CWCombo;
 import frc.robot.commands.Climb;
@@ -81,8 +82,8 @@ public class RobotContainer {
 
   
   private void configureButtonBindings() {
-    m_input.shoot.and(m_input.layupTrigger.negate()).whileActiveOnce(new AutoShoot(this));
-    m_input.shoot.and(m_input.layupTrigger).whileActiveOnce(/*new SequentialCommandGroup(new AutoDrive(this, 0, -24, 0, true),*/ new AutoShoot(this));
+    m_input.shoot.and(m_input.layupTrigger.negate()).and(m_input.gather.negate()).whileActiveOnce(new AutoShoot(this));
+    m_input.shoot.and(m_input.layupTrigger).and(m_input.gather.negate()).whileActiveOnce(/*new SequentialCommandGroup(new AutoDrive(this, 0, -24, 0, true),*/ new AutoShoot(this));
     m_input.angleReset.whileActiveOnce(new ZeroReset(this));
     m_input.angleReset.whileActiveOnce(new CountCmd(this));
     m_input.climbUp.and(m_input.shift.negate()).whileActiveOnce(new Climb(this, ClimberCals.upPower));
@@ -97,7 +98,8 @@ public class RobotContainer {
     m_input.jogL.whileActiveOnce(new Jog(this, false, true));
     m_input.jogR.whileActiveOnce(new Jog(this, false, false));
     m_input.autoTrench.whileActiveOnce(new AutoTrench(this, Orientation.AUTO));
-    m_input.gather.whileActiveOnce(new AutoGather(this));
+    m_input.gather.and(m_input.shoot.negate()).whileActiveOnce(new AutoGather(this));
+    m_input.shoot.and(m_input.gather).whileActiveOnce(new AutoShootGather(this));
     //m_input.cwActivate.whileActiveOnce(new CWCombo(this));
     //TODO: enable when the CW works
   }

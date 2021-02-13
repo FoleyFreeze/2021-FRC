@@ -100,28 +100,27 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationInit(){
-
-    /*
-    NewAutoPath nap = new NewAutoPath(m_robotContainer, "path1.txt");
+/*
+    NewAutoPath nap = new NewAutoPath(m_robotContainer, "CircleTest.txt");
     nap.initialize();
 
     nap.botPos = new Pose2d(0, 0, new Rotation2d());
-    nap.robotAngle = 0;
+    //nap.robotAngle = 0;
     nap.execute();
 
-    nap.botPos = new Pose2d(47, 0, new Rotation2d());
+    nap.botPos = new Pose2d(30, 60+60*Math.sqrt(Math.PI)/2, new Rotation2d());
     nap.execute();
 
     //should finish first index
-    nap.botPos = new Pose2d(50, 0, new Rotation2d());
+    nap.botPos = new Pose2d(60, 120, new Rotation2d());
     nap.execute();
 
-    nap.botPos = new Pose2d(84, 30, new Rotation2d());
-    nap.robotAngle = 90;
+    nap.botPos = new Pose2d(120, 60, new Rotation2d());
+    //nap.robotAngle = 90;
     nap.execute();
 
-    nap.botPos = new Pose2d(22, 44, new Rotation2d());
-    nap.robotAngle = 240;
+    nap.botPos = new Pose2d(0, 0, new Rotation2d());
+    //nap.robotAngle = 240;
     nap.execute();
 
     nap.botPos = new Pose2d(20, 41, new Rotation2d());
@@ -134,8 +133,7 @@ public class Robot extends TimedRobot {
     nap.execute();
 
     System.out.println(nap.isFinished());
-    System.exit(0);
-    */
+    System.exit(0);*/
     
     //testing for the auto path spline follower 
     /*Waypoint[] path = Waypoint.fromFile("path1.txt");

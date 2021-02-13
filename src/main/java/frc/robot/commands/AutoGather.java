@@ -13,11 +13,21 @@ public class AutoGather extends CommandBase {
 
     private RobotContainer m_subsystem;
     private boolean auton;
+    public boolean masked;
+    public Vector strafe;
+    public double maxPower;
+
+    public AutoGather(RobotContainer subsystem, boolean masked){
+        m_subsystem = subsystem;
+        this.masked = masked;
+        if(!masked){
+            addRequirements(m_subsystem.m_intake);
+            addRequirements(m_subsystem.m_drivetrain);
+        }
+    }
 
     public AutoGather(RobotContainer subsystem){
-        m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_intake);
-        addRequirements(m_subsystem.m_drivetrain);
+        this(subsystem, false);
     }
 
     @Override
@@ -35,8 +45,7 @@ public class AutoGather extends CommandBase {
 
     @Override
     public void execute(){
-        double rot,maxPower;
-        Vector strafe;
+        double rot;
         Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
@@ -95,7 +104,9 @@ public class AutoGather extends CommandBase {
             prevPose = botPos;
         }
         rot = m_subsystem.m_input.getRot();
-        m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient(),maxPower);
+        if(!masked){
+            m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient(),maxPower);
+        }
         
         if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
             m_subsystem.m_intake.dropIntake(false);
