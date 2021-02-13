@@ -269,6 +269,11 @@ public class TransporterCW extends SubsystemBase{
     }
 
     public void resetJammed(){
-        prevJammed = false;
+        if(prevJammed){
+            prevJammed = false;
+            double x = rotateMotor.getPosition() / tCals.countsPerIndex;
+            x = Math.ceil(x);
+            targetpos = x * tCals.countsPerIndex;
+        }
     }
 }
