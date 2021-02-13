@@ -36,6 +36,7 @@ public class Vision extends SubsystemBase{
         addNTListener();
         this.cals = cals;
         m_subsystem = subsystem;
+        NTEnablePiCones(cals.coneMode);
     }
 
     public boolean hasTargetImage(){
@@ -125,5 +126,10 @@ public class Vision extends SubsystemBase{
     public void NTEnablePiBall(boolean set){
         NetworkTable nt = NetworkTableInstance.getDefault().getTable("Pi");
         nt.getInstance().getEntry("Ball Enable").setBoolean(set);
+    }
+
+    public void NTEnablePiCones(boolean set){
+        NetworkTable nt = NetworkTableInstance.getDefault().getTable("Pi");
+        nt.getInstance().getEntry("Cone Enable").setBoolean(set);
     }
 }
