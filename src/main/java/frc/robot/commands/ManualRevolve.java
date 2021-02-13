@@ -20,6 +20,8 @@ public class ManualRevolve extends CommandBase{
         } else{
             m_subsystem.m_transporterCW.index(1);
         }
+
+        m_subsystem.m_transporterCW.resetJammed();
     }
 
     @Override

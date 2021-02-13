@@ -107,7 +107,7 @@ public class TransporterCW extends SubsystemBase{
             CWNotTransport.set(false);
         }
 
-        if(Timer.getFPGATimestamp() > jamTime){
+        /*if(Timer.getFPGATimestamp() > jamTime){
             if(prevJammed) {
                 index(1);
                 prevJammed = false;
@@ -117,13 +117,24 @@ public class TransporterCW extends SubsystemBase{
             jamTime = Timer.getFPGATimestamp() + tCals.jamRestTime;
             index(-2);
             prevJammed = true;
-        }
-
-        rotateMotor.setPosition(targetpos);
-        
+        }*/
 
         int x = (int) Math.round(rotateMotor.getPosition() / tCals.countsPerIndex);
         if(x < 0) x = 5 - Math.abs(x%5);
+
+        if(rotateMotor.isJammed() && !prevJammed){
+            prevJammed = true;
+            if(targetpos - rotateMotor.getPosition() > tCals.countsPerIndex/2){
+                index(-1);
+            }
+        }
+
+        if(prevJammed){
+            rotateMotor.setPower(0);
+        } else {
+            rotateMotor.setPosition(targetpos);
+        }
+        
 
         if(ballpositions[(x + 1) % 5] && launcher.get()){
             ballnumber--;
@@ -255,5 +266,9 @@ public class TransporterCW extends SubsystemBase{
     public boolean hasBall(){
         double volts = ballSensor.getAverageVoltage();
         return volts > tCals.hasBallMinV && volts < tCals.hasBallMaxV;
+    }
+
+    public void resetJammed(){
+        prevJammed = false;
     }
 }
