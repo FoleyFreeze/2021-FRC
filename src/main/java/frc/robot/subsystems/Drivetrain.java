@@ -23,6 +23,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase{
     public class Wheel{
+        DriverCals cals;
         int idx;
         Motor driveMotor;
         Motor turnMotor;
@@ -38,6 +39,7 @@ public class Drivetrain extends SubsystemBase{
         
         //create a wheel object to make assigning motor values easier
         public Wheel(DriverCals cals, int idx){
+            this.cals = cals;
             driveMotor = Motor.initMotor(cals.driveMotors[idx]);
             turnMotor = Motor.initMotor(cals.turnMotors[idx]);
             enc = new AnalogInput(cals.turnEncoderIds[idx]);
@@ -62,10 +64,11 @@ public class Drivetrain extends SubsystemBase{
         }
 
         public void drive(boolean parkMode){
-            double encVoltage = enc.getVoltage();
+            
             //SmartDashboard.putNumber("RawEnc" + idx, encVoltage);
             double currentAngle;
             if(k.analogVTicks){
+                double encVoltage = enc.getVoltage();
                 currentAngle = ((encVoltage - angleOffset) 
                     *2*Math.PI/5);
             } else{
@@ -92,9 +95,9 @@ public class Drivetrain extends SubsystemBase{
                     wheelVec.theta -= Math.PI;
                 }
             }
-            SmartDashboard.putNumber("CurrAngle" + idx, Math.toDegrees(currentAngle));
+            //SmartDashboard.putNumber("CurrAngle" + idx, Math.toDegrees(currentAngle));
             //SmartDashboard.putNumber("AngleCorr" + idx, Math.toDegrees(angleDiff));
-            SmartDashboard.putString("WheelCmd" + idx, wheelVec.toString());
+            //SmartDashboard.putString("WheelCmd" + idx, wheelVec.toString());
             
 
             double deltaTicks = angleDiff / (2*Math.PI) * k.turnTicksPerRev;
@@ -112,9 +115,15 @@ public class Drivetrain extends SubsystemBase{
         public SwerveModuleState getState(){
             double time = Timer.getFPGATimestamp();
             double pos = -driveMotor.getPosition();
+            Rotation2d wheelAng; 
+            if(cals.analogVTicks){
+                wheelAng = new Rotation2d((enc.getVoltage() - angleOffset) * 2*Math.PI / 5);
+            } else {
+                wheelAng = new Rotation2d(turnMotor.getPosition()/k.turnTicksPerRev*2*Math.PI + initialAng);
+            }
             
             double velocity = (pos - prevPos)/(time - prevTime) / k.driveInPerTick * k.wheelDiam[idx];
-            Rotation2d wheelAng = new Rotation2d((enc.getVoltage() - angleOffset) * 2*Math.PI / 5);
+            
             prevTime = time;
             prevPos = pos;
             
@@ -325,15 +334,18 @@ public class Drivetrain extends SubsystemBase{
             //SmartDashboard.putNumber("Turn Curr "+w.idx, wheels[w.idx].turnMotor.getCurrent());
         }
 
-        Display.put("DistSenseInfo Re", distSens.getRear().toString());
-        Display.put("DistSenseInfo Ri", distSens.getRight().toString());
+        //Display.put("DistSenseInfo Re", distSens.getRear().toString());
+        //Display.put("DistSenseInfo Ri", distSens.getRight().toString());
 
         robotAng = -navX.getAngle();
         Rotation2d robotRot2d = new Rotation2d(Math.toRadians(robotAng)/* - Math.PI/2*/);
         Display.put("NavX Ang", robotAng);
 
-        drivePos = driveOdom.update(robotRot2d, wheels[0].getState(), wheels[1].getState(), 
-            wheels[2].getState(), wheels[3].getState());
+        SwerveModuleState s1 = wheels[0].getState();
+        SwerveModuleState s2 = wheels[1].getState();
+        SwerveModuleState s3 = wheels[2].getState();
+        SwerveModuleState s4 = wheels[3].getState();
+        drivePos = driveOdom.update(robotRot2d, s1, s2, s3, s4);
 
         double x = drivePos.getTranslation().getX();
         double y = drivePos.getTranslation().getY();

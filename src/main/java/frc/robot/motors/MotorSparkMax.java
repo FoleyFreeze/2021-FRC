@@ -1,5 +1,7 @@
 package frc.robot.motors;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -13,6 +15,7 @@ public class MotorSparkMax extends Motor{
     
     MotorCal cals;
     CANSparkMax motor;
+    CANEncoder encoder;
     
     public MotorSparkMax(MotorCal cal){
         cals = cal;
@@ -30,21 +33,23 @@ public class MotorSparkMax extends Motor{
         motor.setOpenLoopRampRate(cal.rampRate);
 
         if(cals.pid){
-            motor.setClosedLoopRampRate(cal.rampRate);
-            motor.getPIDController().setP(cal.kP);
-            motor.getPIDController().setI(cal.kI);
-            motor.getPIDController().setD(cal.kD);
-            motor.getPIDController().setFF(cal.kF);
-            motor.getPIDController().setDFilter(cal.kDFilt);
-            motor.getPIDController().setOutputRange(cal.minPower, 
-                cal.maxPower);
-            motor.setClosedLoopRampRate(cal.rampRate);
-            motor.getPIDController().setIZone(cal.ilim);
+            CANPIDController pid = motor.getPIDController();
+            pid.setP(cal.kP);
+            pid.setI(cal.kI);
+            pid.setD(cal.kD);
+            pid.setFF(cal.kF);
+            pid.setDFilter(cal.kDFilt);
+            pid.setOutputRange(cal.minPower, cal.maxPower);
+            pid.setIZone(cal.ilim);
+            if(cal.rampRate != 0){
+                motor.setClosedLoopRampRate(cal.rampRate);
+            }
         }
         
         motor.setInverted(cal.invert);
 
-        motor.getEncoder().setPosition(0);
+        encoder = motor.getEncoder();
+        encoder.setPosition(0);
     }
 
     public void setPower(double power){
@@ -96,8 +101,9 @@ public class MotorSparkMax extends Motor{
         return Timer.getFPGATimestamp() < currentTimer;
     }
 
+    
     public double getPosition(){
-        return motor.getEncoder().getPosition();
+        return encoder.getPosition();
     }
 
     public void setSpeed(double speed){
@@ -111,7 +117,7 @@ public class MotorSparkMax extends Motor{
     }
 
     public double getSpeed(){
-        return motor.getEncoder().getVelocity();
+        return encoder.getVelocity();
     }
 
     public double getCurrent(){

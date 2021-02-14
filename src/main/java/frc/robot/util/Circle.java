@@ -30,7 +30,7 @@ public class Circle {
         //(botY - center.y)*(botY - center.y)=radius*radius-((botX - center.x)*(botX - center.x));
         double radAngle = Math.atan2(botY-center.y, botX-center.x);
         double delta = Util.angleDiffRad(radAngle+Math.PI/2, botAngle);
-        if (delta>Math.PI/2){
+        if (Math.abs(delta)>Math.PI/2){
             return radAngle - Math.PI/2;
         } else {
             return radAngle + Math.PI/2;

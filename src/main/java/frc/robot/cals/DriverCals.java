@@ -9,11 +9,12 @@ public class DriverCals extends CalSet {
         MotorCal.spark( 1).ramp(0.3).limit(1.0).coast().currLim(80), 
         MotorCal.spark(14).ramp(0.3).limit(1.0).coast().currLim(80), 
         MotorCal.spark(15).ramp(0.3).limit(1.0).coast().currLim(80)};
-    public MotorCal[] turnMotors = {   
-        MotorCal.spark( 5).pid(0.2, 0.01, 0.25, 0).iLim(1).dFilt(0.01).limit(0.60).brake().ramp(0.001), 
-        MotorCal.spark( 4).pid(0.2, 0.01, 0.25, 0).iLim(1).dFilt(0.01).limit(0.60).brake().ramp(0.001), 
-        MotorCal.spark(10).pid(0.2, 0.01, 0.25, 0).iLim(1).dFilt(0.01).limit(0.60).brake().ramp(0.001), 
-        MotorCal.spark(11).pid(0.2, 0.01, 0.25, 0).iLim(1).dFilt(0.01).limit(0.60).brake().ramp(0.001)};
+    public MotorCal[] turnMotors = {
+        //old PID values: .2 .01 .25, 1, 0.01, 0.6   
+        MotorCal.spark( 5).pid(0.4, 0.011, 0.3, 0).iLim(1).dFilt(0.01).limit(0.75).brake(), 
+        MotorCal.spark( 4).pid(0.4, 0.011, 0.3, 0).iLim(1).dFilt(0.01).limit(0.75).brake(), 
+        MotorCal.spark(10).pid(0.4, 0.011, 0.3, 0).iLim(1).dFilt(0.01).limit(0.75).brake(), 
+        MotorCal.spark(11).pid(0.4, 0.011, 0.3, 0).iLim(1).dFilt(0.01).limit(0.75).brake()};
     public int[] turnEncoderIds = {2, 1, 3, 0};
     public double[] xPos = {-10.75, 10.75, -10.75, 10.75};
     public double[] yPos = {12.5, 12.5, -12.5, -12.5};
@@ -51,7 +52,7 @@ public class DriverCals extends CalSet {
     public double autoDriveAngKp = 0.02; //50deg is full power
     public double autoDriveStrafeRange = 5;
     public double autoDriveAngRange = 5;
-    public double autoDriveMaxPwr = .6;
+    public double autoDriveMaxPwr = .8;
     public double autoDriveStartPwr = 0.15;
     public double autoDriveEndPwr = 0.15;
     public double autoDriveStartDist = 36;
@@ -59,8 +60,8 @@ public class DriverCals extends CalSet {
 
     public double autoDriveLookahead = 36;
 
-    public double lookAheadCurve = 2.15;
-    public double circKp = 0;//1/12.0;
+    public double lookAheadCurve = 8;//2.15;
+    public double circKp = 0.2;//1/12.0;
     public double minDistAutoCirc = 10;
     public double minAngDiffAuto = Math.toRadians(10);
 
@@ -79,7 +80,7 @@ public class DriverCals extends CalSet {
         switch(type){
             case COMPETITION:
                                         //these are in encoder order (not wheel order) 
-                angleOffset = new double[]{2.764, 3.735, 3.547, 0.085};
+        angleOffset = new double[]{2.802, 3.662, 3.603, 0.023};
             break;
 
             case PRACTICE:

@@ -44,7 +44,7 @@ public class NewAutoPath extends CommandBase{
     @Override
     public void execute(){
         Circle tgt = path.get(idx);
-        //botPos = m_subsystem.m_drivetrain.drivePos;
+        botPos = m_subsystem.m_drivetrain.drivePos;
         Vector tan;
 
         if(tgt.radius > 0){//circle
