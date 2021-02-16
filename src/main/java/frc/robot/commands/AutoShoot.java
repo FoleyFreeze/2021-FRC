@@ -22,6 +22,7 @@ public class AutoShoot extends CommandBase{
     public double rot;
     public double centX = 0;
     public double centY = 0;
+    public boolean shootReady;
     
     public AutoShoot(RobotContainer subsystem, boolean masked){
         m_subsystem = subsystem;
@@ -104,17 +105,22 @@ public class AutoShoot extends CommandBase{
         
         if(!masked){
             m_subsystem.m_drivetrain.drive(m_subsystem.m_input.getXY(), rot, centX, centY, 
-            m_subsystem.m_input.fieldOrient());
-        }
-        
-        m_subsystem.m_cannonClimber.prime(dist);
+                m_subsystem.m_input.fieldOrient());
 
-        if(m_subsystem.m_cannonClimber.ready() && aligned && m_subsystem.m_transporterCW.ballnumber > 0){
-            m_subsystem.m_transporterCW.shootAll();
-            m_subsystem.m_transporterCW.enablefire(true);
-            shootFinTime = Timer.getFPGATimestamp() + m_subsystem.m_cannonClimber.shootCals.shootTime;
-        } 
-        else m_subsystem.m_transporterCW.stoprot();
+            m_subsystem.m_cannonClimber.prime(dist);
+
+            if(m_subsystem.m_cannonClimber.ready() && aligned && m_subsystem.m_transporterCW.ballnumber > 0){
+                m_subsystem.m_transporterCW.shootAll();
+                m_subsystem.m_transporterCW.enablefire(true);
+                shootFinTime = Timer.getFPGATimestamp() + m_subsystem.m_cannonClimber.shootCals.shootTime;
+            } 
+            else m_subsystem.m_transporterCW.stoprot();
+        }else{
+            if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt){
+                //Once this starts up, it will not stop priming, which is theoretically fine
+                m_subsystem.m_cannonClimber.prime(dist);
+            }
+        }
 
         prevRobotAngle = m_subsystem.m_drivetrain.robotAng;
         prevTime = time;
