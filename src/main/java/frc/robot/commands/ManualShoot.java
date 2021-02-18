@@ -30,19 +30,32 @@ public class ManualShoot extends CommandBase{
             if(m_subsystem.m_cannonClimber.ready()){
                 m_subsystem.m_transporterCW.enablefire(true);
             }*/
+
+            //use jog u/d to set speed
             double speed = m_subsystem.m_cannonClimber.shootCals.initShootSpeed;
             speed += m_subsystem.m_cannonClimber.shootCals.initJogDist * 100;
             m_subsystem.m_cannonClimber.setspeed(speed);
             m_subsystem.m_transporterCW.enablefire(true);
-            int jogAng = (int) m_subsystem.m_cannonClimber.shootCals.initJogAng;
-            if(jogAng == 0){
-                m_subsystem.m_cannonClimber.hTgtPos = HoodPos.LOW;
-            } else if(jogAng == 1){
-                m_subsystem.m_cannonClimber.hTgtPos = HoodPos.MID1;
-            } else if(jogAng == 2){
-                m_subsystem.m_cannonClimber.hTgtPos = HoodPos.MID2;
-            } else if(jogAng == 3){
-                m_subsystem.m_cannonClimber.hTgtPos = HoodPos.HIGH;
+            
+            //use jog l/r to set hood height
+            double jogAng = m_subsystem.m_cannonClimber.shootCals.initJogAng;
+            if(m_subsystem.m_cannonClimber.shootCals.pneumaticHood){
+                switch(((int) jogAng) % 4){
+                    case 0:
+                        m_subsystem.m_cannonClimber.hTgtPos = HoodPos.LOW;
+                    break;
+                    case 1:
+                        m_subsystem.m_cannonClimber.hTgtPos = HoodPos.MID1;
+                    break;
+                    case 2:
+                        m_subsystem.m_cannonClimber.hTgtPos = HoodPos.MID2;
+                    break;
+                    case 3:
+                        m_subsystem.m_cannonClimber.hTgtPos = HoodPos.HIGH;
+                    break;
+                }
+            } else{
+                m_subsystem.m_cannonClimber.setScrewHeight(jogAng*0.5);
             }
         }
     }

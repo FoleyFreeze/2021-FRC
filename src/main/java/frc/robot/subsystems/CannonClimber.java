@@ -128,8 +128,8 @@ public class CannonClimber extends SubsystemBase{
         }
     }
 
-    public void screwHoodPosition(double distToTgt){
-        double height = Util.interpolate(shootCals.screwHoodHeight, shootCals.screwDist, distToTgt);
+    public void setScrewHeight(double height){
+        height = Util.limit(height, shootCals.minScrewHeight, shootCals.maxScrewHeight);
         height *= shootCals.hoodTicksPerInch;
         hoodMotor.setPosition(height);
     }
@@ -143,7 +143,8 @@ public class CannonClimber extends SubsystemBase{
             pneumaticHoodPosition(distToTgt);
             speed = Util.interpolate(shootCals.pnuRpm[hTgtPos.ordinal()], shootCals.pnuDist[hTgtPos.ordinal()], distToTgt);
         } else{
-            screwHoodPosition(distToTgt);
+            double height = Util.interpolate(shootCals.screwHoodHeight, shootCals.screwDist, distToTgt);
+            setScrewHeight(height);
             speed = Util.interpolate(shootCals.screwRpm, shootCals.screwDist, distToTgt);
         }
 

@@ -48,4 +48,8 @@ public class Util{
         }
         return delta;
     }
+
+    public static double limit(double val, double min, double max){
+        return Math.min(Math.max(val, min), max);
+    }
 }
