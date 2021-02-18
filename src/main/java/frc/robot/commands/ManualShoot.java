@@ -49,7 +49,7 @@ public class ManualShoot extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        m_subsystem.m_cannonClimber.setpower(0);
+        m_subsystem.m_cannonClimber.stop();
         m_subsystem.m_transporterCW.enablefire(false);
         m_subsystem.m_cannonClimber.hTgtPos = HoodPos.LOW;
     }

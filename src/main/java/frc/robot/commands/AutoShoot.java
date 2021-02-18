@@ -128,7 +128,7 @@ public class AutoShoot extends CommandBase{
 
     @Override
     public void end(boolean interrupted){
-        m_subsystem.m_cannonClimber.setpower(0);
+        m_subsystem.m_cannonClimber.stop();
         m_subsystem.m_cannonClimber.setCamLights(false);
         m_subsystem.m_vision.NTEnablePiTgt(false);
         m_subsystem.m_cannonClimber.hTgtPos = HoodPos.LOW;

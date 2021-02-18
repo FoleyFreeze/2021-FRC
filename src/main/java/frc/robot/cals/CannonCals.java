@@ -30,17 +30,23 @@ public class CannonCals extends CalSet {
     public double shootTime = 1.5;
     public double shootCentX = 0.0;
     public double shootCentY = 0.0;
-    public double[][] rpm = {{2700.0, 2775.0, 3000.0},
+    public double[][] pnuRpm = {{2700.0, 2775.0, 3000.0},
                              {2700.0, 2900.0, 3000.0},
                              {2700.0, 3000.0, 4000.0}, 
                              {2700.0, 3350.0, 5400.0}};
-    public double[][] dist = {{  -1.0,  -1.0,  -0.1},
+    public double[][] pnuDist = {{  -1.0,  -1.0,  -0.1},
                               { -0.5, 0.0, 35.0},
                               { 30.0, 60.0, 70.0},
                               {60.0, 83.0, 500.0}};
     public double allowedRpmError = 50;
     public double allowedRpmHyst = 50;
-    public final double SOL_RESTTIME = 0.2;                                
+    public final double SOL_RESTTIME = 0.2; 
+    public boolean pneumaticHood = false;
+    public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.2, 0.001, 0.1, 0).iLim(1).limit(0.3);//.brake();
+    public double hoodTicksPerInch = 0;
+    public double[] screwDist = {-1.0, 500.0};
+    public double[] screwRpm = {1800.0, 5400.0};
+    public double[] screwHoodHeight = {0.0, 10.0};
 
     public CannonCals(){
         

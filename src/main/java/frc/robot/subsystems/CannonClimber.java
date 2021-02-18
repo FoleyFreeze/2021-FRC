@@ -16,6 +16,7 @@ public class CannonClimber extends SubsystemBase{
     public ClimberCals climbCals;
     private Motor motor;
     private Motor motor2;
+    private Motor hoodMotor;
     public enum HoodPos{
         LOW, MID1, MID2, HIGH
     }
@@ -45,8 +46,12 @@ public class CannonClimber extends SubsystemBase{
         motor = Motor.initMotor(shootCals.ccMotor);
         motor2 = Motor.initMotor(shootCals.ccMotor2);
 
-        hoodSol = new Solenoid(sCals.hoodSolValue);
-        stopSol = new Solenoid(sCals.stopSolValue);
+        if(shootCals.pneumaticHood){
+            hoodSol = new Solenoid(sCals.hoodSolValue);
+            stopSol = new Solenoid(sCals.stopSolValue);
+        } else{
+            hoodMotor = Motor.initMotor(shootCals.hoodMotor);
+        }
         camLightsSol = new Solenoid(sCals.camLightsSol);
         shootVsClimb = new Solenoid(sCals.ShootVClimbValue);
         dropFoot = new Solenoid(cCals.dropFootValue);
@@ -64,6 +69,15 @@ public class CannonClimber extends SubsystemBase{
         targetSpeed = 0;
     }
 
+    public void stop(){
+        setpower(0);
+        if(shootCals.pneumaticHood){
+            hTgtPos = HoodPos.LOW;
+        } else{
+            hoodMotor.setPower(0);
+        }
+    }
+
     public void setspeed(double speed){
         if(shootCals.disabled) return;
         motor.setSpeed(speed);
@@ -71,11 +85,8 @@ public class CannonClimber extends SubsystemBase{
         targetSpeed = speed;
     }
 
-    public void prime(double distToTgt){
-        if(shootCals.disabled) return;
-        if(!climbCals.disabled) shootVsClimb.set(false);
-        
-        double[] distAxis = shootCals.dist[hTgtPos.ordinal()];
+    public void pneumaticHoodPosition(double distToTgt){
+        double[] distAxis = shootCals.pnuDist[hTgtPos.ordinal()];
         if(distAxis[0] > distToTgt){
             switch(hTgtPos){
                 case LOW:
@@ -115,9 +126,27 @@ public class CannonClimber extends SubsystemBase{
                     break;
             }
         }
-    
+    }
 
-        double speed = Util.interpolate(shootCals.rpm[hTgtPos.ordinal()], shootCals.dist[hTgtPos.ordinal()], distToTgt);
+    public void screwHoodPosition(double distToTgt){
+        double height = Util.interpolate(shootCals.screwHoodHeight, shootCals.screwDist, distToTgt);
+        height *= shootCals.hoodTicksPerInch;
+        hoodMotor.setPosition(height);
+    }
+
+    public void prime(double distToTgt){
+        if(shootCals.disabled) return;
+        if(!climbCals.disabled) shootVsClimb.set(false);
+        
+        double speed;
+        if(shootCals.pneumaticHood){
+            pneumaticHoodPosition(distToTgt);
+            speed = Util.interpolate(shootCals.pnuRpm[hTgtPos.ordinal()], shootCals.pnuDist[hTgtPos.ordinal()], distToTgt);
+        } else{
+            screwHoodPosition(distToTgt);
+            speed = Util.interpolate(shootCals.screwRpm, shootCals.screwDist, distToTgt);
+        }
+
         speed += shootCals.initJogDist *100;
         setspeed(speed);
     }
@@ -130,17 +159,7 @@ public class CannonClimber extends SubsystemBase{
         }
     }
 
-    public void periodic(){
-        if(DriverStation.getInstance().isDisabled()){
-            hTgtPos = HoodPos.LOW;
-        }
-
-        if(DriverStation.getInstance().isAutonomous()){
-            hTgtPos = HoodPos.HIGH;
-        }
-
-        if(climbCals.disabled && shootCals.disabled) return;
-        
+    public void setPneumaticHood(){
         if(Timer.getFPGATimestamp()>solRestTime){
             switch(hTgtPos){
                 case LOW:
@@ -194,6 +213,25 @@ public class CannonClimber extends SubsystemBase{
                     break;
             }
         }
+    }
+
+    public void periodic(){
+        if(DriverStation.getInstance().isDisabled()){
+            hTgtPos = HoodPos.LOW;
+        }
+
+        if(DriverStation.getInstance().isAutonomous()){
+            hTgtPos = HoodPos.HIGH;
+        }
+
+        if(climbCals.disabled && shootCals.disabled) return;
+        
+        if(shootCals.pneumaticHood){
+            setPneumaticHood();
+        } else{
+
+        }
+        
         Display.put("Foot Dropped", dropFoot.get());
         Display.put("CCMotorCurrent 0", motor.getCurrent());
         Display.put("CCMotorCurrent 1", motor2.getCurrent());
