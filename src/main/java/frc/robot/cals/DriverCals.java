@@ -75,6 +75,8 @@ public class DriverCals extends CalSet {
 
     public final double DRV_GATHERKP = 0.01;
 
+    public final double joyMaxPwr = 1.0;
+
     public DriverCals(){
 
         switch(type){
