@@ -15,6 +15,8 @@ import frc.robot.cals.ClimberCals;
 import frc.robot.cals.DriverCals;
 import frc.robot.cals.ElectroKendro;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.JoystickDriveRot;
+import frc.robot.commands.JoystickDriveStrafe;
 import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ManualRevolve;
 import frc.robot.commands.ManualShoot;
@@ -66,9 +68,11 @@ public class RobotContainer {
   
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(m_drivetrain, m_intake, 
-    m_cannonClimber, m_pneumatics, m_transporterCW);
+    m_cannonClimber, m_pneumatics, m_transporterCW, m_driveRot, m_driveStrafe);
     
-    m_drivetrain.setDefaultCommand(new JoystickDrive(this));
+    //m_drivetrain.setDefaultCommand(new JoystickDrive(this));
+    m_driveRot.setDefaultCommand(new JoystickDriveRot(this));
+    m_driveStrafe.setDefaultCommand(new JoystickDriveStrafe(this));
 
     configureButtonBindings();
 
