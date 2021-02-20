@@ -12,7 +12,8 @@ public class CWMove extends CommandBase{
 
     public CWMove(RobotContainer subsystem){
         m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_drivetrain);
+        addRequirements(m_subsystem.m_driveStrafe);
+        addRequirements(m_subsystem.m_driveRot);
         addRequirements(m_subsystem.m_transporterCW);
         xy = Vector.fromXY(0, -1);
         start = m_subsystem.m_drivetrain.drivePos.getTranslation().getY();

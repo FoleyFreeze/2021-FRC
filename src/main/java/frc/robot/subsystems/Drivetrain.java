@@ -196,6 +196,10 @@ public class Drivetrain extends SubsystemBase{
         drive(strafe, rot, 0, 0, mSubsystem.m_input.fieldOrient());
     }
 
+    public void drive(Vector strafe, double rot, double maxPower){
+        drive(strafe, rot, 0, 0, mSubsystem.m_input.fieldOrient(), maxPower);
+    }
+
         //joystick x, joystick y, joystick rot, center of rotation x and y, field oriented
     public void drive(Vector strafe, double rot, double centX, double centY, boolean fieldOrient, double maxPower){
         if(k.disabled) return;
@@ -299,9 +303,34 @@ public class Drivetrain extends SubsystemBase{
         prevAng = -navX.getAngle();
     }
 
+    private boolean rotGood = false;
+    private boolean strafeGood = false;
+    private double rotPwr;
+    private double maxPwr;
+    private Vector strafePwr;
+
+    public void driveRot(double rotPwr, double maxPwr){
+        rotGood = true;
+        if(strafeGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr));
+        this.rotPwr = rotPwr;
+        this.maxPwr = maxPwr;
+    }
+
+    public void driveStrafe(Vector strafePwr, double maxPwr){
+        strafeGood = true;
+        if(rotGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr));
+        this.strafePwr = strafePwr;
+        this.maxPwr = maxPwr;
+    }
+
+    public void resetRotStrafe(){
+        rotGood = false;
+        strafeGood = false;
+    }
+
     private boolean resetDriveStraight(double rot){
         return rot != 0 
-        || Math.abs(Util.angleDiff(prevAng, goalAng)) > k.driveStraightMaxDelta;
+            || Math.abs(Util.angleDiff(prevAng, goalAng)) > k.driveStraightMaxDelta;
     }
 
     public double[] getDist(){
@@ -353,6 +382,7 @@ public class Drivetrain extends SubsystemBase{
         Display.put("Motors Good", motorsGood);
 
         Display.put("Pit Mode", mSubsystem.m_input.pitMode());
+        resetRotStrafe();
     }
 
     public void setStartPosition(double x, double y){

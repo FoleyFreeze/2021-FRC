@@ -27,7 +27,8 @@ public class AutoDrive extends CommandBase{
 
     public AutoDrive(RobotContainer subsystem, double deltaX, double deltaY, double angle, boolean deltaVsField){
         m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_drivetrain);
+        addRequirements(m_subsystem.m_driveStrafe);
+        addRequirements(m_subsystem.m_driveRot);
         mCals = m_subsystem.m_drivetrain.k;
         this.deltaX = deltaX;
         this.deltaY = deltaY;

@@ -33,7 +33,8 @@ public class AutoPath extends CommandBase{
         if(path == null) return;
 
         m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_drivetrain);
+        addRequirements(m_subsystem.m_driveRot);
+        addRequirements(m_subsystem.m_driveStrafe);
         mCals = m_subsystem.m_drivetrain.k;
         this.path = path;
         this.lookAhead = lookAhead;

@@ -57,6 +57,8 @@ public class RobotContainer {
   public final Pneumatics m_pneumatics = new Pneumatics(pCals);
   public final TransporterCW m_transporterCW = new TransporterCW(new TransporterCals(pCals), new CWheelCals(), this);
   public final Vision m_vision = new Vision(new VisionCals(), this);
+  public final DriveRot m_driveRot = new DriveRot();
+  public final DriveStrafe m_driveStrafe = new DriveStrafe();
 
   public SendableChooser<CommandBase> autonChooser;
 

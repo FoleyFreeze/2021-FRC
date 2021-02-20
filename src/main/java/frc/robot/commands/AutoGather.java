@@ -22,7 +22,7 @@ public class AutoGather extends CommandBase {
         this.masked = masked;
         if(!masked){
             addRequirements(m_subsystem.m_intake);
-            addRequirements(m_subsystem.m_drivetrain);
+            addRequirements(m_subsystem.m_driveStrafe);
         }
     }
 
@@ -104,9 +104,7 @@ public class AutoGather extends CommandBase {
             prevPose = botPos;
         }
         rot = m_subsystem.m_input.getRot();
-        if(!masked){
-            m_subsystem.m_drivetrain.drive(strafe, rot, 0, 0, m_subsystem.m_input.fieldOrient(),maxPower);
-        }
+        m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower);
         
         if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
             m_subsystem.m_intake.dropIntake(false);

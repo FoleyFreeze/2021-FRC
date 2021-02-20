@@ -30,7 +30,7 @@ public class AutoShoot extends CommandBase{
         m_cals = m_subsystem.m_cannonClimber.shootCals;
 
         if(!masked){
-            addRequirements(m_subsystem.m_drivetrain);
+            addRequirements(m_subsystem.m_driveRot);
             addRequirements(m_subsystem.m_cannonClimber);
             addRequirements(m_subsystem.m_transporterCW);
         }
@@ -103,9 +103,9 @@ public class AutoShoot extends CommandBase{
         }
         if(Math.abs(error) <= m_cals.tolerance) aligned = true;//make dependent on dist
         
+        m_subsystem.m_drivetrain.driveRot(rot, m_subsystem.m_drivetrain.k.autoBallMaxPwr);
+
         if(!masked){
-            m_subsystem.m_drivetrain.drive(m_subsystem.m_input.getXY(), rot, centX, centY, 
-                m_subsystem.m_input.fieldOrient());
 
             m_subsystem.m_cannonClimber.prime(dist);
 

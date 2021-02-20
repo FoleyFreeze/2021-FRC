@@ -21,7 +21,8 @@ public class AutoTrench extends CommandBase{
     public AutoTrench(RobotContainer subsystem, Orientation orient){
         m_subsystem = subsystem;
         m_cals = m_subsystem.m_drivetrain.k;
-        addRequirements(m_subsystem.m_drivetrain);
+        addRequirements(m_subsystem.m_driveStrafe);
+        addRequirements(m_subsystem.m_driveRot);
 
         this.orient = orient;
     }

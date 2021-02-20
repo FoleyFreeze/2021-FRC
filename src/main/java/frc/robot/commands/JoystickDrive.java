@@ -10,7 +10,8 @@ public class JoystickDrive extends CommandBase{
 
     public JoystickDrive(RobotContainer subsystem){
         m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_drivetrain);
+        addRequirements(m_subsystem.m_driveStrafe);
+        addRequirements(m_subsystem.m_driveRot);
     }
 
     @Override
