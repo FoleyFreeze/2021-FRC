@@ -6,8 +6,8 @@ public class CannonCals extends CalSet {
 
     public boolean disabled = false;
     //public MotorCal ccMotor = new MotorCal(MotorType.TALON_SRX, 2).limit(1);
-    public MotorCal ccMotor = MotorCal.srx(2).limit(1).pid(0.1, 0.0002, 0, 0.05).iLim(409600);
-    public MotorCal ccMotor2 = MotorCal.srx(3).invert().follow(2);
+    public MotorCal ccMotor = new MotorCal(MotorType.TALON_SRX, 2).limit(1).pid(0.1, 0.0002, 0, 0.05).iLim(409600);
+    public MotorCal ccMotor2 = new MotorCal(MotorType.TALON_SRX, 3).invert().follow(2);
     public double falconRpmPerPower = 5400;
     public int hoodSolValue = 1;
     public int stopSolValue = 0;
@@ -42,8 +42,8 @@ public class CannonCals extends CalSet {
     public double allowedRpmHyst = 50;
     public final double SOL_RESTTIME = 0.2; 
     public boolean pneumaticHood = true;
-    public MotorCal hoodMotor = MotorCal.spark(7).pid(0.2, 0.001, 0.1, 0).iLim(1).limit(0.3);//.brake();
-    public double hoodTicksPerInch = 42 * 30/8.0;//ticks per rev * revs per in
+    public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.2, 0.001, 0.1, 0).iLim(1).limit(0.3);//.brake();
+    public double hoodTicksPerInch = 0;
     public double[] screwDist = {-1.0, 500.0};
     public double[] screwRpm = {1800.0, 5400.0};
     public double[] screwHoodHeight = {0.0, 10.0};
