@@ -153,10 +153,12 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public boolean ready(){
+        double speed = motor.getSpeed();
+        Display.put("RPM", speed);
         if(subsystem.m_transporterCW.launcher.get()){
-            return Math.abs(motor.getSpeed() - targetSpeed) < shootCals.allowedRpmHyst;
+            return Math.abs(speed - targetSpeed) < shootCals.allowedRpmHyst;
         } else {
-            return Math.abs(motor.getSpeed() - targetSpeed) < shootCals.allowedRpmError;
+            return Math.abs(speed - targetSpeed) < shootCals.allowedRpmError;
         }
     }
 

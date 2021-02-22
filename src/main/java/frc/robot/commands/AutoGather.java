@@ -106,7 +106,7 @@ public class AutoGather extends CommandBase {
         rot = m_subsystem.m_input.getRot();
         m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower);
         
-        if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
+        if(!masked && m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
             m_subsystem.m_intake.dropIntake(false);
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.backwardPower);
         } else if(m_subsystem.m_transporterCW.isIndexing()){//spin intake backwards when spinning tn
@@ -115,7 +115,10 @@ public class AutoGather extends CommandBase {
             m_subsystem.m_intake.setPower(m_subsystem.m_intake.mCals.forwardPower);
         }
 
-        m_subsystem.m_transporterCW.gatherIndex();
+        //only rotate the revolver if there is space for it, or if we are shooting
+        if(masked || m_subsystem.m_transporterCW.ballnumber < m_subsystem.m_transporterCW.tCals.maxBallCt){
+            m_subsystem.m_transporterCW.gatherIndex();
+        }
     }
 
     @Override

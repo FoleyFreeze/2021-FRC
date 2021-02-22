@@ -146,7 +146,8 @@ public class Display extends SubsystemBase{
             addToTab(tab, "Ball Position 3", false, 3, 3);
             addToTab(tab, "Ball Position 4", false, 3, 4);
             addToTab(tab, "Current Pos", 0, 4, 0);
-            addToTab(tab, "BallSenseV", 0, 4, 0);
+            addToTab(tab, "BallSenseV", 0, 4, 1);
+            addToTab(tab, "MaskedBallSenseV", 0,4,2);
 
         tab = Shuffleboard.getTab("Color Wheel");
             addToTab(tab, "TCMotorCurrent0", 0, 0, 0);

@@ -23,6 +23,7 @@ public class MotorCal {
     public double tempLimit = 60;
     public double overTempRestTime = 30;
     public int overCurrentCountDown = 1;
+    public boolean resetEnc = true;
 
     public enum MotorType{
         PWM_TALON, SPARK_MAX, TALON_SRX, NULL
@@ -126,6 +127,11 @@ public class MotorCal {
 
     public MotorCal ramp(double rate){
         rampRate = rate;
+        return this;
+    }
+
+    public MotorCal resetEnc(boolean rst){
+        resetEnc = rst;
         return this;
     }
 }

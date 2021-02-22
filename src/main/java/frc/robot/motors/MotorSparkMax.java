@@ -17,7 +17,7 @@ public class MotorSparkMax extends Motor{
     CANSparkMax motor;
     CANEncoder encoder;
     
-    public MotorSparkMax(MotorCal cal){
+    public MotorSparkMax(MotorCal cal){ 
         cals = cal;
         motor = new CANSparkMax(cal.id, 
             com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -49,7 +49,7 @@ public class MotorSparkMax extends Motor{
         motor.setInverted(cal.invert);
 
         encoder = motor.getEncoder();
-        encoder.setPosition(0);
+        if(cal.resetEnc) encoder.setPosition(0);
     }
 
     public void setPower(double power){

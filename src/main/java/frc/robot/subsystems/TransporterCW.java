@@ -30,7 +30,6 @@ public class TransporterCW extends SubsystemBase{
     public Solenoid CWNotTransport;
     private double targetpos = 0;
     private boolean[] ballpositions = {false, false, false, false, false};
-    public boolean isIndexing;
     public int ballnumber;
     private RobotContainer mSubsystem;
     public ColorMatch colorMatch;
@@ -47,6 +46,20 @@ public class TransporterCW extends SubsystemBase{
         if(tCals.disabled && cCals.disabled) return;
 
         rotateMotor = Motor.initMotor(tCals.rotateMotor);
+        //This sleep exists because sometimes on wakeup the encoder is negative
+        //waiting a short amount of time allows the encoder to read the true positive value
+        try{
+            Thread.sleep(100);
+        } catch (Exception e){
+
+        }
+        targetpos = rotateMotor.getPosition();
+        SmartDashboard.putNumber("Testing",targetpos);
+        targetpos = Math.round(targetpos / tCals.countsPerIndex);
+        SmartDashboard.putNumber("Testing1",targetpos);
+        targetpos = targetpos * tCals.countsPerIndex;
+        SmartDashboard.putNumber("Testing2",targetpos);
+
         loadMotor = Motor.initMotor(tCals.loadMotor);
         ballSensor = new AnalogInput(tCals.sensorValue);
         ballSensor.setAverageBits(4);
@@ -205,7 +218,7 @@ public class TransporterCW extends SubsystemBase{
         if(tCals.disabled) return;
         double error = targetpos - rotateMotor.getPosition();
         double time = Timer.getFPGATimestamp();
-        if(hasBall() && Math.abs(error) < tCals.countsPerIndex / 2 && ballnumber < tCals.maxBallCt){ //only spin if not moving & we have an open spot
+        if(hasBall() && Math.abs(error) < tCals.countsPerIndex / 2){ //only spin if not moving & we have an open spot
             waitTime += time - prevTime;
             if(waitTime > tCals.ballSenseDelay){
                 waitTime = 0;
@@ -213,9 +226,7 @@ public class TransporterCW extends SubsystemBase{
                 int x = (int) Math.round(rotateMotor.getPosition() / tCals.countsPerIndex);
                 if(x < 0) x = 5 - Math.abs(x%5);
                 ballpositions[x % 5] = true;
-                if(ballnumber < tCals.maxBallCt) {
-                    index(1);
-                }
+                index(1);
             }
         }
         SmartDashboard.putNumber("waittime",waitTime);
@@ -237,10 +248,10 @@ public class TransporterCW extends SubsystemBase{
 
     public void shootAll(){
         if(tCals.disabled) return;
-        //enablefire(ballnumber > 0);
+        enablefire(ballnumber > 0);
         double error = targetpos - rotateMotor.getPosition();
         if(Math.abs(error) < tCals.countsPerIndex && ballnumber > 0){
-            index(1);
+            index(ballnumber);
         }
     }
 
@@ -264,8 +275,13 @@ public class TransporterCW extends SubsystemBase{
     }
 
     public boolean hasBall(){
-        double volts = ballSensor.getAverageVoltage();
-        return volts > tCals.hasBallMinV && volts < tCals.hasBallMaxV;
+        if(isIndexing()){
+            return false;
+        } else {
+            double volts = ballSensor.getAverageVoltage();
+            Display.put("MaskedBallSenseV",volts);
+            return volts > tCals.hasBallMinV && volts < tCals.hasBallMaxV;
+        }
     }
 
     public void resetJammed(){
