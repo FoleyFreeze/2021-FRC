@@ -42,7 +42,7 @@ public class CannonCals extends CalSet {
     public double allowedRpmHyst = 50;
     public final double SOL_RESTTIME = 0.2; 
     public boolean pneumaticHood = true;
-    public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.2, 0.001, 0.1, 0).iLim(1).limit(0.3);//.brake();
+    public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.1, 0.0001, 0.0, 0).iLim(2).limit(0.3);//.brake();
     public double hoodTicksPerInch = 0;
     public double[] screwDist = {-1.0, 500.0};
     public double[] screwRpm = {1800.0, 5400.0};
