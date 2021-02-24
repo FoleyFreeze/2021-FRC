@@ -46,6 +46,7 @@ public class DriverCals extends CalSet {
     public double autoBallMaxPwr = .5;
     public double autoBallDistKd = 0;
     public double autoBallGthDist = 10;//distance the gatherer sticks out(inches)
+    public double autoBallMinDist = 0;//only used for auton award routine for autogather
     //public double autoBallXFactor = 1.7;//how much we multiply x by to subtract from y
 
     public double autoDriveStrafeKp = 0.15; //full power in 10in

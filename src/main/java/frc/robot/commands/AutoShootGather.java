@@ -12,7 +12,7 @@ public class AutoShootGather extends CommandBase{
     public AutoShootGather(RobotContainer subsystem){
         m_subsystem = subsystem;
         autoShoot = new AutoShoot(subsystem, true);
-        autoGather = new AutoGather(subsystem, true);
+        autoGather = new AutoGather(subsystem, true, false);
         addRequirements(m_subsystem.m_driveStrafe);
         addRequirements(m_subsystem.m_driveRot);
         addRequirements(m_subsystem.m_cannonClimber);

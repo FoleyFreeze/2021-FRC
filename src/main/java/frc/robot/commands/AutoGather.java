@@ -14,20 +14,22 @@ public class AutoGather extends CommandBase {
     private RobotContainer m_subsystem;
     private boolean auton;
     public boolean masked;
+    public boolean kpOverride;
     public Vector strafe;
     public double maxPower;
 
-    public AutoGather(RobotContainer subsystem, boolean masked){
+    public AutoGather(RobotContainer subsystem, boolean masked, boolean kpOverride){
         m_subsystem = subsystem;
         this.masked = masked;
         if(!masked){
             addRequirements(m_subsystem.m_intake);
             addRequirements(m_subsystem.m_driveStrafe);
         }
+        this.kpOverride = kpOverride;
     }
 
     public AutoGather(RobotContainer subsystem){
-        this(subsystem, false);
+        this(subsystem, false, false);
     }
 
     @Override
@@ -69,8 +71,16 @@ public class AutoGather extends CommandBase {
                 x = 2 * Math.signum(x);
             }
             y -= Math.abs(xFactor*x);
-            double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
-            strafe = Vector.fromXY(-y*kp, x*kp);
+            
+            if(!kpOverride){
+                double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
+                strafe = Vector.fromXY(-y*kp, x*kp);
+            } else{
+                double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
+                if(distError < m_subsystem.m_drivetrain.k.autoBallMinDist){
+                    strafe = Vector.fromXY(-y*kp, 0);
+                }
+            }
 
             prevPose=botPos;
             boolean fieldOrient = m_subsystem.m_input.fieldOrient();
