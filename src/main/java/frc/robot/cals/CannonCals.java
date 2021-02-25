@@ -17,8 +17,8 @@ public class CannonCals extends CalSet {
     public double trenchDist = 208.75;
     public double autonDist = 83;
     public double manualPower = 0.5;
-    public double kPDrive = 0.05;
-    public double kDDrive = 0.05;
+    public double kPDrive = 0.015;
+    public double kDDrive = -0.002;
     public double maxRot = 0.2;
     public double tolerance = 3.0;
     public double initShootSpeed = 4000;
@@ -41,13 +41,13 @@ public class CannonCals extends CalSet {
     public double allowedRpmError = 50;
     public double allowedRpmHyst = 50;
     public final double SOL_RESTTIME = 0.2; 
-    public boolean pneumaticHood = true;
-    public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.1, 0.0001, 0.0, 0).iLim(2).limit(0.3);//.brake();
-    public double hoodTicksPerInch = 0;
-    public double[] screwDist = {-1.0, 500.0};
-    public double[] screwRpm = {1800.0, 5400.0};
-    public double[] screwHoodHeight = {0.0, 10.0};
-    public double maxScrewHeight = 10;
+    public boolean pneumaticHood = false;
+    public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.1, 0.0001, 0.0, 0).iLim(2).limit(0.3).resetEnc(false).invert();//.brake();
+    public double hoodTicksPerInch = 4 * 30/8.0; //30 revs in 8 in * gear ratio of 4:1
+    public double[] screwDist = {0, 44, 96, 156};
+    public double[] screwRpm = {2800, 3100, 3675, 4000};
+    public double[] screwHoodHeight = {0.0, 0.5, 2, 2.5};
+    public double maxScrewHeight = 5;
     public double minScrewHeight = 0;
 
     public CannonCals(){

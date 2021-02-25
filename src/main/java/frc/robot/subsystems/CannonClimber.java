@@ -242,7 +242,12 @@ public class CannonClimber extends SubsystemBase{
         Display.put("CC Motor Temp 1", motor2.getTemp());
         Display.put("RPM", motor.getSpeed());
         Display.put("CLError", targetSpeed - motor.getSpeed());
-        Display.put("Hood Pos", hCurrPos.toString());
+        if(shootCals.pneumaticHood){
+            Display.put("Hood Pos", hCurrPos.toString());
+        } else {
+            Display.put("Hood Pos", hoodMotor.getPosition() / shootCals.hoodTicksPerInch + "");
+        }
+        
     }
 
     public void jogUpDn(boolean up){

@@ -13,7 +13,6 @@ public class AutoShoot extends CommandBase{
 
     private RobotContainer m_subsystem;
     private CannonCals m_cals;
-    public double rotCam = 0.0;
     public boolean auton;
     public double shootFinTime;
     double prevRobotAngle;
@@ -61,26 +60,24 @@ public class AutoShoot extends CommandBase{
         if(m_subsystem.m_vision.hasTargetImage() && m_subsystem.m_input.cam()){
             VisionData image = m_subsystem.m_vision.targetData.getFirst();
 
-            double camAng = image.angle + m_cals.initJogAng;
-            double camAngError = Util.angleDiff(m_subsystem.m_drivetrain.robotAng, camAng);
-            double angDelta = Util.angleDiff(image.robotangle, m_subsystem.m_drivetrain.robotAng);
-            rotCam = Util.angleDiff(camAngError, angDelta);
-            error = rotCam;
+            double botAngle = m_subsystem.m_drivetrain.robotAng;
+            double robotAngleDiff = Util.angleDiff(botAngle, image.robotangle);
+            double rotError = Util.angleDiff(image.angle + m_cals.initJogAng, robotAngleDiff);
+
+            error = rotError;
             dist = image.dist;
 
-            //if we are doing 3 pointers
+            //if we are doing 3 pointers TODO: does this work?
             if(m_subsystem.m_input.twoVThree()){
-                double angTgt = rotCam - m_subsystem.m_drivetrain.robotAng;
+                double angTgt = rotError - m_subsystem.m_drivetrain.robotAng;
                 double hypSin = dist * Math.sin(angTgt);
                 double hypCos = dist * Math.cos(angTgt) + 29.25;
 
                 dist = Math.sqrt(hypSin*hypSin + hypCos*hypCos);
                 error = Math.atan(hypSin/hypCos);
             }
-
-            double robotAngle = m_subsystem.m_drivetrain.robotAng;
             
-            double deltaAngle = Util.angleDiff(robotAngle, prevRobotAngle);
+            double deltaAngle = Util.angleDiff(botAngle, prevRobotAngle);
 
             double d = (deltaAngle)/(time - prevTime);
             rot = error * m_cals.kPDrive - d * m_cals.kDDrive;
@@ -113,7 +110,6 @@ public class AutoShoot extends CommandBase{
                 m_subsystem.m_transporterCW.shootAll();
                 shootFinTime = Timer.getFPGATimestamp() + m_subsystem.m_cannonClimber.shootCals.shootTime;
             } 
-            else m_subsystem.m_transporterCW.stoprot();
         }else{
             if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt){
                 //Once this starts up, it will not stop priming, which is theoretically fine
@@ -133,6 +129,7 @@ public class AutoShoot extends CommandBase{
         m_subsystem.m_vision.NTEnablePiTgt(false);
         m_subsystem.m_cannonClimber.hTgtPos = HoodPos.LOW;
         m_subsystem.m_transporterCW.enablefire(false);
+        m_subsystem.m_transporterCW.stoprot();
     }
 
     @Override

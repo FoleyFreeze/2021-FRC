@@ -50,6 +50,9 @@ public class MotorSparkMax extends Motor{
 
         encoder = motor.getEncoder();
         if(cal.resetEnc) encoder.setPosition(0);
+
+        //save settings to the motor controllers
+        //motor.burnFlash();
     }
 
     public void setPower(double power){
