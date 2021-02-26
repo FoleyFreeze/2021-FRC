@@ -22,6 +22,7 @@ import frc.robot.commands.ManualRevolve;
 import frc.robot.commands.ManualShoot;
 import frc.robot.commands.NewAutoPath;
 import frc.robot.commands.AutoTrench;
+import frc.robot.commands.AutonAwardPath;
 import frc.robot.subsystems.*;
 import frc.robot.util.Waypoint;
 import frc.robot.cals.IntakeCals;
@@ -83,6 +84,7 @@ public class RobotContainer {
     
     autonChooser.addOption("AutoSquare", new AutonSquare(this));
     autonChooser.addOption("AutoPath", new NewAutoPath(this, "CircleTest.txt"));
+    autonChooser.addOption("AutonAward", new AutonAwardPath(this));
     SmartDashboard.putData(autonChooser);
   }
 

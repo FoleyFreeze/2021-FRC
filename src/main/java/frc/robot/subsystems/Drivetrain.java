@@ -137,6 +137,7 @@ public class Drivetrain extends SubsystemBase{
     public DriverCals k;
     public AHRS navX;
     private RobotContainer mSubsystem;
+    public Vector recentVelocity;
 
     public Drivetrain(DriverCals cals, RobotContainer subsystem){
         k = cals;
@@ -375,6 +376,7 @@ public class Drivetrain extends SubsystemBase{
         SwerveModuleState s3 = wheels[2].getState();
         SwerveModuleState s4 = wheels[3].getState();
         drivePos = driveOdom.update(robotRot2d, s1, s2, s3, s4);
+        recentVelocity = getDriveVel(drivePos);
 
         double x = drivePos.getTranslation().getX();
         double y = drivePos.getTranslation().getY();
@@ -403,5 +405,14 @@ public class Drivetrain extends SubsystemBase{
         for(Wheel w: wheels){
             w.driveMotor.setBrake(brake);
         }
+    }
+
+    Pose2d prevPos = new Pose2d();
+    public Vector getDriveVel(Pose2d pos){
+        double dx = pos.getX() - prevPos.getX();
+        double dy = pos.getY() - prevPos.getY();
+
+        prevPos = pos;
+        return Vector.fromXY(dx/0.02, dy/.02);
     }
 }
