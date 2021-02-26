@@ -47,8 +47,11 @@ public class CannonCals extends CalSet {
     public double[] screwDist = {0, 44, 96, 156};
     public double[] screwRpm = {2800, 3100, 3675, 4000};
     public double[] screwHoodHeight = {0.0, 0.5, 2, 2.5};
+    public double[] flightTime = {0.5, 0.7, 0.9, 1};//screwDist is the axis
     public double maxScrewHeight = 5;
     public double minScrewHeight = 0;
+    public boolean enableVelOffset = true;
+    public boolean enableLatOffset = false;
 
     public CannonCals(){
         

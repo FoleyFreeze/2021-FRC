@@ -8,6 +8,7 @@ import frc.robot.cals.CannonCals;
 import frc.robot.subsystems.CannonClimber.HoodPos;
 import frc.robot.subsystems.Vision.VisionData;
 import frc.robot.util.Util;
+import frc.robot.util.Vector;
 
 public class AutoShoot extends CommandBase{
 
@@ -59,23 +60,21 @@ public class AutoShoot extends CommandBase{
         double dist;
         if(m_subsystem.m_vision.hasTargetImage() && m_subsystem.m_input.cam()){
             VisionData image = m_subsystem.m_vision.targetData.getFirst();
-
             double botAngle = m_subsystem.m_drivetrain.robotAng;
+            /*
             double robotAngleDiff = Util.angleDiff(botAngle, image.robotangle);
             double rotError = Util.angleDiff(image.angle + m_cals.initJogAng, robotAngleDiff);
+            */
 
-            error = rotError;
-            dist = image.dist;
+            Vector toTarget = new Vector(image.dist, Math.toRadians(image.angle + image.robotangle));
+            toTarget = applyLatencyOffset(toTarget, image);
+            toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
+            toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
 
-            //if we are doing 3 pointers TODO: does this work?
-            if(m_subsystem.m_input.twoVThree()){
-                double angTgt = rotError - m_subsystem.m_drivetrain.robotAng;
-                double hypSin = dist * Math.sin(angTgt);
-                double hypCos = dist * Math.cos(angTgt) + 29.25;
-
-                dist = Math.sqrt(hypSin*hypSin + hypCos*hypCos);
-                error = Math.atan(hypSin/hypCos);
-            }
+            //error = rotError;
+            //dist = image.dist;
+            error = Util.angleDiff(botAngle, Math.toDegrees(toTarget.theta));
+            dist = toTarget.r;
             
             double deltaAngle = Util.angleDiff(botAngle, prevRobotAngle);
 
@@ -137,4 +136,40 @@ public class AutoShoot extends CommandBase{
         if(auton) return Timer.getFPGATimestamp() >= shootFinTime && m_subsystem.m_transporterCW.ballnumber == 0;
         return false;
     }
+
+    private Vector apply3ptProjection(Vector v){
+        //if we are doing 3 pointers
+        if(m_subsystem.m_input.twoVThree()){
+            double angTgt = v.theta;
+            double hypSin = v.r * Math.sin(angTgt);
+            double hypCos = v.r * Math.cos(angTgt) + 29.25; //additional distance between 2pt and 3pt (in)
+    
+            double dist = Math.sqrt(hypSin*hypSin + hypCos*hypCos);
+            double ang = Math.atan(hypSin/hypCos);
+
+            return new Vector(dist-29.25, ang);
+        } else {
+            return v;
+        }
+    }
+
+    private Vector applyMovementCompensation(Vector tgt, Vector vel){
+        CannonCals cc = m_subsystem.m_cannonClimber.shootCals;
+        if(cc.enableVelOffset){
+            double time = Util.interpolate(cc.flightTime, cc.screwDist, tgt.r);
+            Vector displacement = new Vector(-vel.r * time, vel.theta);
+            return tgt.add(displacement);
+        } else{
+            return tgt;
+        }
+    }
+
+    private Vector applyLatencyOffset(Vector tgt, VisionData img){
+        CannonCals cc = m_subsystem.m_cannonClimber.shootCals;
+        if(cc.enableLatOffset){
+            
+        }
+        return tgt;
+    }
+    
 }
