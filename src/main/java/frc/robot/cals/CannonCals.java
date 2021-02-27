@@ -29,7 +29,7 @@ public class CannonCals extends CalSet {
     public double distJog = 0.5;
     public double distJogShift = .25;
     public double angJog = 0.5;
-    public double shootTime = 1.5;
+    public double shootTime = 1.5;//TODO figure out how short this can be
     public double shootCentX = 0.0;
     public double shootCentY = 0.0;
     public double[][] pnuRpm = {{2700.0, 2775.0, 3000.0},

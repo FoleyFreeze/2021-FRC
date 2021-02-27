@@ -141,7 +141,8 @@ public class AutoGather extends CommandBase {
     @Override
     public boolean isFinished(){
         if(auton){
-            return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
+            if(kpOverride) return m_subsystem.m_transporterCW.ballnumber >= 3; //for skills challenge only
+            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
         }
         return false;
     }

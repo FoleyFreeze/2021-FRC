@@ -12,6 +12,9 @@ public class AutonAwardPath extends SequentialCommandGroup{
 
     public AutonAwardPath(RobotContainer subsystem){
         m_subsystem = subsystem;
+        
+        //move and shoot path
+        /*
         for(int i = 0; i < 1; i++){
             addCommands(
                 new ParallelCommandGroup(new AutoShoot(subsystem), new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 185, 0), 
@@ -21,6 +24,33 @@ public class AutonAwardPath extends SequentialCommandGroup{
                 new AutoDrive(subsystem, 30, 185, 0, true)
             );
         }
+        */
+
+        //stationary shoot path
+        Waypoint circleCenter = new Waypoint(90,185,0);
+        Waypoint shootPos2 = new Waypoint(90,125,0);
+        Waypoint shootPos3 = new Waypoint(90,125,0);
+        addCommands(
+            new SequentialCommandGroup(new AutoShoot(subsystem), new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 185, 0), 
+                circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr)), 
+            new AutoDrive(subsystem, 150, 330, 0, true),
+            new AutoGather(subsystem, false, true),
+            new AutoDrive(subsystem, 30, 185, 0, true)
+        );
+        addCommands(
+            new SequentialCommandGroup(new AutoArcDrive(subsystem, new Circle(shootPos2, 
+                circleCenter), true, subsystem.m_drivetrain.k.autoDriveMaxPwr),
+                new AutoShoot(subsystem), new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 185, 0), 
+                circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr)), 
+            new AutoDrive(subsystem, 150, 330, 0, true),
+            new AutoGather(subsystem, false, true),
+            new AutoDrive(subsystem, 30, 185, 0, true)
+        );
+        addCommands(
+            new SequentialCommandGroup(new AutoArcDrive(subsystem, new Circle(shootPos3, 
+                circleCenter), true, subsystem.m_drivetrain.k.autoDriveMaxPwr),
+                new AutoShoot(subsystem)
+        );
     }
 
     @Override

@@ -172,7 +172,7 @@ public class AutoShoot extends CommandBase{
             Vector displacement = new Vector(-vel.r * time, vel.theta);
             Vector out = Vector.add(tgt,displacement);
             SmartDashboard.putNumber("VelOffset",Math.toDegrees(Util.angleDiffRad(out.theta, tgt.theta)));
-
+            
             return out;
         } else{
             return tgt;

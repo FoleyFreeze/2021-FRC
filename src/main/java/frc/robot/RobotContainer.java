@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoArcDrive;
 import frc.robot.commands.AutoDrive;
 import frc.robot.commands.AutoGather;
 import frc.robot.commands.AutoPath;
@@ -85,6 +86,7 @@ public class RobotContainer {
     autonChooser.addOption("AutoSquare", new AutonSquare(this));
     autonChooser.addOption("AutoPath", new NewAutoPath(this, "CircleTest.txt"));
     autonChooser.addOption("AutonAward", new AutonAwardPath(this));
+//    autonChooser.addOption("AutoArc", new AutoArcDrive(this, ));
     SmartDashboard.putData(autonChooser);
   }
 
