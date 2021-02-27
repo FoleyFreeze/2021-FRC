@@ -19,14 +19,14 @@ public class CannonCals extends CalSet {
     public double manualPower = 0.5;
     public double kPDrive = 0.015;
     public double kDDrive = -0.002;
-    public double maxRot = 0.2;
-    public double tolerance = 3.0;
+    public double maxRot = 0.4;
+    public double tolerance = 1.0;//in degrees
     public double initShootSpeed = 4000;
     public double initJogDist = 0.0;
     public double initJogAng = 0.0;
     public double distJog = 0.5;
     public double distJogShift = .25;
-    public double angJog = 1.0;
+    public double angJog = 0.5;
     public double shootTime = 1.5;
     public double shootCentX = 0.0;
     public double shootCentY = 0.0;

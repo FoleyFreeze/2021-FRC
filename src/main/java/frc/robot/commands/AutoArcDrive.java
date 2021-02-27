@@ -32,7 +32,8 @@ public class AutoArcDrive extends CommandBase{
 
     public AutoArcDrive(RobotContainer subsystem, Circle circle, boolean stop, double maxPwr){
         m_subsystem = subsystem;
-        tgtCirc.add(1, circle);
+        tgtCirc = new ArrayList<>();
+        tgtCirc.add(circle);
         addRequirements(m_subsystem.m_driveStrafe);
         botPos = m_subsystem.m_drivetrain.drivePos;
         k = m_subsystem.m_drivetrain.k;

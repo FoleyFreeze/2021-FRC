@@ -66,14 +66,15 @@ public class AutoShoot extends CommandBase{
             double rotError = Util.angleDiff(image.angle + m_cals.initJogAng, robotAngleDiff);
             */
 
-            Vector toTarget = new Vector(image.dist, Math.toRadians(image.angle + image.robotangle));
+            double jog = m_subsystem.m_cannonClimber.shootCals.initJogAng;
+            Vector toTarget = new Vector(image.dist, Math.toRadians(image.angle + image.robotangle + jog));
             toTarget = applyLatencyOffset(toTarget, image);
             toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
             toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
 
             //error = rotError;
             //dist = image.dist;
-            error = Util.angleDiff(botAngle, Math.toDegrees(toTarget.theta));
+            error = Util.angleDiff(Math.toDegrees(toTarget.theta), botAngle);
             dist = toTarget.r;
             
             double deltaAngle = Util.angleDiff(botAngle, prevRobotAngle);

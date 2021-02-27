@@ -120,6 +120,8 @@ public class TransporterCW extends SubsystemBase{
             CWNotTransport.set(false);
         }
 
+        SmartDashboard.putBoolean("RevolverJammed",prevJammed);
+
         /*if(Timer.getFPGATimestamp() > jamTime){
             if(prevJammed) {
                 index(1);

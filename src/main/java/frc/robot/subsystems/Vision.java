@@ -30,6 +30,9 @@ public class Vision extends SubsystemBase{
 
     RobotContainer m_subsystem;
 
+    NetworkTable piTable;
+    NetworkTable visionTable;
+
     public Vision(VisionCals cals, RobotContainer subsystem){
         targetData = new LimitedList<>(cals.historySize);
         ballData = new LimitedList<>(cals.historySize);
@@ -57,9 +60,10 @@ public class Vision extends SubsystemBase{
 
     private void addNTListener(){
         NetworkTableInstance.getDefault().setUpdateRate(0.03);
-        NetworkTable nt = NetworkTableInstance.getDefault().getTable("Vision");
+        visionTable = NetworkTableInstance.getDefault().getTable("Vision");
+        piTable = NetworkTableInstance.getDefault().getTable("Pi");
 
-        nt.addEntryListener("Target", (table, key, entry, value, flags) -> {
+        visionTable.addEntryListener("Target", (table, key, entry, value, flags) -> {
             try{
                 VisionData vd = new VisionData();
                 String data = value.getString();
@@ -88,7 +92,7 @@ public class Vision extends SubsystemBase{
 
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         
-        nt.addEntryListener("Ball", (table, key, entry, value, flags) -> {
+        visionTable.addEntryListener("Ball", (table, key, entry, value, flags) -> {
             try{
                 VisionData vd = new VisionData();
                 String data = value.getString();
@@ -118,18 +122,20 @@ public class Vision extends SubsystemBase{
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
+    @Override
+    public void periodic(){
+        piTable.getInstance().getEntry("Timer").setDouble(Timer.getFPGATimestamp());
+    }
+
     public void NTEnablePiTgt(boolean set){
-        NetworkTable nt = NetworkTableInstance.getDefault().getTable("Pi");
-        nt.getInstance().getEntry("Tgt Enable").setBoolean(set);
+        piTable.getInstance().getEntry("Tgt Enable").setBoolean(set);
     }
 
     public void NTEnablePiBall(boolean set){
-        NetworkTable nt = NetworkTableInstance.getDefault().getTable("Pi");
-        nt.getInstance().getEntry("Ball Enable").setBoolean(set);
+        piTable.getInstance().getEntry("Ball Enable").setBoolean(set);
     }
 
     public void NTEnablePiCones(boolean set){
-        NetworkTable nt = NetworkTableInstance.getDefault().getTable("Pi");
-        nt.getInstance().getEntry("Cone Enable").setBoolean(set);
+        piTable.getInstance().getEntry("Cone Enable").setBoolean(set);
     }
 }
