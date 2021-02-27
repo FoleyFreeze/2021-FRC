@@ -18,6 +18,7 @@ public class AutoShoot extends CommandBase{
     public double shootFinTime;
     double prevRobotAngle;
     double prevTime;
+    double sumError;
     public boolean masked;
     public double rot;
     public double centX = 0;
@@ -49,7 +50,8 @@ public class AutoShoot extends CommandBase{
         
         auton = DriverStation.getInstance().isAutonomous();
         prevRobotAngle = m_subsystem.m_drivetrain.robotAng;
-        prevTime = 0;
+        prevTime = Timer.getFPGATimestamp();
+        sumError = 0;
     }
 
     @Override
@@ -79,8 +81,13 @@ public class AutoShoot extends CommandBase{
             
             double deltaAngle = Util.angleDiff(botAngle, prevRobotAngle);
 
-            double d = (deltaAngle)/(time - prevTime);
-            rot = error * m_cals.kPDrive - d * m_cals.kDDrive;
+            double dt = (time - prevTime);
+            double d = deltaAngle / dt;
+            sumError += error * dt;
+            if(Math.abs(sumError) > m_cals.maxI){
+                sumError = m_cals.maxI * Math.signum(sumError);
+            }
+            rot = error * m_cals.kPDrive - d * m_cals.kDDrive + sumError * m_cals.kIDrive;
 
             if(rot > m_cals.maxRot) rot = m_cals.maxRot;
             else if(rot < -m_cals.maxRot) rot = -m_cals.maxRot;

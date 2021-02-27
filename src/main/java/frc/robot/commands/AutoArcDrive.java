@@ -15,7 +15,7 @@ public class AutoArcDrive extends CommandBase{
     RobotContainer m_subsystem;
     ArrayList<Circle> tgtCirc;
     Pose2d botPos;
-    int idx = 1;
+    int idx = 0;
     DriverCals k;
     boolean stop;
     double maxPwr;
@@ -55,40 +55,45 @@ public class AutoArcDrive extends CommandBase{
 
     @Override
     public void execute(){
-        Circle tgt = tgtCirc.get(idx);
-        botPos = m_subsystem.m_drivetrain.drivePos;
-        Vector tan;
+        if(idx < tgtCirc.size()){
 
-        tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), circAng));
-        Vector radial = Vector.fromXY(tgt.getCentX()-botPos.getX(), tgt.getCentY()-botPos.getY());
+            Circle tgt = tgtCirc.get(idx);
+            botPos = m_subsystem.m_drivetrain.drivePos;
+            Vector tan;
 
-        //finishes segment when error less than cal and sign change
-        double angError = Util.angleDiffRad(radial.theta+Math.PI, tgt.angleofEnd());
-        tgtReached = Math.abs(angError) < k.minAngDiffAuto && prevSign != Math.signum(angError);
-        prevSign = Math.signum(angError);
+            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), circAng));
+            Vector radial = Vector.fromXY(tgt.getCentX()-botPos.getX(), tgt.getCentY()-botPos.getY());
 
-        //apply correction for being too far/close from the center
-        radial.r -= tgt.radius;
-        radial.r*= k.circKp;
-        //apply correction depending on how fast we are moving
-        radial.r += k.lookAheadCurve*(k.autoDriveMaxPwr/tgt.radius);
+            //finishes segment when error less than cal and sign change
+            double angError = Util.angleDiffRad(radial.theta+Math.PI, tgt.angleofEnd());
+            tgtReached = Math.abs(angError) < k.minAngDiffAuto && prevSign != Math.signum(angError);
+            prevSign = Math.signum(angError);
 
-        tan.add(radial);
+            //apply correction for being too far/close from the center
+            radial.r -= tgt.radius;
+            radial.r*= k.circKp;
+            //apply correction depending on how fast we are moving
+            radial.r += k.lookAheadCurve*(k.autoDriveMaxPwr/tgt.radius);
 
-        tan.r = k.autoDriveMaxPwr;
-        if(tgtReached){//If the target is close enough
-            idx++;
-            prevSign = 0;
-        } else{//If the target isn't reached or close enough
-            circAng = tan.theta;    
-            m_subsystem.m_drivetrain.drive(tan, 0);
+            tan.add(radial);
+
+            tan.r = k.autoDriveMaxPwr;
+            if(tgtReached){//If the target is close enough
+                idx++;
+                prevSign = 0;
+            } else{//If the target isn't reached or close enough
+                circAng = tan.theta;    
+                m_subsystem.m_drivetrain.driveStrafe(tan, k.autoDriveMaxPwr);
+            }
+        } else {
+            m_subsystem.m_drivetrain.driveStrafe(new Vector(0,0), k.autoDriveMaxPwr);
         }
     }
 
     @Override
     public void end(boolean interrupted){
         if(stop){
-            m_subsystem.m_drivetrain.drive(new Vector(0,0), 0);
+            m_subsystem.m_drivetrain.driveStrafe(new Vector(0,0), k.autoDriveMaxPwr);
         }
     }
 

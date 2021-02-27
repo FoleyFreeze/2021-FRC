@@ -17,30 +17,33 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.cals.CalSet;
+import frc.robot.commands.AutoArcDrive;
 import frc.robot.commands.AutoPath;
+import frc.robot.commands.AutonAwardPath;
 import frc.robot.commands.NewAutoPath;
 import frc.robot.subsystems.Display;
+import frc.robot.util.Circle;
 import frc.robot.util.Waypoint;
 
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  private RobotContainer m_subsystem;
 
   @Override
   public void robotInit() {
     Display.init();
     CalSet.identifyBot();
     
-    m_robotContainer = new RobotContainer();
+    m_subsystem = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
     double time = Timer.getFPGATimestamp();
-    m_robotContainer.dt = time - lastTime;
-    Display.put("DT", m_robotContainer.dt);
+    m_subsystem.dt = time - lastTime;
+    Display.put("DT", m_subsystem.dt);
     lastTime = time;
     
     CommandScheduler.getInstance().run();
@@ -59,12 +62,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_subsystem.getAutonomousCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule(false);
     }
 
-    m_robotContainer.m_transporterCW.autonInit();
+    m_subsystem.m_transporterCW.autonInit();
   }
 
   @Override
@@ -76,12 +79,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    if(m_robotContainer.m_drivetrain.getBrake()){
-      m_robotContainer.m_drivetrain.setBrake(false);
+    if(m_subsystem.m_drivetrain.getBrake()){
+      m_subsystem.m_drivetrain.setBrake(false);
     }
 
     //sets cals based on connected controller (flysky vs xbox) 
-    m_robotContainer.m_input.onInit();
+    m_subsystem.m_input.onInit();
   }
 
   @Override
@@ -179,6 +182,20 @@ public class Robot extends TimedRobot {
     System.out.println(pathTest.tgtPt);
 
     System.exit(0);
+    */
+
+    /*AutoArcDrive aap = new AutoArcDrive(m_subsystem, new Circle(new Waypoint(150, 185, 0), new Waypoint(90, 185, 0)), false, 1);
+
+    aap.initialize();
+
+    m_subsystem.m_drivetrain.drivePos = new Pose2d(90, 125, new Rotation2d());
+    aap.execute();
+
+    m_subsystem.m_drivetrain.drivePos = new Pose2d(150-Math.sqrt(2)/2*60, 185+Math.sqrt(2)/2*60, new Rotation2d());
+    aap.execute();
+
+    m_subsystem.m_drivetrain.drivePos = new Pose2d(150, 185, new Rotation2d());
+    aap.execute();
     */
   }
 
