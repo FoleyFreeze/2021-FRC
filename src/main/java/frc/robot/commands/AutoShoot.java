@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.cals.CannonCals;
@@ -87,6 +88,9 @@ public class AutoShoot extends CommandBase{
             if(Math.abs(sumError) > m_cals.maxI){
                 sumError = m_cals.maxI * Math.signum(sumError);
             }
+            if(Math.signum(sumError) != Math.signum(error)){
+                sumError = 0;
+            }
             rot = error * m_cals.kPDrive - d * m_cals.kDDrive + sumError * m_cals.kIDrive;
 
             if(rot > m_cals.maxRot) rot = m_cals.maxRot;
@@ -166,7 +170,10 @@ public class AutoShoot extends CommandBase{
         if(cc.enableVelOffset){
             double time = Util.interpolate(cc.flightTime, cc.screwDist, tgt.r);
             Vector displacement = new Vector(-vel.r * time, vel.theta);
-            return tgt.add(displacement);
+            Vector out = Vector.add(tgt,displacement);
+            SmartDashboard.putNumber("VelOffset",Math.toDegrees(Util.angleDiffRad(out.theta, tgt.theta)));
+
+            return out;
         } else{
             return tgt;
         }

@@ -17,10 +17,10 @@ public class CannonCals extends CalSet {
     public double trenchDist = 208.75;
     public double autonDist = 83;
     public double manualPower = 0.5;
-    public double kPDrive = 0.015;
-    public double kDDrive = -0.002;
-    public double kIDrive = 0.01;
-    public double maxI = 0.02 / kIDrive;
+    public double kPDrive = 0.013;
+    public double kDDrive = -0.0015;
+    public double kIDrive = 0.035;
+    public double maxI = 0.08 / kIDrive;
     public double maxRot = 0.4;
     public double tolerance = 1.0;//in degrees
     public double initShootSpeed = 4000;
@@ -49,7 +49,8 @@ public class CannonCals extends CalSet {
     public double[] screwDist = {0, 44, 96, 156};
     public double[] screwRpm = {2800, 3100, 3675, 4000};
     public double[] screwHoodHeight = {0.0, 0.5, 2, 2.5};
-    public double[] flightTime = {0.5, 0.7, 0.9, 1};//screwDist is the axis
+    double x = 0.1;
+    public double[] flightTime = {0.4+x, 0.45+x, 0.5+x, 0.7+x};
     public double maxScrewHeight = 5;
     public double minScrewHeight = 0;
     public boolean enableVelOffset = false;

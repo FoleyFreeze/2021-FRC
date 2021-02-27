@@ -112,8 +112,7 @@ public class Drivetrain extends SubsystemBase{
             turnMotor.setPosition(targetTicks);
         }
 
-        public SwerveModuleState getState(){
-            double time = Timer.getFPGATimestamp();
+        public SwerveModuleState getState(double dt){
             double pos = -driveMotor.getPosition();
             Rotation2d wheelAng; 
             if(cals.analogVTicks){
@@ -122,9 +121,8 @@ public class Drivetrain extends SubsystemBase{
                 wheelAng = new Rotation2d(turnMotor.getPosition()/k.turnTicksPerRev*2*Math.PI + initialAng);
             }
             
-            double velocity = (pos - prevPos)/(time - prevTime) / k.driveInPerTick * k.wheelDiam[idx];
+            double velocity = (pos - prevPos)/dt / k.driveInPerTick * k.wheelDiam[idx];
             
-            prevTime = time;
             prevPos = pos;
             
             state.speedMetersPerSecond = velocity;
@@ -350,6 +348,7 @@ public class Drivetrain extends SubsystemBase{
         return distSens.getRight();
     }
 
+    double prevTime = Timer.getFPGATimestamp();
     public void periodic(){
         if(k.disabled) return;
         
@@ -371,12 +370,15 @@ public class Drivetrain extends SubsystemBase{
         Rotation2d robotRot2d = new Rotation2d(Math.toRadians(robotAng)/* - Math.PI/2*/);
         Display.put("NavX Ang", robotAng);
 
-        SwerveModuleState s1 = wheels[0].getState();
-        SwerveModuleState s2 = wheels[1].getState();
-        SwerveModuleState s3 = wheels[2].getState();
-        SwerveModuleState s4 = wheels[3].getState();
+        double time = Timer.getFPGATimestamp();
+        double dt = time - prevTime;
+        prevTime = time;
+        SwerveModuleState s1 = wheels[0].getState(dt);
+        SwerveModuleState s2 = wheels[1].getState(dt);
+        SwerveModuleState s3 = wheels[2].getState(dt);
+        SwerveModuleState s4 = wheels[3].getState(dt);
         drivePos = driveOdom.update(robotRot2d, s1, s2, s3, s4);
-        recentVelocity = getDriveVel(drivePos);
+        recentVelocity = getDriveVel(drivePos, dt);
 
         double x = drivePos.getTranslation().getX();
         double y = drivePos.getTranslation().getY();
@@ -408,11 +410,18 @@ public class Drivetrain extends SubsystemBase{
     }
 
     Pose2d prevPos = new Pose2d();
-    public Vector getDriveVel(Pose2d pos){
+
+    double avgx;
+    double avgy;
+    double w = 0.7;
+    public Vector getDriveVel(Pose2d pos, double dt){
         double dx = pos.getX() - prevPos.getX();
         double dy = pos.getY() - prevPos.getY();
-
         prevPos = pos;
-        return Vector.fromXY(dx/0.02, dy/.02);
+
+        avgx = w*avgx + (1-w)*dx;
+        avgy = w*avgy + (1-w)*dy;
+
+        return Vector.fromXY(avgx/dt, avgy/dt);
     }
 }
