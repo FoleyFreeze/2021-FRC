@@ -14,17 +14,18 @@ public class AutonAwardPath extends SequentialCommandGroup{
         m_subsystem = subsystem;
         for(int i = 0; i < 1; i++){
             addCommands(
-                new ParallelCommandGroup(new AutoShoot(subsystem), new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 195, 0), 
+                new ParallelCommandGroup(new AutoShoot(subsystem), new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 185, 0), 
                     new Waypoint(90, 195, 0)), false, subsystem.m_drivetrain.k.autoDriveMaxPwr)), 
                 new AutoDrive(subsystem, 150, 330, 0, true),
                 new AutoGather(subsystem, false, true),
-                new AutoDrive(subsystem, 30, 195, 0, true)
+                new AutoDrive(subsystem, 30, 185, 0, true)
             );
         }
     }
 
     @Override
     public void initialize(){
+        super.initialize();
         m_subsystem.m_drivetrain.setStartPosition(90, 125);
     }
 }
