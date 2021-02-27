@@ -50,7 +50,7 @@ public class CannonCals extends CalSet {
     public double[] flightTime = {0.5, 0.7, 0.9, 1};//screwDist is the axis
     public double maxScrewHeight = 5;
     public double minScrewHeight = 0;
-    public boolean enableVelOffset = true;
+    public boolean enableVelOffset = false;
     public boolean enableLatOffset = false;
 
     public CannonCals(){

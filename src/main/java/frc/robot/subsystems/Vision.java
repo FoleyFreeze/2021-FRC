@@ -24,7 +24,7 @@ public class Vision extends SubsystemBase{
 
     public VisionCals cals;
     public double lastFrameTime;
-    public int lastFrameId;
+    public double lastFrameId;
     public LimitedList<VisionData> targetData;
     public LimitedList<VisionData> ballData;
 
@@ -78,8 +78,8 @@ public class Vision extends SubsystemBase{
                 //SmartDashboard.putNumber("Image dt", dt);
                 Display.put("Image DT", dt);
                 lastFrameTime = vd.timestamp;
-                int id = Integer.parseInt(parts[0]);
-                int dFrame = id - lastFrameId;
+                double id = Double.parseDouble(parts[0]);
+                double dFrame = id - lastFrameId;
                 SmartDashboard.putNumber("Image dFrame", dFrame);
                 lastFrameId = id;
 
@@ -107,8 +107,8 @@ public class Vision extends SubsystemBase{
                 //SmartDashboard.putNumber("Image dt", dt);
                 Display.put("Image DT", dt);
                 lastFrameTime = vd.timestamp;
-                int id = Integer.parseInt(parts[0]);
-                int dFrame = id - lastFrameId;
+                double id = Double.parseDouble(parts[0]);
+                double dFrame = id - lastFrameId;
                 SmartDashboard.putNumber("Image dFrame", dFrame);
                 lastFrameId = id;
 
@@ -124,18 +124,18 @@ public class Vision extends SubsystemBase{
 
     @Override
     public void periodic(){
-        piTable.getInstance().getEntry("Timer").setDouble(Timer.getFPGATimestamp());
+        piTable.getEntry("Timer").setDouble(Timer.getFPGATimestamp());
     }
 
     public void NTEnablePiTgt(boolean set){
-        piTable.getInstance().getEntry("Tgt Enable").setBoolean(set);
+        piTable.getEntry("Tgt Enable").setBoolean(set);
     }
 
     public void NTEnablePiBall(boolean set){
-        piTable.getInstance().getEntry("Ball Enable").setBoolean(set);
+        piTable.getEntry("Ball Enable").setBoolean(set);
     }
 
     public void NTEnablePiCones(boolean set){
-        piTable.getInstance().getEntry("Cone Enable").setBoolean(set);
+        piTable.getEntry("Cone Enable").setBoolean(set);
     }
 }
