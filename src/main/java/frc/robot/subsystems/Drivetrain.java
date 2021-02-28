@@ -317,6 +317,7 @@ public class Drivetrain extends SubsystemBase{
 
     public void driveStrafe(Vector strafePwr, double maxPwr){
         strafeGood = true;
+        SmartDashboard.putString("StrafeCmd",strafePwr.toString());
         if(rotGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr));
         this.strafePwr = strafePwr;
         this.maxPwr = maxPwr;

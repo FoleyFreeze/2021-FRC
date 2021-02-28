@@ -49,7 +49,7 @@ public class AutoArcDrive extends CommandBase{
     public void initialize(){
         if(tgtCirc.isEmpty()) return;
         prevSign = 0;
-        circAng = 0;//Math.PI/2;
+        circAng = 0.1;//Math.PI/2;
         m_subsystem.m_drivetrain.setBrake(false); //unset brake mode if it was set
         first = true;
     }
