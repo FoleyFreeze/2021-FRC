@@ -33,7 +33,7 @@ public class AutoDrive extends CommandBase{
         this.deltaX = deltaX;
         this.deltaY = deltaY;
         this.tgtRot = angle;
-        this.deltaVsField = deltaVsField;//if false, it's delta
+        this.deltaVsField = deltaVsField;//if true, it's delta
     }
 
     @Override

@@ -71,9 +71,9 @@ public class AutoShoot extends CommandBase{
 
             double jog = m_subsystem.m_cannonClimber.shootCals.initJogAng;
             Vector toTarget = new Vector(image.dist, Math.toRadians(image.angle + image.robotangle + jog));
-            toTarget = applyLatencyOffset(toTarget, image);
-            toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
-            toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
+            //toTarget = applyLatencyOffset(toTarget, image);
+            //toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
+            //toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
 
             //error = rotError;
             //dist = image.dist;
@@ -145,6 +145,7 @@ public class AutoShoot extends CommandBase{
 
     @Override
     public boolean isFinished(){
+        SmartDashboard.putNumber("shootFinTime",shootFinTime - Timer.getFPGATimestamp());
         if(auton) return Timer.getFPGATimestamp() >= shootFinTime && m_subsystem.m_transporterCW.ballnumber == 0;
         return false;
     }

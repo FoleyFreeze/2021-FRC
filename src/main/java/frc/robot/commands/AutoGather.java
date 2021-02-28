@@ -17,6 +17,7 @@ public class AutoGather extends CommandBase {
     public boolean kpOverride;
     public Vector strafe;
     public double maxPower;
+    int ballCount;
 
     public AutoGather(RobotContainer subsystem, boolean masked, boolean kpOverride){
         m_subsystem = subsystem;
@@ -25,7 +26,8 @@ public class AutoGather extends CommandBase {
             addRequirements(m_subsystem.m_intake);
             addRequirements(m_subsystem.m_driveStrafe);
         }
-        this.kpOverride = kpOverride;
+        //this.kpOverride = kpOverride;
+        this.kpOverride = true;
     }
 
     public AutoGather(RobotContainer subsystem){
@@ -40,6 +42,8 @@ public class AutoGather extends CommandBase {
 
         prevBotAngle = m_subsystem.m_drivetrain.robotAng;
         prevPose = m_subsystem.m_drivetrain.drivePos;
+
+        ballCount = m_subsystem.m_transporterCW.ballnumber;
     }
 
     private double prevBotAngle;
@@ -66,19 +70,41 @@ public class AutoGather extends CommandBase {
             
             double x = ballData.dist * Math.sin(Math.toRadians(rotError));
             double y = ballData.dist * Math.cos(Math.toRadians(rotError));
-            double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
-            if(Math.abs(x) < 2){//constant is in inches
-                x = 2 * Math.signum(x);
-            }
-            y -= Math.abs(xFactor*x);
             
             if(!kpOverride){
+                double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
+                if(Math.abs(x) < 2){//constant is in inches
+                    x = 2 * Math.signum(x);
+                }
+                y -= Math.abs(xFactor*x);
+
                 double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
                 strafe = Vector.fromXY(-y*kp, x*kp);
             } else{
-                double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
-                if(distError < m_subsystem.m_drivetrain.k.autoBallMinDist){
-                    strafe = Vector.fromXY(-y*kp, 0);
+
+                if(distError > 48){
+                    /*
+                    double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
+                    if(Math.abs(x) < 2){//constant is in inches
+                        x = 2 * Math.signum(x);
+                    }
+                    y -= Math.abs(xFactor*x);
+                    
+                    double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
+                    if(distError < m_subsystem.m_drivetrain.k.autoBallMinDist){
+                        strafe = Vector.fromXY(0, x*kp);
+                    } else {*/
+                        strafe = new Vector(0,0);
+                    //}
+                } else {
+                    double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
+                    if(Math.abs(x) < 2){//constant is in inches
+                        x = 2 * Math.signum(x);
+                    }
+                    y -= Math.abs(xFactor*x);
+
+                    double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
+                    strafe = Vector.fromXY(-y*kp, x*kp);
                 }
             }
 
@@ -141,7 +167,7 @@ public class AutoGather extends CommandBase {
     @Override
     public boolean isFinished(){
         if(auton){
-            if(kpOverride) return m_subsystem.m_transporterCW.ballnumber >= 3; //for skills challenge only
+            if(kpOverride) return m_subsystem.m_transporterCW.ballnumber > ballCount; //for skills challenge only
             else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
         }
         return false;

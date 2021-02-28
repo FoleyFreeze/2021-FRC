@@ -20,7 +20,7 @@ public class CannonCals extends CalSet {
     public double kPDrive = 0.013;
     public double kDDrive = -0.0015;
     public double kIDrive = 0.035;
-    public double maxI = 0.08 / kIDrive;
+    public double maxI = 0.1 / kIDrive;
     public double maxRot = 0.4;
     public double tolerance = 1.0;//in degrees
     public double initShootSpeed = 4000;
@@ -46,11 +46,11 @@ public class CannonCals extends CalSet {
     public boolean pneumaticHood = false;
     public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.1, 0.0001, 0.0, 0).iLim(2).limit(0.3).resetEnc(false).invert();//.brake();
     public double hoodTicksPerInch = 4 * 30/8.0; //30 revs in 8 in * gear ratio of 4:1
-    public double[] screwDist = {0, 44, 96, 156};
-    public double[] screwRpm = {2800, 3100, 3675, 4000};
-    public double[] screwHoodHeight = {0.0, 0.5, 2, 2.5};
-    double x = 0.1;
-    public double[] flightTime = {0.4+x, 0.45+x, 0.5+x, 0.7+x};
+    public double[] screwDist = {0, 44, 96, 156, 214};
+    public double[] screwRpm = {2800, 3100, 3675, 4000, 4800};
+    public double[] screwHoodHeight = {0.0, 0.5, 2, 2.5, 3.5};
+    double x = 0.0;
+    public double[] flightTime = {0.4+x, 0.45+x, 0.5+x, 0.7+x, 0.8+x};
     public double maxScrewHeight = 5;
     public double minScrewHeight = 0;
     public boolean enableVelOffset = false;

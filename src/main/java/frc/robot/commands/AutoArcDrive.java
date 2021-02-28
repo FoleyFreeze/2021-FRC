@@ -33,9 +33,9 @@ public class AutoArcDrive extends CommandBase{
     public AutoArcDrive(RobotContainer subsystem, Circle circle, boolean stop, double maxPwr){
         m_subsystem = subsystem;
         tgtCirc = new ArrayList<>();
+        botPos = m_subsystem.m_drivetrain.drivePos;
         tgtCirc.add(circle);
         addRequirements(m_subsystem.m_driveStrafe);
-        botPos = m_subsystem.m_drivetrain.drivePos;
         k = m_subsystem.m_drivetrain.k;
         this.stop = stop;
         this.maxPwr = maxPwr;
@@ -43,13 +43,15 @@ public class AutoArcDrive extends CommandBase{
 
     double prevSign;
     double circAng;
+    boolean first;
 
     @Override
     public void initialize(){
         if(tgtCirc.isEmpty()) return;
         prevSign = 0;
-        circAng = Math.PI/2;
+        circAng = 0;//Math.PI/2;
         m_subsystem.m_drivetrain.setBrake(false); //unset brake mode if it was set
+        first = true;
     }
 
     boolean tgtReached = false;
@@ -67,7 +69,7 @@ public class AutoArcDrive extends CommandBase{
 
             //finishes segment when error less than cal and sign change
             double angError = Util.angleDiffRad(radial.theta+Math.PI, tgt.angleofEnd());
-            tgtReached = Math.abs(angError) < k.minAngDiffAuto && prevSign != Math.signum(angError);
+            tgtReached = !first && Math.abs(angError) < k.minAngDiffAuto && prevSign != Math.signum(angError);
             prevSign = Math.signum(angError);
 
             //apply correction for being too far/close from the center
@@ -84,17 +86,22 @@ public class AutoArcDrive extends CommandBase{
                 prevSign = 0;
             } else{//If the target isn't reached or close enough
                 circAng = tan.theta;    
-                m_subsystem.m_drivetrain.driveStrafe(tan, k.autoDriveMaxPwr);
+                //m_subsystem.m_drivetrain.driveStrafe(tan, k.autoDriveMaxPwr);
+                m_subsystem.m_drivetrain.drive(tan, 0, k.autoDriveMaxPwr);
             }
+
+            first = false;
         } else {
-            m_subsystem.m_drivetrain.driveStrafe(new Vector(0,0), k.autoDriveMaxPwr);
+            //m_subsystem.m_drivetrain.driveStrafe(new Vector(0,0), k.autoDriveMaxPwr);
+            m_subsystem.m_drivetrain.drive(new Vector(0,0), 0, k.autoDriveMaxPwr);
         }
     }
 
     @Override
     public void end(boolean interrupted){
         if(stop){
-            m_subsystem.m_drivetrain.driveStrafe(new Vector(0,0), k.autoDriveMaxPwr);
+            //m_subsystem.m_drivetrain.driveStrafe(new Vector(0,0), k.autoDriveMaxPwr);
+            m_subsystem.m_drivetrain.drive(new Vector(0,0), 0, k.autoDriveMaxPwr);
         }
     }
 

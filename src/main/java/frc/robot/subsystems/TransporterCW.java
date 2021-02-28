@@ -104,12 +104,12 @@ public class TransporterCW extends SubsystemBase{
 
             //TODO: This should only be 3 for the skills challenge
             //but probably doesn't matter that much overall
-            ballnumber = 5;
-            ballpositions[0] = true;
+            ballnumber = 3;
+            ballpositions[0] = false;
             ballpositions[1] = true;
             ballpositions[2] = true;
             ballpositions[3] = true;
-            ballpositions[4] = true;
+            ballpositions[4] = false;
         }
 
         //gameData = gameDataList.getFirst();
