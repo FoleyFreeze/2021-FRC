@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -44,10 +45,12 @@ public class AutoGather extends CommandBase {
         prevPose = m_subsystem.m_drivetrain.drivePos;
 
         ballCount = m_subsystem.m_transporterCW.ballnumber;
+        prevBallPos = null; //ensure we forget old ball data
     }
 
     private double prevBotAngle;
     private Pose2d prevPose;
+    Pose2d ballIntersect;
 
     @Override
     public void execute(){
@@ -83,28 +86,36 @@ public class AutoGather extends CommandBase {
             } else{
 
                 if(distError > 48){
-                    /*
-                    double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
-                    if(Math.abs(x) < 2){//constant is in inches
-                        x = 2 * Math.signum(x);
-                    }
-                    y -= Math.abs(xFactor*x);
-                    
-                    double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
-                    if(distError < m_subsystem.m_drivetrain.k.autoBallMinDist){
-                        strafe = Vector.fromXY(0, x*kp);
-                    } else {*/
-                        strafe = new Vector(0,0);
-                    //}
-                } else {
-                    double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
-                    if(Math.abs(x) < 2){//constant is in inches
-                        x = 2 * Math.signum(x);
-                    }
-                    y -= Math.abs(xFactor*x);
+                    Vector out = ballPredict(ballData);
+                    SmartDashboard.putNumber("BallIntercept", out.r);
+                    ballIntersect = new Pose2d(botPos.getX() + out.getX(), botPos.getY() + out.getY(), new Rotation2d());
 
-                    double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
-                    strafe = Vector.fromXY(-y*kp, x*kp);
+                    strafe = new Vector(0,0);
+                } else {
+                    if(ballIntersect != null){
+                        //PID to it
+                        double kp = 0.3 / 12.0;
+                        double kd = 0.0;
+
+                        double errorX = botPos.getX() - ballIntersect.getX();
+                        double errorY = botPos.getY() - ballIntersect.getY();
+
+                        double dt = m_subsystem.m_drivetrain.dt;
+                        double dErrorX = (botPos.getX() - prevPose.getX()) / dt;
+                        double dErrorY = (botPos.getY() - prevPose.getY()) / dt;
+
+                        double pX = errorX * kp - dErrorX * kd;
+                        double pY = errorY * kp - dErrorY * kd;
+                        strafe = Vector.fromXY(pX, pY);
+
+                        //treat as field oriented even when not
+                        if(!m_subsystem.m_input.fieldOrient()){
+                            strafe.theta -= m_subsystem.m_drivetrain.robotAng;
+                        }
+
+                    } else {
+                        strafe = new Vector(0,0);
+                    }
                 }
             }
 
@@ -171,5 +182,27 @@ public class AutoGather extends CommandBase {
             else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
         }
         return false;
+    }
+
+    Vector prevBallPos;
+    double dx;
+    double dy;
+    double m;
+    public Vector ballPredict(VisionData image){
+        double r = image.dist/Math.cos(Math.toRadians(image.angle));
+        Vector ballPos = new Vector(r, Math.toRadians(image.angle));
+        Vector output;
+        if(prevBallPos != null){
+            Vector movement = Vector.subtract(ballPos, prevBallPos);
+            dx = dx*m + (1-m)*movement.getX();
+            dy = dy*m + (1-m)*movement.getY();
+            output = new Vector((image.dist - m_subsystem.m_drivetrain.k.autoBallGthDist)/dy * dx, Math.toRadians(m_subsystem.m_drivetrain.robotAng));
+            m = 0.5;
+        } else{
+            output = new Vector(0, 0);
+            m = 0;
+        }
+        prevBallPos = ballPos;
+        return output;
     }
 }

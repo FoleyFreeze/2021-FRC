@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+
 public class Vector{
     public double r;
     public double theta;
@@ -20,6 +22,10 @@ public class Vector{
         if(x == 0 && y == 0) theta = 0;
         else theta = Math.atan2(y, x);
         return new Vector(r, theta);
+    }
+
+    public static Vector fromPose(Pose2d loc){
+        return Vector.fromXY(loc.getX(), loc.getY());
     }
 
     public void scaleNorm(){
@@ -73,7 +79,26 @@ public class Vector{
         return output.add(v2);
     }
 
+    public Vector subtract(Vector v){
+        this.inverse();
+        this.add(v);
+        return this.inverse();
+    }
+
+    public static Vector subtract(Vector v1, Vector v2){
+        Vector out = new Vector(v2);
+        return out.inverse().add(v1);
+    }
+
     public String toString(){
         return String.format("%.2f, %.0f", r, Math.toDegrees(theta));
+    }
+
+    public double getX(){
+        return r * Math.cos(theta);
+    }
+
+    public double getY(){
+        return r * Math.sin(theta);
     }
 }

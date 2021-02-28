@@ -348,6 +348,7 @@ public class Drivetrain extends SubsystemBase{
         return distSens.getRight();
     }
 
+    public double dt;
     double prevTime = Timer.getFPGATimestamp();
     public void periodic(){
         if(k.disabled) return;
@@ -371,7 +372,7 @@ public class Drivetrain extends SubsystemBase{
         Display.put("NavX Ang", robotAng);
 
         double time = Timer.getFPGATimestamp();
-        double dt = time - prevTime;
+        dt = time - prevTime;
         prevTime = time;
         SwerveModuleState s1 = wheels[0].getState(dt);
         SwerveModuleState s2 = wheels[1].getState(dt);
