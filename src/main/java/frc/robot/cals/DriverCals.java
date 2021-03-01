@@ -43,7 +43,7 @@ public class DriverCals extends CalSet {
     public double autoBallAngKd = 20/60;
     public double autoBallMaxD = 120;
     public double autoBallDistKp = .30/12;//20% power applied at 12"
-    public double autoBallMaxPwr = .3;//5;
+    public double autoBallMaxPwr = .6;//5;
     public double autoBallDistKd = 0;
     public double autoBallGthDist = 10;//distance the gatherer sticks out(inches)
     public double autoBallMinDist = 60;//only used for auton award routine for autogather
@@ -53,7 +53,7 @@ public class DriverCals extends CalSet {
     public double autoDriveAngKp = 0.02; //50deg is full power
     public double autoDriveStrafeRange = 5;
     public double autoDriveAngRange = 5;
-    public double autoDriveMaxPwr = 0.2;
+    public double autoDriveMaxPwr = 0.4;
     public double autoDriveStartPwr = 0.15;
     public double autoDriveEndPwr = 0.15;
     public double autoDriveStartDist = 36;

@@ -59,7 +59,7 @@ public class Vision extends SubsystemBase{
     }
 
     private void addNTListener(){
-        NetworkTableInstance.getDefault().setUpdateRate(0.01);
+        NetworkTableInstance.getDefault().setUpdateRate(.03);
         visionTable = NetworkTableInstance.getDefault().getTable("Vision");
         piTable = NetworkTableInstance.getDefault().getTable("Pi");
 
@@ -90,7 +90,7 @@ public class Vision extends SubsystemBase{
                 e.printStackTrace();
             }
 
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate);
         
         visionTable.addEntryListener("Ball", (table, key, entry, value, flags) -> {
             try{
@@ -119,7 +119,7 @@ public class Vision extends SubsystemBase{
                 e.printStackTrace();
             }
 
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate | EntryListenerFlags.kImmediate);
     }
 
     @Override

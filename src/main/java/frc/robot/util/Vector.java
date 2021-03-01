@@ -102,6 +102,10 @@ public class Vector{
         return String.format("%.2f, %.0f", r, Math.toDegrees(theta));
     }
 
+    public String toStringXY(){
+        return String.format("%.2f, %.2f", getX(), getY());
+    }
+
     public double getX(){
         return r * Math.cos(theta);
     }

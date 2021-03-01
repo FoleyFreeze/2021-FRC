@@ -41,22 +41,24 @@ public class AutonAwardPath extends SequentialCommandGroup{
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
             new AutoDrive(subsystem, 30, 65, 0, false)
         );
-        /*
         addCommands(
-            new SequentialCommandGroup(new AutoArcDrive(subsystem, new Circle(shootPos2, 
-                circleCenter), true, subsystem.m_drivetrain.k.autoDriveMaxPwr),
-                new AutoShoot(subsystem), new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 65, 0), 
-                circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr)), 
-            new AutoDrive(subsystem, 150, -70, 0, false),
-            new AutoGather(subsystem, false, true),
+            new AutoArcDrive(subsystem, new Circle(shootPos2, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),    
+            new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
+            new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 65, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
+            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
+            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
+            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
             new AutoDrive(subsystem, 30, 65, 0, false)
         );
         addCommands(
-            new SequentialCommandGroup(new AutoArcDrive(subsystem, new Circle(shootPos3, 
-                circleCenter), true, subsystem.m_drivetrain.k.autoDriveMaxPwr),
-                new AutoShoot(subsystem)
+            new AutoArcDrive(subsystem, new Circle(shootPos3, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),     
+            new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem))
         );
-        */
+        
+        
     }
 
     @Override

@@ -85,9 +85,17 @@ public class AutoGather extends CommandBase {
                 strafe = Vector.fromXY(-y*kp, x*kp);
             } else{
 
-                if(distError > 70){
+                double errorX = 0;
+                double errorY = 0;
+                if(ballIntersect != null){
+                    errorX = ballIntersect.getX() - botPos.getX();
+                    errorY = ballIntersect.getY() - botPos.getY();
+                }
+
+                if(distError > 80){
                     strafe = new Vector(0,0);
                     prevBallPos = null;
+                    ballIntersect = null;
                 } else if(distError > 40){
                     Vector out = ballPredict(ballData);
                     SmartDashboard.putNumber("BallIntercept", out.r);
@@ -95,14 +103,11 @@ public class AutoGather extends CommandBase {
                     ballIntersect = new Pose2d(botPos.getX() + out.getX(), botPos.getY() + out.getY(), new Rotation2d());
 
                     strafe = new Vector(0,0);
-                } else {
+                } else if (distError > 10 && (Math.abs(errorX) > 1 || Math.abs(errorY) > 1)) {
                     if(ballIntersect != null){
                         //PID to it
-                        double kp = 0.3 / 12.0;
+                        double kp = 0.6 / 12.0;
                         double kd = 0.0;
-
-                        double errorX = ballIntersect.getX() - botPos.getX();
-                        double errorY = ballIntersect.getY() - botPos.getY();
 
                         double dt = m_subsystem.m_drivetrain.dt;
                         double dErrorX = (botPos.getX() - prevPose.getX()) / dt;
@@ -120,6 +125,22 @@ public class AutoGather extends CommandBase {
                     } else {
                         strafe = new Vector(0,0);
                     }
+                } else {
+                    if(prevBallPos != null){
+                        System.out.println(errorX + "," + errorY);
+                        prevBallPos = null;
+                        ballIntersect = null;
+                    }
+
+                    //"normal" ball gathering
+                    double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
+                    if(Math.abs(x) < 2){//constant is in inches
+                        x = 2 * Math.signum(x);
+                    }
+                    y -= Math.abs(xFactor*x);
+
+                    double kp = m_subsystem.m_drivetrain.k.autoBallDistKp;
+                    strafe = Vector.fromXY(-y*kp, x*kp);
                 }
             }
 
@@ -200,14 +221,19 @@ public class AutoGather extends CommandBase {
 
         if(prevBallPos != null){
             Vector movement = Vector.subtract(ballPos, prevBallPos);
-            if(Math.abs(movement.r) >= 10) { //if it has moved a signficant distance
+            if(Math.abs(movement.r) >= 4) { //if it has moved a signficant distance
+                System.out.println(ballPos.toStringXY());
                 dx = dx*m + (1-m)*movement.getX();
                 dy = dy*m + (1-m)*movement.getY();
                 prevBallPos = ballPos;
-                m = 1;
+                m = 0.5;
             }
-
-            output = new Vector((image.dist - m_subsystem.m_drivetrain.k.autoBallGthDist)/(-dx) * dy * 3, Math.toRadians(m_subsystem.m_drivetrain.robotAng) + Math.PI/2);
+            //force robot to overshoot so we always gather w/ leading edge
+            double r2/*d2*/ = (ballPos.getX() - m_subsystem.m_drivetrain.k.autoBallGthDist)/(-dx) * dy + ballPos.getY();
+            if(Math.signum(r2) != Math.signum(ballPos.getY())){
+                r2 += Math.signum(r2) * 0;
+            }
+            output = new Vector(r2, Math.toRadians(m_subsystem.m_drivetrain.robotAng) + Math.PI/2);
         } else{
             output = new Vector(0, 0);
             m = 0;
