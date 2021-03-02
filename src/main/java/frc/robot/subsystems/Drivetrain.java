@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.cals.DriverCals;
 import frc.robot.motors.Motor;
+import frc.robot.subsystems.Vision.VisionData;
 import frc.robot.util.DistanceSensors;
 import frc.robot.util.Util;
 import frc.robot.util.Vector;
@@ -391,7 +392,7 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void setStartPosition(double x, double y){
-        Rotation2d angle = new Rotation2d();
+        Rotation2d angle = new Rotation2d(robotAng);
         driveOdom.resetPosition(new Pose2d(x,y,angle), angle);
     }
 
@@ -424,5 +425,14 @@ public class Drivetrain extends SubsystemBase{
         avgy = w*avgy + (1-w)*dy;
 
         return Vector.fromXY(avgx/dt, avgy/dt);
+    }
+
+    public void resetFieldPos(VisionData image){
+        double y = image.dist;
+        double x = Math.tan(Math.toRadians(image.angle - image.robotangle))*y;
+
+        System.out.printf("%.1f, %.1f", x, y);
+
+        //setStartPosition(x, y);
     }
 }
