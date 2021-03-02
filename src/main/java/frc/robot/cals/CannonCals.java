@@ -20,7 +20,7 @@ public class CannonCals extends CalSet {
     public double kPDrive = 0.013;
     public double kDDrive = -0.0015;
     public double kIDrive = 0.035;
-    public double maxI = 0.1 / kIDrive;
+    public double maxI = 0.08 / kIDrive;
     public double maxRot = 0.4;
     public double tolerance = 1.0;//in degrees
     public double initShootSpeed = 4000;

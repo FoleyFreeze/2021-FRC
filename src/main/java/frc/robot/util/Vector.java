@@ -24,6 +24,14 @@ public class Vector{
         return new Vector(r, theta);
     }
 
+    public static Vector fromYX(double x, double y){
+        double r = Math.sqrt(x*x + y*y);
+        double theta;
+        if(x == 0 && y == 0) theta = 0;
+        else theta = Math.atan2(x, y);
+        return new Vector(r, theta);
+    }
+
     public static Vector fromPose(Pose2d loc){
         return Vector.fromXY(loc.getX(), loc.getY());
     }
@@ -94,11 +102,19 @@ public class Vector{
         return String.format("%.2f, %.0f", r, Math.toDegrees(theta));
     }
 
+    public String toStringXY(){
+        return String.format("%.2f, %.2f", getX(), getY());
+    }
+
     public double getX(){
         return r * Math.cos(theta);
     }
 
     public double getY(){
         return r * Math.sin(theta);
+    }
+ 
+    public boolean equals(Vector v){
+        return v.r == r && v.theta == theta;
     }
 }
