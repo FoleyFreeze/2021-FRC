@@ -152,7 +152,7 @@ public class Drivetrain extends SubsystemBase{
         navX = new AHRS(Port.kMXP);
         navX.calibrate();
         try{
-            Thread.sleep(200);
+            Thread.sleep(800);
         } catch(Exception e){
         }
         navX.zeroYaw();
@@ -429,11 +429,15 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public void resetFieldPos(VisionData image){
+        //THIS IS DEPENDENT ON STARTING AT 90,125
+
         double y = image.dist;
-        double x = Math.tan(Math.toRadians(image.angle - image.robotangle))*y;
+        double x = -Math.tan(Math.toRadians(image.angle - image.robotangle))*y;
+        y = (125 + 85) - image.dist;
+        x += 90;
 
-        System.out.printf("%.1f, %.1f", x, y);
+        System.out.printf("%.1f, %.1f\n", x, y);
 
-        //setStartPosition(x, y);
+        setStartPosition(x, y);
     }
 }

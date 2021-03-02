@@ -27,35 +27,36 @@ public class AutonAwardPath extends SequentialCommandGroup{
         */
 
         //stationary shoot path
-        Waypoint circleCenter = new Waypoint(90,65,0);
-        Waypoint shootPos2 = new Waypoint(90,125,0);
-        Waypoint shootPos3 = new Waypoint(90,125,0);
+        Waypoint circleCenter = new Waypoint(90,75,0);
+        Waypoint shootPos2 = new Waypoint(70,121,0);
+        Waypoint shootPos3 = new Waypoint(70,121,0);
         addCommands(
             new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
-            new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 65, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
-            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoArcDrive(subsystem, new Circle(new Waypoint(140, 75, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
+            new AutoDrive(subsystem, 130, -10, 12, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoDrive(subsystem, 130, -10, 18, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoDrive(subsystem, 130, -10, 18, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 30, 65, 0, false)
+            new AutoDrive(subsystem, 40, 75, 0, false)
         );
         addCommands(
             new AutoArcDrive(subsystem, new Circle(shootPos2, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),    
             new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
-            new AutoArcDrive(subsystem, new Circle(new Waypoint(150, 65, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
-            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoArcDrive(subsystem, new Circle(new Waypoint(140, 75, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
+            new AutoDrive(subsystem, 130, -10, 12, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoDrive(subsystem, 130, -10, 18, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 140, -50, 0, false),
+            new AutoDrive(subsystem, 130, -10, 18, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 30, 65, 0, false)
+            new AutoDrive(subsystem, 40, 75, 0, false)
         );
         addCommands(
             new AutoArcDrive(subsystem, new Circle(shootPos3, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),     
-            new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem))
+            new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
+            new AutoDrive(subsystem, circleCenter.x, 5, -135, false)
         );
         
         

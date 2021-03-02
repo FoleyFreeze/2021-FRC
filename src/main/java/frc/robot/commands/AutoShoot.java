@@ -63,6 +63,7 @@ public class AutoShoot extends CommandBase{
         double dist;
         if(m_subsystem.m_vision.hasTargetImage() && m_subsystem.m_input.cam()){
             VisionData image = m_subsystem.m_vision.targetData.getFirst();
+
             double botAngle = m_subsystem.m_drivetrain.robotAng;
             /*
             double robotAngleDiff = Util.angleDiff(botAngle, image.robotangle);
@@ -98,6 +99,11 @@ public class AutoShoot extends CommandBase{
 
             centX = m_cals.shootCentX;
             centY = m_cals.shootCentY;
+
+            if(Math.abs(error) <= m_cals.tolerance){
+                m_subsystem.m_drivetrain.resetFieldPos(image);
+            }
+
         } else if(DriverStation.getInstance().isAutonomous()){
             rot = 0;
             error = 0;

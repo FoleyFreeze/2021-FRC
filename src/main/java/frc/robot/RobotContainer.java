@@ -79,7 +79,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     autonChooser = new SendableChooser<>();
-    autonChooser.addOption("DriveOnly", new AutoDrive(this, 0, 12, 0, true));
+    autonChooser.addOption("backwardsSpin", new AutoDrive(this, 0, -120, -135, false));//autonChooser.addOption("DriveOnly", new AutoDrive(this, 0, 12, 0, true));
     //autonChooser.setDefaultOption("DriveAndShoot", new SequentialCommandGroup(new AutoShoot(this),new AutoDrive(this,0,-48,90,true)));
     autonChooser.setDefaultOption("DriveAndShoot", new SequentialCommandGroup(new AutoShoot(this),new DriveTime(3, this, 0, -0.4, 0)));
     

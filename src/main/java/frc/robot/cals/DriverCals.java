@@ -52,8 +52,8 @@ public class DriverCals extends CalSet {
     public double autoDriveStrafeKp = 0.15; //full power in 10in
     public double autoDriveAngKp = 0.02; //50deg is full power
     public double autoDriveStrafeRange = 5;
-    public double autoDriveAngRange = 5;
-    public double autoDriveMaxPwr = 0.4;
+    public double autoDriveAngRange = 2;
+    public double autoDriveMaxPwr = 0.5;
     public double autoDriveStartPwr = 0.15;
     public double autoDriveEndPwr = 0.15;
     public double autoDriveStartDist = 36;
@@ -61,8 +61,8 @@ public class DriverCals extends CalSet {
 
     public double autoDriveLookahead = 36;
 
-    public double lookAheadCurve = 8;//2.15;
-    public double circKp = 0.2;//1/12.0;
+    public double lookAheadCurve = 2.5;//8;//2.15;
+    public double circKp = 0.15;//0.2;//1/12.0;
     public double minDistAutoCirc = 10;
     public double minAngDiffAuto = Math.toRadians(10);
 
