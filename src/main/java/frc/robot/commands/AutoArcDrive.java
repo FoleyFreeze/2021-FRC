@@ -69,6 +69,7 @@ public class AutoArcDrive extends CommandBase{
 
             //finishes segment when error less than cal and sign change
             double angError = Util.angleDiffRad(radial.theta+Math.PI, tgt.angleofEnd());
+            System.out.printf("AngErr: %.2f", angError);
             tgtReached = !first && Math.abs(angError) < k.minAngDiffAuto && prevSign != Math.signum(angError);
             prevSign = Math.signum(angError);
 

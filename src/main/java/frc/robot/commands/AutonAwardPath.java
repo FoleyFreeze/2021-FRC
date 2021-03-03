@@ -31,6 +31,12 @@ public class AutonAwardPath extends SequentialCommandGroup{
         Waypoint shootPos2 = new Waypoint(70,121,0);
         Waypoint shootPos3 = new Waypoint(70,121,0);
         addCommands(
+            //gather 3 balls first
+            new AutoGather(subsystem, false, false).raceWith(new JoystickDriveRot(subsystem)),
+            new AutoGather(subsystem, false, false).raceWith(new JoystickDriveRot(subsystem)),
+            new AutoGather(subsystem, false, false).raceWith(new JoystickDriveRot(subsystem)),
+            
+            new AutoDrive(subsystem, 0, 0, 0, true), //ensure robot somewhat faces goal
             new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
             new AutoArcDrive(subsystem, new Circle(new Waypoint(140, 75, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
             new AutoDrive(subsystem, 130, -10, 12, false),
@@ -39,10 +45,11 @@ public class AutonAwardPath extends SequentialCommandGroup{
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
             new AutoDrive(subsystem, 130, -10, 18, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 40, 75, 0, false)
+            //new AutoDrive(subsystem, 40, 75, 0, false)
+            new AutoDrive(subsystem, 30, 120, 0, false) //shoot from left location
         );
         addCommands(
-            new AutoArcDrive(subsystem, new Circle(shootPos2, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),    
+            //new AutoArcDrive(subsystem, new Circle(shootPos2, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),    
             new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
             new AutoArcDrive(subsystem, new Circle(new Waypoint(140, 75, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
             new AutoDrive(subsystem, 130, -10, 12, false),
@@ -51,10 +58,11 @@ public class AutonAwardPath extends SequentialCommandGroup{
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
             new AutoDrive(subsystem, 130, -10, 18, false),
             new AutoGather(subsystem, false, true).raceWith(new JoystickDriveRot(subsystem)),
-            new AutoDrive(subsystem, 40, 75, 0, false)
+            //new AutoDrive(subsystem, 40, 75, 0, false)
+            new AutoDrive(subsystem, 110, 120, 0, false) //shoot from right location
         );
         addCommands(
-            new AutoArcDrive(subsystem, new Circle(shootPos3, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),     
+            //new AutoArcDrive(subsystem, new Circle(shootPos3, circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr),     
             new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
             new AutoDrive(subsystem, circleCenter.x, 5, -135, false)
         );

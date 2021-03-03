@@ -27,8 +27,8 @@ public class AutoGather extends CommandBase {
             addRequirements(m_subsystem.m_intake);
             addRequirements(m_subsystem.m_driveStrafe);
         }
-        //this.kpOverride = kpOverride;
-        this.kpOverride = true;
+        this.kpOverride = kpOverride;
+        //this.kpOverride = true;
     }
 
     public AutoGather(RobotContainer subsystem){
@@ -203,8 +203,8 @@ public class AutoGather extends CommandBase {
     @Override
     public boolean isFinished(){
         if(auton){
-            if(kpOverride) return m_subsystem.m_transporterCW.ballnumber > ballCount; //for skills challenge only
-            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
+            /*if(kpOverride)*/ return m_subsystem.m_transporterCW.ballnumber > ballCount; //for skills challenge only
+            //else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
         }
         return false;
     }

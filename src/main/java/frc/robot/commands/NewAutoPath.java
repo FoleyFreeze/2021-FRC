@@ -68,7 +68,7 @@ public class NewAutoPath extends CommandBase{
             double dX = botPos.getX()-tgt.getX();
             double dY = botPos.getY()-tgt.getY();
             dist = Math.sqrt(dX*dX+dY*dY);
-            //finishes segment when error less tan cal and sign change
+            //finishes segment when error less than cal and sign change
             tgtReached = dist < k.minDistAutoCirc && dist > prevDist;
             prevDist = dist;
 
