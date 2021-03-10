@@ -436,7 +436,7 @@ public class Drivetrain extends SubsystemBase{
         y = (125 + 85) - image.dist;
         x += 90;
 
-        System.out.printf("%.1f, %.1f\n", x, y);
+        //System.out.printf("%.1f, %.1f\n", x, y);
 
         setStartPosition(x, y);
     }

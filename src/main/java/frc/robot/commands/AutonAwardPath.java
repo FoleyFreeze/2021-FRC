@@ -36,7 +36,7 @@ public class AutonAwardPath extends SequentialCommandGroup{
             new AutoGather(subsystem, false, false).raceWith(new JoystickDriveRot(subsystem)),
             new AutoGather(subsystem, false, false).raceWith(new JoystickDriveRot(subsystem)),
             
-            new AutoDrive(subsystem, 0, 0, 0, true), //ensure robot somewhat faces goal
+            new AutoDrive(subsystem, 90, 125, 0, false), //ensure robot somewhat faces goal
             new AutoShoot(subsystem).raceWith(new JoystickDriveStrafe(subsystem)), 
             new AutoArcDrive(subsystem, new Circle(new Waypoint(140, 75, 0), circleCenter), false, subsystem.m_drivetrain.k.autoDriveMaxPwr), 
             new AutoDrive(subsystem, 130, -10, 12, false),

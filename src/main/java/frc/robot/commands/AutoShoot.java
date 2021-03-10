@@ -71,9 +71,10 @@ public class AutoShoot extends CommandBase{
             */
 
             double jog = m_subsystem.m_cannonClimber.shootCals.initJogAng;
-            Vector toTarget = new Vector(image.dist, Math.toRadians(image.angle + image.robotangle + jog));
+            double distH = image.dist / Math.cos(Math.toRadians(image.angle));
+            Vector toTarget = new Vector(distH, Math.toRadians(image.robotangle - image.angle + jog));
             //toTarget = applyLatencyOffset(toTarget, image);
-            //toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
+            toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
             //toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
 
             //error = rotError;
@@ -86,10 +87,14 @@ public class AutoShoot extends CommandBase{
             double dt = (time - prevTime);
             double d = deltaAngle / dt;
             sumError += error * dt;
+            SmartDashboard.putNumber("SumI",sumError);
             if(Math.abs(sumError) > m_cals.maxI){
                 sumError = m_cals.maxI * Math.signum(sumError);
             }
-            if(Math.signum(sumError) != Math.signum(error)){
+            if(Math.abs(error) > m_cals.iZone){
+                sumError = 0;
+            }
+            if(Math.signum(error) != Math.signum(sumError)){
                 sumError = 0;
             }
             rot = error * m_cals.kPDrive - d * m_cals.kDDrive + sumError * m_cals.kIDrive;
@@ -100,6 +105,7 @@ public class AutoShoot extends CommandBase{
             centX = m_cals.shootCentX;
             centY = m_cals.shootCentY;
 
+            SmartDashboard.putNumber("AngError", error);
             if(Math.abs(error) <= m_cals.tolerance){
                 m_subsystem.m_drivetrain.resetFieldPos(image);
             }
@@ -159,14 +165,18 @@ public class AutoShoot extends CommandBase{
     private Vector apply3ptProjection(Vector v){
         //if we are doing 3 pointers
         if(m_subsystem.m_input.twoVThree()){
+            //System.out.println(v.toString());
+            final double xOffset = 29;//29.25;
             double angTgt = v.theta;
             double hypSin = v.r * Math.sin(angTgt);
-            double hypCos = v.r * Math.cos(angTgt) + 29.25; //additional distance between 2pt and 3pt (in)
+            double hypCos = v.r * Math.cos(angTgt) + xOffset; //additional distance between 2pt and 3pt (in)
     
             double dist = Math.sqrt(hypSin*hypSin + hypCos*hypCos);
-            double ang = Math.atan(hypSin/hypCos);
+            double ang = Math.atan2(hypSin,hypCos);
 
-            return new Vector(dist-29.25, ang);
+            Vector out = new Vector(dist-xOffset, ang);
+            //System.out.println(out.toString());
+            return out;
         } else {
             return v;
         }

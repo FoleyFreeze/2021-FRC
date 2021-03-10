@@ -99,7 +99,7 @@ public class AutoGather extends CommandBase {
                 } else if(distError > 40){
                     Vector out = ballPredict(ballData);
                     SmartDashboard.putNumber("BallIntercept", out.r);
-                    System.out.println("Y: " + out.r);
+                    //System.out.println("Y: " + out.r);
                     ballIntersect = new Pose2d(botPos.getX() + out.getX(), botPos.getY() + out.getY(), new Rotation2d());
 
                     strafe = new Vector(0,0);
@@ -127,7 +127,7 @@ public class AutoGather extends CommandBase {
                     }
                 } else {
                     if(prevBallPos != null){
-                        System.out.println(errorX + "," + errorY);
+                        //System.out.println(errorX + "," + errorY);
                         prevBallPos = null;
                         ballIntersect = null;
                     }
@@ -222,7 +222,7 @@ public class AutoGather extends CommandBase {
         if(prevBallPos != null){
             Vector movement = Vector.subtract(ballPos, prevBallPos);
             if(Math.abs(movement.r) >= 4) { //if it has moved a signficant distance
-                System.out.println(ballPos.toStringXY());
+                //System.out.println(ballPos.toStringXY());
                 dx = dx*m + (1-m)*movement.getX();
                 dy = dy*m + (1-m)*movement.getY();
                 prevBallPos = ballPos;
