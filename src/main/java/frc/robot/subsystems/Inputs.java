@@ -257,12 +257,12 @@ public class Inputs{
     }
 
     //operator
-    public boolean twoVThree(){
+    public boolean twoVThreePt(){
         if(!cals.DS_ENABLED) return false;
         return ds.getRawButton(cals.DS_TWOVTHREE);
     }
 
-    public boolean cwRotNotPos(){
+    public boolean stage2V3(){
         if(!cals.DS_ENABLED) return false;
         return ds.getRawButton(cals.DS_CWROTPOS);
     }

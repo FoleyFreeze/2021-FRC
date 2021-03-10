@@ -74,7 +74,7 @@ public class AutoGather extends CommandBase {
             double x = ballData.dist * Math.sin(Math.toRadians(rotError));
             double y = ballData.dist * Math.cos(Math.toRadians(rotError));
             
-            if(!kpOverride){
+            if(!m_subsystem.m_input.stage2V3()){
                 double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
                 if(Math.abs(x) < 2){//constant is in inches
                     x = 2 * Math.signum(x);

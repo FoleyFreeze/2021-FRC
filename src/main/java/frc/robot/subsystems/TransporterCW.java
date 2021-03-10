@@ -161,7 +161,7 @@ public class TransporterCW extends SubsystemBase{
         }else if(mSubsystem.m_intake.isOut()) {
             gatePower(tCals.TN_STOPSPEED);
         }else if(CWNotTransport.get()){
-            if(mSubsystem.m_input.cwRotNotPos()){
+            if(mSubsystem.m_input.stage2V3()){
                 gatePower(cCals.rotSpeed);
             } else{
                 gatePower(cCals.colSpeed);
