@@ -74,8 +74,8 @@ public class AutoShoot extends CommandBase{
                 */
 
                 double jog = m_subsystem.m_cannonClimber.shootCals.initJogAng;
-                double distH = image.dist / Math.cos(Math.toRadians(image.angle));
-                toTarget = new Vector(distH, Math.toRadians(image.robotangle - image.angle + jog));
+                double distH = image.location[0].r / Math.cos(image.location[0].theta);
+                toTarget = new Vector(distH, Math.toRadians(image.robotangle - Math.toDegrees(image.location[0].theta) + jog));
                 //toTarget = applyLatencyOffset(toTarget, image);
                 toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
                 //toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);

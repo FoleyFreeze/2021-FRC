@@ -294,4 +294,13 @@ public class TransporterCW extends SubsystemBase{
             targetpos = x * tCals.countsPerIndex;
         }
     }
+
+    public void clearBalls(){
+        ballnumber = 0;
+            ballpositions[0] = false;
+            ballpositions[1] = false;
+            ballpositions[2] = false;
+            ballpositions[3] = false;
+            ballpositions[4] = false;
+    }
 }
