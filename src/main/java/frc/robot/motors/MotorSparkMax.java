@@ -128,7 +128,8 @@ public class MotorSparkMax extends Motor{
     }
 
     public double getTemp(){
-        return motor.getMotorTemperature();
+        //convert to F
+        return motor.getMotorTemperature() * 9 / 5.0 + 32;
     }
 
     boolean brakeOn;

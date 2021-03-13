@@ -27,8 +27,8 @@ public class AutoGather extends CommandBase {
             addRequirements(m_subsystem.m_intake);
             addRequirements(m_subsystem.m_driveStrafe);
         }
-        this.kpOverride = kpOverride;
-        //this.kpOverride = true;
+        //this.kpOverride = kpOverride;
+        this.kpOverride = true;
     }
 
     public AutoGather(RobotContainer subsystem){
