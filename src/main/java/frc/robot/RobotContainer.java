@@ -43,7 +43,8 @@ import frc.robot.commands.auton.AutoSC_Test;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootGather;
 import frc.robot.commands.auton.AutonSquare;
-import frc.robot.commands.CWCombo;
+import frc.robot.commands.auton.CWCombo;
+import frc.robot.commands.auton.GalacticSearch;
 import frc.robot.commands.Climb;
 import frc.robot.commands.CountCmd;
 import frc.robot.commands.DriveTime;
@@ -87,6 +88,7 @@ public class RobotContainer {
     autonChooser.addOption("AutoPath", new NewAutoPath(this, "CircleTest.txt"));
     autonChooser.addOption("AutonAward", new AutonAwardPath(this));
     autonChooser.addOption("barrelTest", new NewAutoPath(this, "BarrelTest.txt"));
+    autonChooser.addOption("GalacticSearch", new GalacticSearch(this));
 //    autonChooser.addOption("AutoArc", new AutoArcDrive(this, ));
     SmartDashboard.putData(autonChooser);
   }

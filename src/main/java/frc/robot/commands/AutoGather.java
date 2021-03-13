@@ -189,7 +189,7 @@ public class AutoGather extends CommandBase {
             rot = rotError * m_subsystem.m_drivetrain.k.autoBallAngKp + dRotError * m_subsystem.m_drivetrain.k.autoBallAngKd;*/
             
             maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
-        }else{//driver has control
+        }else{
             if(auton && initBallPos != null){
                 //GALACTIC SEARCH PATTERN
                 /*set strafe to go towards the next ball
@@ -199,14 +199,14 @@ public class AutoGather extends CommandBase {
                 */
                 double x = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getX();
                 double y = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getY();
-                Vector v = Vector.fromXY(x, y-28);
+                Vector v = Vector.fromXY(x, y-28);//Offset for robot width and gatherer
                 v.threshNorm();
                 strafe = v;
                 maxPower = m_subsystem.m_drivetrain.k.autoDriveMaxPwr;
                 prevBotAngle = m_subsystem.m_drivetrain.robotAng;
                 prevPose = botPos;
 
-            } else {
+            } else {//driver has control
                 strafe = m_subsystem.m_input.getXY();
                 maxPower = 1;
                 prevBotAngle = m_subsystem.m_drivetrain.robotAng;
