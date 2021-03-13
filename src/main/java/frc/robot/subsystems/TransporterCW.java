@@ -161,7 +161,7 @@ public class TransporterCW extends SubsystemBase{
         }else if(mSubsystem.m_intake.isOut()) {
             gatePower(tCals.TN_STOPSPEED);
         }else if(CWNotTransport.get()){
-            if(mSubsystem.m_input.cwRotNotPos()){
+            if(mSubsystem.m_input.stage2V3()){
                 gatePower(cCals.rotSpeed);
             } else{
                 gatePower(cCals.colSpeed);
@@ -293,5 +293,14 @@ public class TransporterCW extends SubsystemBase{
             x = Math.ceil(x);
             targetpos = x * tCals.countsPerIndex;
         }
+    }
+
+    public void clearBalls(){
+        ballnumber = 0;
+            ballpositions[0] = false;
+            ballpositions[1] = false;
+            ballpositions[2] = false;
+            ballpositions[3] = false;
+            ballpositions[4] = false;
     }
 }

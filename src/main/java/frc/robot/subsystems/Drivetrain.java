@@ -431,9 +431,9 @@ public class Drivetrain extends SubsystemBase{
     public void resetFieldPos(VisionData image){
         //THIS IS DEPENDENT ON STARTING AT 90,125
 
-        double y = image.dist;
-        double x = -Math.tan(Math.toRadians(image.angle - image.robotangle))*y;
-        y = (125 + 85) - image.dist;
+        double y = image.location[0].r;
+        double x = -Math.tan(image.location[0].theta - Math.toRadians(image.robotangle))*y;
+        y = (125 + 85) - image.location[0].r;
         x += 90;
 
         //System.out.printf("%.1f, %.1f\n", x, y);

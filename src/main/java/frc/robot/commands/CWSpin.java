@@ -31,7 +31,7 @@ public class CWSpin extends CommandBase{
 
     @Override
     public void execute(){
-        if(m_subsystem.m_input.cwRotNotPos()){
+        if(m_subsystem.m_input.stage2V3()){
             //transCW.loadMotor.setSpeed(m_cals.rotSpeed);
             if(transCW.detectedColor != transCW.lastColor) wedgeCount++;
         }else{
@@ -45,7 +45,7 @@ public class CWSpin extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        if(m_subsystem.m_input.cwRotNotPos()){
+        if(m_subsystem.m_input.stage2V3()){
             return wedgeCount >= 24;
         }else{
             switch(gameData){       //TODO fix me!!!

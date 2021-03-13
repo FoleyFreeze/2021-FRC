@@ -61,21 +61,25 @@ public class AutoShoot extends CommandBase{
         double error;
         boolean aligned = false;
         double dist;
-        if(m_subsystem.m_vision.hasTargetImage() && m_subsystem.m_input.cam()){
-            VisionData image = m_subsystem.m_vision.targetData.getFirst();
-
+        if(/* &&*/ m_subsystem.m_input.cam()){
             double botAngle = m_subsystem.m_drivetrain.robotAng;
-            /*
-            double robotAngleDiff = Util.angleDiff(botAngle, image.robotangle);
-            double rotError = Util.angleDiff(image.angle + m_cals.initJogAng, robotAngleDiff);
-            */
+            Vector toTarget = new Vector(0,0);
+            VisionData image = null;
+            boolean hasImage = m_subsystem.m_vision.hasTargetImage();
+            if(hasImage){
+                image = m_subsystem.m_vision.targetData.getFirst();
+                /*
+                double robotAngleDiff = Util.angleDiff(botAngle, image.robotangle);
+                double rotError = Util.angleDiff(image.angle + m_cals.initJogAng, robotAngleDiff);
+                */
 
-            double jog = m_subsystem.m_cannonClimber.shootCals.initJogAng;
-            double distH = image.dist / Math.cos(Math.toRadians(image.angle));
-            Vector toTarget = new Vector(distH, Math.toRadians(image.robotangle - image.angle + jog));
-            //toTarget = applyLatencyOffset(toTarget, image);
-            toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
-            //toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
+                double jog = m_subsystem.m_cannonClimber.shootCals.initJogAng;
+                double distH = image.location[0].r / Math.cos(image.location[0].theta);
+                toTarget = new Vector(distH, Math.toRadians(image.robotangle - Math.toDegrees(image.location[0].theta) + jog));
+                //toTarget = applyLatencyOffset(toTarget, image);
+                toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
+                //toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
+            } 
 
             //error = rotError;
             //dist = image.dist;
@@ -106,7 +110,7 @@ public class AutoShoot extends CommandBase{
             centY = m_cals.shootCentY;
 
             SmartDashboard.putNumber("AngError", error);
-            if(Math.abs(error) <= m_cals.tolerance){
+            if(hasImage && Math.abs(error) <= m_cals.tolerance){
                 m_subsystem.m_drivetrain.resetFieldPos(image);
             }
 
@@ -129,7 +133,7 @@ public class AutoShoot extends CommandBase{
 
             m_subsystem.m_cannonClimber.prime(dist);
 
-            if(m_subsystem.m_cannonClimber.ready() && aligned && m_subsystem.m_transporterCW.ballnumber > 0){
+            if(m_subsystem.m_cannonClimber.ready() && dist != 0 && aligned && m_subsystem.m_transporterCW.ballnumber > 0){
                 m_subsystem.m_transporterCW.shootAll();
                 shootFinTime = Timer.getFPGATimestamp() + m_subsystem.m_cannonClimber.shootCals.shootTime;
             } 
@@ -164,7 +168,7 @@ public class AutoShoot extends CommandBase{
 
     private Vector apply3ptProjection(Vector v){
         //if we are doing 3 pointers
-        if(m_subsystem.m_input.twoVThree()){
+        if(m_subsystem.m_input.twoVThreePt()){
             //System.out.println(v.toString());
             final double xOffset = 29;//29.25;
             double angTgt = v.theta;

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.cals.ElectroKendro;
+import frc.robot.cals.CalSet.BotType;
 import frc.robot.util.Vector;
 
 public class Inputs{
@@ -257,12 +258,12 @@ public class Inputs{
     }
 
     //operator
-    public boolean twoVThree(){
+    public boolean twoVThreePt(){
         if(!cals.DS_ENABLED) return false;
         return ds.getRawButton(cals.DS_TWOVTHREE);
     }
 
-    public boolean cwRotNotPos(){
+    public boolean stage2V3(){
         if(!cals.DS_ENABLED) return false;
         return ds.getRawButton(cals.DS_CWROTPOS);
     }
@@ -328,6 +329,7 @@ public class Inputs{
     }
 
     public boolean pitMode(){
+        if(cals.type == BotType.PRACTICE) return false;
         if(!cals.DS_ENABLED) return false;
         return !ds.getRawButton(cals.DS_PITMODE);
     }

@@ -76,7 +76,7 @@ public class DriverCals extends CalSet {
 
     public final double DRV_GATHERKP = 0.01;
 
-    public final double joyMaxPwr = 1.0;
+    public double joyMaxPwr = 1.0;
 
     public DriverCals(){
 
@@ -87,6 +87,7 @@ public class DriverCals extends CalSet {
             break;
 
             case PRACTICE:
+                joyMaxPwr = 0.7;
                 angleOffset = new double[]{3.749,1.290,0.536,2.169};
             break;
 

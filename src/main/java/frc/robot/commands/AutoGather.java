@@ -46,7 +46,27 @@ public class AutoGather extends CommandBase {
 
         ballCount = m_subsystem.m_transporterCW.ballnumber;
         prevBallPos = null; //ensure we forget old ball data
+
+        //for galactic search
+        initBallPos = null;
+        if(auton){
+            //save the most recent image with 3 balls
+            if(m_subsystem.m_vision.hasBallImage()) {
+                initBallPos = new Vector[3];
+                VisionData initialImage = m_subsystem.m_vision.ballData.getFirst();
+                Vector robot = Vector.fromXY(prevPose.getX(), prevPose.getY());
+                for(int i = 0; i < initBallPos.length; i++){
+                    double r = initialImage.location[i].r/Math.cos(initialImage.location[i].theta);
+                    double theta = Math.PI/2 - initialImage.location[i].theta + Math.toRadians(prevBotAngle);
+                    Vector ball = new Vector(r, theta);
+                    ball.add(robot);
+
+                    initBallPos[i] = ball;
+                }
+            }
+        }
     }
+    private Vector[] initBallPos;
 
     private double prevBotAngle;
     private Pose2d prevPose;
@@ -62,20 +82,20 @@ public class AutoGather extends CommandBase {
 
             VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
 
-            double distError = ballData.dist-m_subsystem.m_drivetrain.k.autoBallGthDist;
+            double distError = ballData.location[0].r-m_subsystem.m_drivetrain.k.autoBallGthDist;
             double dDistError = Math.sqrt((dXError*dXError)+(dYError*dYError))/ .020/*m_subsystem.dt*/;//might need to set to .020
 
             // strafe = Vector.fromXY(-distError * m_subsystem.m_drivetrain.k.autoBallDistKp 
             //                        - dDistError*m_subsystem.m_drivetrain.k.autoBallDistKd, 0);
             double botAngle = m_subsystem.m_drivetrain.robotAng;
             double robotAngleDiff = Util.angleDiff(botAngle, ballData.robotangle);
-            double rotError = Util.angleDiff(ballData.angle, robotAngleDiff);
+            double rotError = Util.angleDiff(Math.toDegrees(ballData.location[0].theta), robotAngleDiff);
             
-            double x = ballData.dist * Math.sin(Math.toRadians(rotError));
-            double y = ballData.dist * Math.cos(Math.toRadians(rotError));
+            double x = ballData.location[0].r * Math.sin(Math.toRadians(rotError));
+            double y = ballData.location[0].r * Math.cos(Math.toRadians(rotError));
             
-            if(!kpOverride){
-                double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
+            if(!m_subsystem.m_input.stage2V3()){
+                double xFactor = Math.max(2.15 - ballData.location[0].r/45.0, 0);
                 if(Math.abs(x) < 2){//constant is in inches
                     x = 2 * Math.signum(x);
                 }
@@ -133,7 +153,7 @@ public class AutoGather extends CommandBase {
                     }
 
                     //"normal" ball gathering
-                    double xFactor = Math.max(2.15 - ballData.dist/45.0, 0);
+                    double xFactor = Math.max(2.15 - ballData.location[0].r/45.0, 0);
                     if(Math.abs(x) < 2){//constant is in inches
                         x = 2 * Math.signum(x);
                     }
@@ -169,11 +189,29 @@ public class AutoGather extends CommandBase {
             rot = rotError * m_subsystem.m_drivetrain.k.autoBallAngKp + dRotError * m_subsystem.m_drivetrain.k.autoBallAngKd;*/
             
             maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
-        }else{//driver has control
-            strafe = m_subsystem.m_input.getXY();
-            maxPower = 1;
-            prevBotAngle = m_subsystem.m_drivetrain.robotAng;
-            prevPose = botPos;
+        }else{
+            if(auton && initBallPos != null){
+                //GALACTIC SEARCH PATTERN
+                /*set strafe to go towards the next ball
+                1) get vector to next ball via NextBallPosition - RobotPosition
+                2) subtract some y offset to target just before the next ball so that the gatherer can get it
+                3) normalize that vector, and use it as the strafe command
+                */
+                double x = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getX();
+                double y = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getY();
+                Vector v = Vector.fromXY(x, y-28);//Offset for robot width and gatherer
+                v.threshNorm();
+                strafe = v;
+                maxPower = m_subsystem.m_drivetrain.k.autoDriveMaxPwr;
+                prevBotAngle = m_subsystem.m_drivetrain.robotAng;
+                prevPose = botPos;
+
+            } else {//driver has control
+                strafe = m_subsystem.m_input.getXY();
+                maxPower = 1;
+                prevBotAngle = m_subsystem.m_drivetrain.robotAng;
+                prevPose = botPos;
+            }
         }
         rot = m_subsystem.m_input.getRot();
         m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower);
@@ -203,8 +241,8 @@ public class AutoGather extends CommandBase {
     @Override
     public boolean isFinished(){
         if(auton){
-            /*if(kpOverride)*/ return m_subsystem.m_transporterCW.ballnumber > ballCount; //for skills challenge only
-            //else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt;
+            if(kpOverride) return m_subsystem.m_transporterCW.ballnumber > ballCount; //for other skills challenges
+            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt; //for galactic search
         }
         return false;
     }
@@ -214,8 +252,8 @@ public class AutoGather extends CommandBase {
     double dy;
     double m;
     public Vector ballPredict(VisionData image){
-        double r = image.dist/Math.cos(Math.toRadians(image.angle));
-        Vector ballPos = new Vector(r, Math.toRadians(image.angle));
+        double r = image.location[0].r/Math.cos(image.location[0].theta);
+        Vector ballPos = new Vector(r, image.location[0].theta);
 
         Vector output;
 

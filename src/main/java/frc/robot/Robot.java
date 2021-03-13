@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.cals.CalSet;
 import frc.robot.commands.AutoArcDrive;
 import frc.robot.commands.AutoPath;
-import frc.robot.commands.AutonAwardPath;
+import frc.robot.commands.auton.AutonAwardPath;
 import frc.robot.commands.NewAutoPath;
 import frc.robot.subsystems.Display;
 import frc.robot.util.Circle;

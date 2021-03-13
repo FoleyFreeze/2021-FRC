@@ -1,10 +1,17 @@
-package frc.robot.commands;
+package frc.robot.commands.auton;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
+import frc.robot.commands.AutoArcDrive;
+import frc.robot.commands.AutoDrive;
+import frc.robot.commands.AutoGather;
+import frc.robot.commands.AutoShoot;
+import frc.robot.commands.JoystickDriveRot;
+import frc.robot.commands.JoystickDriveStrafe;
 import frc.robot.util.Circle;
 import frc.robot.util.Waypoint;
+
 
 public class AutonAwardPath extends SequentialCommandGroup{
 
