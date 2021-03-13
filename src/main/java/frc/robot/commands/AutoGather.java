@@ -78,7 +78,10 @@ public class AutoGather extends CommandBase {
         Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
+        boolean fieldOrient = false;
         if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage()){//robot has control
+
+            fieldOrient = false;
 
             VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
 
@@ -165,10 +168,10 @@ public class AutoGather extends CommandBase {
             }
 
             prevPose=botPos;
-            boolean fieldOrient = m_subsystem.m_input.fieldOrient();
+            /*boolean fieldOrient = m_subsystem.m_input.fieldOrient();
             if(fieldOrient){
                 strafe.theta -= m_subsystem.m_drivetrain.robotAng;
-            }
+            }*/
 
             //if we are still gathering/indexing the first ball
             //dont drive into the second (but maybe still rotate)
@@ -197,6 +200,7 @@ public class AutoGather extends CommandBase {
                 2) subtract some y offset to target just before the next ball so that the gatherer can get it
                 3) normalize that vector, and use it as the strafe command
                 */
+                fieldOrient = true;
                 double x = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getX();
                 double y = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getY();
                 Vector v = Vector.fromXY(x, y-28);//Offset for robot width and gatherer
@@ -207,6 +211,7 @@ public class AutoGather extends CommandBase {
                 prevPose = botPos;
 
             } else {//driver has control
+                fieldOrient = m_subsystem.m_input.fieldOrient();
                 strafe = m_subsystem.m_input.getXY();
                 maxPower = 1;
                 prevBotAngle = m_subsystem.m_drivetrain.robotAng;
@@ -214,7 +219,7 @@ public class AutoGather extends CommandBase {
             }
         }
         rot = m_subsystem.m_input.getRot();
-        m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower);
+        m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower, fieldOrient);
         
         if(!masked && m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
             m_subsystem.m_intake.dropIntake(false);

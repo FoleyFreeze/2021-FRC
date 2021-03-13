@@ -19,6 +19,7 @@ public class DriveTime extends CommandBase{
         this.x = x;
         this.y = y;
         this.r = r;
+        addRequirements(sub.m_drivetrain);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class DriveTime extends CommandBase{
 
     @Override
     public void execute(){
-        sub.m_drivetrain.drive(Vector.fromXY(x, y), r);
+        sub.m_drivetrain.drive(Vector.fromXY(x, y), r, false);
     }
 
     @Override
