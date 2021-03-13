@@ -15,7 +15,7 @@ public class ElectroKendro extends CalSet{
     public final int FS_AUTOSHOOT = 3;
     public final int FS_AUTOGATHER = 2;
 
-    public final double FS_LOWDEADBND = 0.05;
+    public double FS_LOWDEADBND = 0.05;
     public final double FS_HIGHDEADBND = 1.0;
     public final double FS_EXPONENT = 1.4;
 
@@ -62,6 +62,13 @@ public class ElectroKendro extends CalSet{
     public final int DS_CWROTPOS = 10;
 
     public ElectroKendro(){
+        switch(type){
+            case PRACTICE:
+                FS_LOWDEADBND = 0.1;
+            break;
+            default:
 
+            break;
+        }
     }
 }

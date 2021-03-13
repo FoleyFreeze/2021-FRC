@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.cals.ElectroKendro;
+import frc.robot.cals.CalSet.BotType;
 import frc.robot.util.Vector;
 
 public class Inputs{
@@ -328,6 +329,7 @@ public class Inputs{
     }
 
     public boolean pitMode(){
+        if(cals.type == BotType.PRACTICE) return false;
         if(!cals.DS_ENABLED) return false;
         return !ds.getRawButton(cals.DS_PITMODE);
     }

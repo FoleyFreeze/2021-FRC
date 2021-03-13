@@ -70,6 +70,8 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public void stop(){
+        if(shootCals.disabled) return;
+
         setpower(0);
         if(shootCals.pneumaticHood){
             hTgtPos = HoodPos.LOW;
@@ -86,6 +88,8 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public void pneumaticHoodPosition(double distToTgt){
+        if(shootCals.disabled) return;
+
         double[] distAxis = shootCals.pnuDist[hTgtPos.ordinal()];
         if(distAxis[0] > distToTgt){
             switch(hTgtPos){
@@ -129,6 +133,8 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public void setScrewHeight(double height){
+        if(shootCals.disabled) return;
+
         height = Util.limit(height, shootCals.minScrewHeight, shootCals.maxScrewHeight);
         height *= shootCals.hoodTicksPerInch;
         hoodMotor.setPosition(height);
@@ -153,6 +159,8 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public boolean ready(){
+        if(shootCals.disabled) return false;
+
         double speed = motor.getSpeed();
         Display.put("RPM", speed);
         if(subsystem.m_transporterCW.launcher.get()){
@@ -163,6 +171,8 @@ public class CannonClimber extends SubsystemBase{
     }
 
     public void setPneumaticHood(){
+        if(shootCals.disabled) return;
+
         if(Timer.getFPGATimestamp()>solRestTime){
             switch(hTgtPos){
                 case LOW:
@@ -285,6 +295,7 @@ public class CannonClimber extends SubsystemBase{
         dropFoot.set(on);
     }
     public void setCamLights(boolean on){
+        if(shootCals.disabled) return;
         camLightsSol.set(on);
     }
 }
