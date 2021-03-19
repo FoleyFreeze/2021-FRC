@@ -69,12 +69,25 @@ public class AutoGather extends CommandBase {
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
         boolean fieldOrient = false;
+        boolean rightBall;
+        VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
+
+
+        if(idx<ballData.location.length){       //if it's within a square foot
+            rightBall = ((initBallPos[idx].getX() -12.0 <= ballData.location[idx].getX()) 
+                && (initBallPos[idx].getX() +12.0 >= ballData.location[idx].getX())
+                && (initBallPos[idx].getY() -12.0 <= ballData.location[idx].getY()) 
+                && (initBallPos[idx].getY() +12.0 >= ballData.location[idx].getY()));
+        }else{
+            rightBall = ballData.location[0].r <= 48.0;
+        }
+
         if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage() 
-                && (!auton || m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)){//robot has control
+                && (!auton || rightBall)){/*m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)*///robot has control
 
             fieldOrient = false;
 
-            VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
+            
 
             double distError = ballData.location[0].r-m_subsystem.m_drivetrain.k.autoBallGthDist;
             double dDistError = Math.sqrt((dXError*dXError)+(dYError*dYError))/ .020/*m_subsystem.dt*/;//might need to set to .020
@@ -198,6 +211,8 @@ public class AutoGather extends CommandBase {
                     double x = initBallPos[idx].getX() - botPos.getX();
                     double y = initBallPos[idx].getY() - botPos.getY();
                     Vector v = Vector.fromXY(x, y-50);//Offset for robot width and gatherer
+                    //Vector offset = new Vector(v.r - 50, v.theta + Math.signum(v.theta)*90.0);
+                    //v.subtract(offset);
                     v.threshNorm();
                     strafe = v;
                 } else {

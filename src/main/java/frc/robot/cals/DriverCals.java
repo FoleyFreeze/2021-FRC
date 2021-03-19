@@ -42,7 +42,7 @@ public class DriverCals extends CalSet {
     public double autoBallAngKp = 1.2/120.0;
     public double autoBallAngKd = 20/60;
     public double autoBallMaxD = 120;
-    public double autoBallDistKp = .30/12;//20% power applied at 12"
+    public double autoBallDistKp = .60/12;//.30/12;//20% power applied at 12"
     public double autoBallMaxPwr = .95;//5;
     public double autoBallDistKd = 0;
     public double autoBallGthDist = 10;//distance the gatherer sticks out(inches)
