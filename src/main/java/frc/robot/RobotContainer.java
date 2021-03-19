@@ -68,6 +68,8 @@ public class RobotContainer {
   public SendableChooser<CommandBase> autonChooser;
 
   public double dt;
+
+  public GalacticSearch galacticSearch;
   
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(m_drivetrain, m_intake, 
@@ -88,7 +90,8 @@ public class RobotContainer {
     autonChooser.addOption("AutoPath", new NewAutoPath(this, "CircleTest.txt"));
     autonChooser.addOption("AutonAward", new AutonAwardPath(this));
     autonChooser.addOption("barrelTest", new NewAutoPath(this, "BarrelTest.txt"));
-    autonChooser.addOption("GalacticSearch", new GalacticSearch(this));
+    galacticSearch = new GalacticSearch(this);
+    autonChooser.addOption("GalacticSearch", galacticSearch);
     autonChooser.addOption("SlalomTest", new NewAutoPath(this, "Slalom.txt"));
 //    autonChooser.addOption("AutoArc", new AutoArcDrive(this, ));
     SmartDashboard.putData(autonChooser);

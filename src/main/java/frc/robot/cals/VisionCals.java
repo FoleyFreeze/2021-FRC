@@ -4,7 +4,7 @@ public class VisionCals extends CalSet {
 
     boolean disabled = true;
     public int historySize = 5;
-    public double maxImageTime = 1.2;
+    public double maxImageTime = 0.05;//was 1.2
     public boolean coneMode = false;
 
     public VisionCals(){

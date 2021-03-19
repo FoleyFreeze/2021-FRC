@@ -105,17 +105,17 @@ public class Vision extends SubsystemBase{
 
                 double dist = Double.parseDouble(parts[1]);
                 double angle = Double.parseDouble(parts[2]);
-                Vector v = new Vector(dist, angle);
+                Vector v = new Vector(dist, Math.toRadians(angle));
                 vd.location[0] = v;
 
                 dist = Double.parseDouble(parts[3]);
                 angle = Double.parseDouble(parts[4]);
-                v = new Vector(dist, angle);
+                v = new Vector(dist, Math.toRadians(angle));
                 vd.location[1] = v;
 
                 dist = Double.parseDouble(parts[5]);
                 angle = Double.parseDouble(parts[6]);
-                v = new Vector(dist, angle);
+                v = new Vector(dist, Math.toRadians(angle));
                 vd.location[2] = v;
                 
                 vd.robotangle = m_subsystem.m_drivetrain.robotAng;

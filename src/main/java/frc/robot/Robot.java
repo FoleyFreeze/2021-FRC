@@ -47,6 +47,8 @@ public class Robot extends TimedRobot {
     lastTime = time;
     
     CommandScheduler.getInstance().run();
+
+    Display.put("Selected Auton" , m_subsystem.autonChooser.getSelected().getName());
   }
 
   double lastTime = 0;
@@ -58,6 +60,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_subsystem.galacticSearch.updateBallVector();
   }
 
   @Override

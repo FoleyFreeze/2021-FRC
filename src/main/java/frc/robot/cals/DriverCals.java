@@ -11,10 +11,10 @@ public class DriverCals extends CalSet {
         MotorCal.spark(15).ramp(0.3).limit(1.0).coast().currLim(80)};
     public MotorCal[] turnMotors = {
         //old PID values: .2 .01 .25, 1, 0.01, 0.6   
-        MotorCal.spark( 5).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.75).brake(), 
-        MotorCal.spark( 4).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.75).brake(), 
-        MotorCal.spark(10).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.75).brake(), 
-        MotorCal.spark(11).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.75).brake()};
+        MotorCal.spark( 5).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.5).brake(), //limit was .75
+        MotorCal.spark( 4).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.5).brake(), 
+        MotorCal.spark(10).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.5).brake(), 
+        MotorCal.spark(11).pid(0.2, 0.005, 0.3, 0).iLim(3).limit(0.5).brake()};
     public int[] turnEncoderIds = {2, 1, 3, 0};
     public double[] xPos = {-10.75, 10.75, -10.75, 10.75};
     public double[] yPos = {12.5, 12.5, -12.5, -12.5};
@@ -43,7 +43,7 @@ public class DriverCals extends CalSet {
     public double autoBallAngKd = 20/60;
     public double autoBallMaxD = 120;
     public double autoBallDistKp = .30/12;//20% power applied at 12"
-    public double autoBallMaxPwr = .6;//5;
+    public double autoBallMaxPwr = .95;//5;
     public double autoBallDistKd = 0;
     public double autoBallGthDist = 10;//distance the gatherer sticks out(inches)
     public double autoBallMinDist = 60;//only used for auton award routine for autogather
@@ -56,8 +56,8 @@ public class DriverCals extends CalSet {
     public double autoDriveMaxPwr = 0.55;
     public double autoDriveStartPwr = 0.15;
     public double autoDriveEndPwr = 0.15;
-    public double autoDriveStartDist = 36;
-    public double autoDriveEndDist = 36;
+    public double autoDriveStartDist = 6;
+    public double autoDriveEndDist = 6;
 
     public double autoDriveLookahead = 36;
 
@@ -83,7 +83,8 @@ public class DriverCals extends CalSet {
         switch(type){
             case COMPETITION:
                                         //these are in encoder order (not wheel order) 
-        angleOffset = new double[]{2.802, 3.662, 3.603, 0.023};
+                //angleOffset = new double[]{2.802, 3.662, 3.603, 0.023};
+                angleOffset = new double[]{2.766, 3.664, 3.566, 0.035};
             break;
 
             case PRACTICE:

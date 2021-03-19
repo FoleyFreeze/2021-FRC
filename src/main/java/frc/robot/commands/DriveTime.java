@@ -25,11 +25,12 @@ public class DriveTime extends CommandBase{
     @Override
     public void initialize(){
         endTime = Timer.getFPGATimestamp() + time;
+        sub.m_drivetrain.setBrake(true);
     }
 
     @Override
     public void execute(){
-        sub.m_drivetrain.drive(Vector.fromXY(x, y), r, false);
+        sub.m_drivetrain.drive(Vector.fromXY(x, y), r, true);
     }
 
     @Override

@@ -20,6 +20,11 @@ public class AutoGather extends CommandBase {
     public double maxPower;
     int ballCount;
 
+    public AutoGather(RobotContainer subsystem, Vector[] initBallPos) {
+        this(subsystem,false,false);
+        this.initBallPos = initBallPos;
+    }
+
     public AutoGather(RobotContainer subsystem, boolean masked, boolean kpOverride){
         m_subsystem = subsystem;
         this.masked = masked;
@@ -29,6 +34,7 @@ public class AutoGather extends CommandBase {
         }
         this.kpOverride = kpOverride;
         //this.kpOverride = true;
+        this.initBallPos = null;
     }
 
     public AutoGather(RobotContainer subsystem){
@@ -46,31 +52,15 @@ public class AutoGather extends CommandBase {
 
         ballCount = m_subsystem.m_transporterCW.ballnumber;
         prevBallPos = null; //ensure we forget old ball data
-
-        //for galactic search
-        initBallPos = null;
-        if(auton){
-            //save the most recent image with 3 balls
-            if(m_subsystem.m_vision.hasBallImage()) {
-                initBallPos = new Vector[3];
-                VisionData initialImage = m_subsystem.m_vision.ballData.getFirst();
-                Vector robot = Vector.fromXY(prevPose.getX(), prevPose.getY());
-                for(int i = 0; i < initBallPos.length; i++){
-                    double r = initialImage.location[i].r/Math.cos(initialImage.location[i].theta);
-                    double theta = Math.PI/2 - initialImage.location[i].theta + Math.toRadians(prevBotAngle);
-                    Vector ball = new Vector(r, theta);
-                    ball.add(robot);
-
-                    initBallPos[i] = ball;
-                }
-            }
-        }
+        idx = 0; //for galactic search
     }
+    
     private Vector[] initBallPos;
 
     private double prevBotAngle;
     private Pose2d prevPose;
     Pose2d ballIntersect;
+    int idx = 0;
 
     @Override
     public void execute(){
@@ -79,7 +69,8 @@ public class AutoGather extends CommandBase {
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
         boolean fieldOrient = false;
-        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage()){//robot has control
+        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage() 
+                && (!auton || m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)){//robot has control
 
             fieldOrient = false;
 
@@ -97,7 +88,7 @@ public class AutoGather extends CommandBase {
             double x = ballData.location[0].r * Math.sin(Math.toRadians(rotError));
             double y = ballData.location[0].r * Math.cos(Math.toRadians(rotError));
             
-            if(!m_subsystem.m_input.stage2V3()){
+            if(true /*!m_subsystem.m_input.stage2V3()*/){
                 double xFactor = Math.max(2.15 - ballData.location[0].r/45.0, 0);
                 if(Math.abs(x) < 2){//constant is in inches
                     x = 2 * Math.signum(x);
@@ -192,6 +183,7 @@ public class AutoGather extends CommandBase {
             rot = rotError * m_subsystem.m_drivetrain.k.autoBallAngKp + dRotError * m_subsystem.m_drivetrain.k.autoBallAngKd;*/
             
             maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
+            idx = m_subsystem.m_transporterCW.ballnumber + 1;
         }else{
             if(auton && initBallPos != null){
                 //GALACTIC SEARCH PATTERN
@@ -201,11 +193,16 @@ public class AutoGather extends CommandBase {
                 3) normalize that vector, and use it as the strafe command
                 */
                 fieldOrient = true;
-                double x = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getX();
-                double y = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getY();
-                Vector v = Vector.fromXY(x, y-28);//Offset for robot width and gatherer
-                v.threshNorm();
-                strafe = v;
+                if(idx < 3){
+                    //index is defined above
+                    double x = initBallPos[idx].getX() - botPos.getX();
+                    double y = initBallPos[idx].getY() - botPos.getY();
+                    Vector v = Vector.fromXY(x, y-50);//Offset for robot width and gatherer
+                    v.threshNorm();
+                    strafe = v;
+                } else {
+                    strafe = new Vector(1, Math.PI/2);
+                }
                 maxPower = m_subsystem.m_drivetrain.k.autoDriveMaxPwr;
                 prevBotAngle = m_subsystem.m_drivetrain.robotAng;
                 prevPose = botPos;
