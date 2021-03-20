@@ -53,6 +53,8 @@ public class AutoGather extends CommandBase {
         ballCount = m_subsystem.m_transporterCW.ballnumber;
         prevBallPos = null; //ensure we forget old ball data
         idx = 0; //for galactic search
+        rightBall = false;
+        oldImage =null;
     }
     
     private Vector[] initBallPos;
@@ -61,29 +63,49 @@ public class AutoGather extends CommandBase {
     private Pose2d prevPose;
     Pose2d ballIntersect;
     int idx = 0;
+    boolean rightBall;
+    VisionData oldImage;
 
     @Override
     public void execute(){
         double rot;
         Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
+        double botAngle = m_subsystem.m_drivetrain.robotAng;
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
         boolean fieldOrient = false;
-        boolean rightBall;
         VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
 
 
-        if(idx<ballData.location.length){       //if it's within a square foot
-            rightBall = ((initBallPos[idx].getX() -12.0 <= ballData.location[idx].getX()) 
-                && (initBallPos[idx].getX() +12.0 >= ballData.location[idx].getX())
-                && (initBallPos[idx].getY() -12.0 <= ballData.location[idx].getY()) 
-                && (initBallPos[idx].getY() +12.0 >= ballData.location[idx].getY()));
-        }else{
-            rightBall = ballData.location[0].r <= 48.0;
+        if(auton && initBallPos != null){
+            if(idx<3){       //if it's within a square foot
+                Vector ballCoords = ballData.location[0].camToFieldVec(botAngle, Vector.fromPose(botPos));
+                double dist = Vector.subtract(initBallPos[idx], ballCoords).r;
+
+                //is the ball we see the next ball we should gather
+                if(Math.abs(dist) <= 45){
+                    rightBall = true;
+                }else{
+                    //if we just lost it, that means we probably gathered it
+                    if(ballCoords != null){
+                        if(rightBall && oldImage.location[0].r < 30){
+                            idx++;
+                        }
+                    }
+                    rightBall = false;
+                }
+
+                oldImage = ballData;
+                System.out.println(rightBall + " " + initBallPos[idx] + " " + ballCoords  + " " + oldImage.location[0].r);
+            }else{
+                rightBall = ballData.location[0].r <= 48.0;
+            }
+        } else {
+            rightBall = true;
         }
 
         if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage() 
-                && (!auton || rightBall)){/*m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)*///robot has control
+                && rightBall){/*m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)*///robot has control
 
             fieldOrient = false;
 
@@ -94,7 +116,7 @@ public class AutoGather extends CommandBase {
 
             // strafe = Vector.fromXY(-distError * m_subsystem.m_drivetrain.k.autoBallDistKp 
             //                        - dDistError*m_subsystem.m_drivetrain.k.autoBallDistKd, 0);
-            double botAngle = m_subsystem.m_drivetrain.robotAng;
+            
             double robotAngleDiff = Util.angleDiff(botAngle, ballData.robotangle);
             double rotError = Util.angleDiff(Math.toDegrees(ballData.location[0].theta), robotAngleDiff);
             
@@ -196,7 +218,6 @@ public class AutoGather extends CommandBase {
             rot = rotError * m_subsystem.m_drivetrain.k.autoBallAngKp + dRotError * m_subsystem.m_drivetrain.k.autoBallAngKd;*/
             
             maxPower = m_subsystem.m_drivetrain.k.autoBallMaxPwr;
-            idx = m_subsystem.m_transporterCW.ballnumber + 1;
         }else{
             if(auton && initBallPos != null){
                 //GALACTIC SEARCH PATTERN
@@ -210,7 +231,7 @@ public class AutoGather extends CommandBase {
                     //index is defined above
                     double x = initBallPos[idx].getX() - botPos.getX();
                     double y = initBallPos[idx].getY() - botPos.getY();
-                    Vector v = Vector.fromXY(x, y-50);//Offset for robot width and gatherer
+                    Vector v = Vector.fromXY(x, y-64);//Offset for robot width and gatherer
                     //Vector offset = new Vector(v.r - 50, v.theta + Math.signum(v.theta)*90.0);
                     //v.subtract(offset);
                     v.threshNorm();
@@ -259,7 +280,7 @@ public class AutoGather extends CommandBase {
     public boolean isFinished(){
         if(auton){
             if(kpOverride) return m_subsystem.m_transporterCW.ballnumber > ballCount; //for other skills challenges
-            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt; //for galactic search
+            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt-1 || idx == 3; //for galactic search
         }
         return false;
     }

@@ -40,7 +40,7 @@ public class GalacticSearch extends SequentialCommandGroup {
             Vector[] tempVectors = new Vector[3];
             boolean allgood = true;
             VisionData initialImage = m_subsystem.m_vision.ballData.getFirst();
-            Vector robot = Vector.fromXY(pos.getX(), pos.getY());
+            Vector robot = Vector.fromPose(pos);
             for(int i = 0; i < tempVectors.length; i++){
                 double r = initialImage.location[i].r/Math.cos(initialImage.location[i].theta);
                 double theta = Math.PI - initialImage.location[i].theta + Math.toRadians(angle);

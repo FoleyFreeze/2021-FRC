@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -56,7 +57,7 @@ public class Vision extends SubsystemBase{
     public boolean hasBallImage(){
         if(ballData.size() > 0){
             VisionData vd = ballData.getFirst();
-            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTime;
+            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTime  && Math.abs(vd.location[0].theta) < Math.toRadians(45);
         }
         return false;
     }
@@ -71,6 +72,7 @@ public class Vision extends SubsystemBase{
                 VisionData vd = new VisionData(1);
                 String data = value.getString();
                 String[] parts = data.split(",");
+                Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
 
                 double dist = Double.parseDouble(parts[1]);
                 double angle = Double.parseDouble(parts[2]);
