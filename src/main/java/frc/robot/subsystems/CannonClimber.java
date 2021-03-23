@@ -251,7 +251,12 @@ public class CannonClimber extends SubsystemBase{
         Display.put("CC Motor Temp 0", motor.getTemp());
         Display.put("CC Motor Temp 1", motor2.getTemp());
         Display.put("RPM", motor.getSpeed());
-        Display.put("CLError", targetSpeed - motor.getSpeed());
+        double cle = targetSpeed - motor.getSpeed();
+        if(Math.abs(cle) < 100){
+            Display.put("CLError", cle);
+        }
+        
+        
         if(shootCals.pneumaticHood){
             Display.put("Hood Pos", hCurrPos.toString());
         } else {

@@ -49,7 +49,7 @@ public class Vision extends SubsystemBase{
     public boolean hasTargetImage(){
         if(targetData.size() > 0){
             VisionData vd = targetData.getFirst();
-            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTime;
+            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTimeTgt;
         }
         return false;
     }
@@ -57,7 +57,7 @@ public class Vision extends SubsystemBase{
     public boolean hasBallImage(){
         if(ballData.size() > 0){
             VisionData vd = ballData.getFirst();
-            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTime  && Math.abs(vd.location[0].theta) < Math.toRadians(45);
+            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTimeBall  && Math.abs(vd.location[0].theta) < Math.toRadians(45);
         }
         return false;
     }

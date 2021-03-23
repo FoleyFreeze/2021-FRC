@@ -53,8 +53,10 @@ public class AutoShoot extends CommandBase{
         prevRobotAngle = m_subsystem.m_drivetrain.robotAng;
         prevTime = Timer.getFPGATimestamp();
         sumError = 0;
+        prevReady = false;
     }
 
+    boolean prevReady;
     @Override
     public void execute(){
         double time = Timer.getFPGATimestamp();
@@ -132,11 +134,15 @@ public class AutoShoot extends CommandBase{
         if(!masked){
 
             m_subsystem.m_cannonClimber.prime(dist);
+            boolean ready = m_subsystem.m_cannonClimber.ready();
 
-            if(m_subsystem.m_cannonClimber.ready() && dist != 0 && aligned && m_subsystem.m_transporterCW.ballnumber > 0){
+            //ensure we are within rpm target 2x in a row
+            if(prevReady && ready && dist != 0 && aligned && m_subsystem.m_transporterCW.ballnumber > 0){
                 m_subsystem.m_transporterCW.shootAll();
                 shootFinTime = Timer.getFPGATimestamp() + m_subsystem.m_cannonClimber.shootCals.shootTime;
             } 
+
+            prevReady = ready;
         }else{
             if(m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt){
                 //Once this starts up, it will not stop priming, which is theoretically fine

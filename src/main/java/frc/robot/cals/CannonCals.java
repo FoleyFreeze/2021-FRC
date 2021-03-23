@@ -41,8 +41,8 @@ public class CannonCals extends CalSet {
                               { -0.5, 0.0, 35.0},
                               { 30.0, 60.0, 70.0},
                               {60.0, 83.0, 500.0}};
-    public double allowedRpmError = 50;
-    public double allowedRpmHyst = 50;
+    public double allowedRpmError = 25;
+    public double allowedRpmHyst = 25;
     public final double SOL_RESTTIME = 0.2; 
     public boolean pneumaticHood = false;
     public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.1, 0.0001, 0.0, 0).iLim(2).limit(0.3).resetEnc(false).invert();//.brake();
