@@ -196,11 +196,20 @@ public class Drivetrain extends SubsystemBase{
         drive(strafe, rot, 0, 0, mSubsystem.m_input.fieldOrient());
     }
 
+    public void drive(Vector strafe, double rot, boolean fieldOrient){
+        drive(strafe, rot, 0, 0, fieldOrient);
+    }
+
     public void drive(Vector strafe, double rot, double maxPower){
         drive(strafe, rot, 0, 0, mSubsystem.m_input.fieldOrient(), maxPower);
     }
 
+    public void drive(Vector strafe, double rot, double maxPower, boolean fieldOrient){
+        drive(strafe, rot, 0, 0, fieldOrient, maxPower);
+    }
+
         //joystick x, joystick y, joystick rot, center of rotation x and y, field oriented
+        //boolean botRelFirst = false;
     public void drive(Vector strafe, double rot, double centX, double centY, boolean fieldOrient, double maxPower){
         if(k.disabled) return;
         currentTime = Timer.getFPGATimestamp();
@@ -210,9 +219,14 @@ public class Drivetrain extends SubsystemBase{
         //SmartDashboard.putNumber("RobotAngle", navX.getAngle());
         if(fieldOrient){
             strafe.theta -= Math.toRadians(-navX.getAngle() % 360) /*- Math.PI/2*/;
+            
             //while(strafe.theta > 180) strafe.theta -= 360;
             //while(strafe.theta < -180) strafe.theta += 360;
-        }
+            //botRelFirst = true;
+        } /*else if(botRelFirst){
+            setStartPosition(0.0, 0.0);
+            //botRelFirst = false;
+        }*/
         
         //SmartDashboard.putBoolean("Driving Straight", driveStraight);
         
@@ -320,6 +334,14 @@ public class Drivetrain extends SubsystemBase{
         strafeGood = true;
         SmartDashboard.putString("StrafeCmd",strafePwr.toString());
         if(rotGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr));
+        this.strafePwr = strafePwr;
+        this.maxPwr = maxPwr;
+    }
+
+    public void driveStrafe(Vector strafePwr, double maxPwr, boolean fieldOrient){
+        strafeGood = true;
+        SmartDashboard.putString("StrafeCmd",strafePwr.toString());
+        if(rotGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr), fieldOrient);
         this.strafePwr = strafePwr;
         this.maxPwr = maxPwr;
     }

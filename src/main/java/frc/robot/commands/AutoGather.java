@@ -20,6 +20,11 @@ public class AutoGather extends CommandBase {
     public double maxPower;
     int ballCount;
 
+    public AutoGather(RobotContainer subsystem, Vector[] initBallPos) {
+        this(subsystem,false,false);
+        this.initBallPos = initBallPos;
+    }
+
     public AutoGather(RobotContainer subsystem, boolean masked, boolean kpOverride){
         m_subsystem = subsystem;
         this.masked = masked;
@@ -27,8 +32,9 @@ public class AutoGather extends CommandBase {
             addRequirements(m_subsystem.m_intake);
             addRequirements(m_subsystem.m_driveStrafe);
         }
-        //this.kpOverride = kpOverride;
-        this.kpOverride = true;
+        this.kpOverride = kpOverride;
+        //this.kpOverride = true;
+        this.initBallPos = null;
     }
 
     public AutoGather(RobotContainer subsystem){
@@ -46,55 +52,80 @@ public class AutoGather extends CommandBase {
 
         ballCount = m_subsystem.m_transporterCW.ballnumber;
         prevBallPos = null; //ensure we forget old ball data
-
-        //for galactic search
-        initBallPos = null;
-        if(auton){
-            //save the most recent image with 3 balls
-            if(m_subsystem.m_vision.hasBallImage()) {
-                initBallPos = new Vector[3];
-                VisionData initialImage = m_subsystem.m_vision.ballData.getFirst();
-                Vector robot = Vector.fromXY(prevPose.getX(), prevPose.getY());
-                for(int i = 0; i < initBallPos.length; i++){
-                    double r = initialImage.location[i].r/Math.cos(initialImage.location[i].theta);
-                    double theta = Math.PI/2 - initialImage.location[i].theta + Math.toRadians(prevBotAngle);
-                    Vector ball = new Vector(r, theta);
-                    ball.add(robot);
-
-                    initBallPos[i] = ball;
-                }
-            }
-        }
+        idx = 0; //for galactic search
+        rightBall = false;
+        oldImage =null;
     }
+    
     private Vector[] initBallPos;
 
     private double prevBotAngle;
     private Pose2d prevPose;
     Pose2d ballIntersect;
+    int idx = 0;
+    boolean rightBall;
+    VisionData oldImage;
 
     @Override
     public void execute(){
         double rot;
         Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
+        double botAngle = m_subsystem.m_drivetrain.robotAng;
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
-        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage()){//robot has control
+        boolean fieldOrient = false;
+        VisionData ballData = null;
+        if(m_subsystem.m_vision.ballData.size() != 0) ballData = m_subsystem.m_vision.ballData.getFirst();
 
-            VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
+
+        if(auton && initBallPos != null){
+            if(idx<3 && m_subsystem.m_vision.hasBallImage()){
+                Vector ballCoords = ballData.location[0].camToFieldVec(botAngle, Vector.fromPose(botPos));
+                double dist = Vector.subtract(initBallPos[idx], ballCoords).r;
+
+                //is the ball we see the next ball we should gather
+                if(Math.abs(dist) <= 45){
+                    rightBall = true;
+                }else{
+                    //if we just lost it, that means we probably gathered it
+                    if(ballCoords != null){
+                        if(rightBall && oldImage.location[0].r < 30){
+                            idx++;
+                        }
+                    }
+                    rightBall = false;
+                }
+
+                oldImage = ballData;
+                System.out.println(rightBall + " " + initBallPos[idx] + " " + ballCoords  + " " + oldImage.location[0].r);
+            }else{
+                //no ball in the current image
+                rightBall = false;
+            }
+        } else {
+            rightBall = true;
+        }
+
+        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage() 
+                && rightBall){/*m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)*///robot has control
+
+            fieldOrient = false;
+
+            
 
             double distError = ballData.location[0].r-m_subsystem.m_drivetrain.k.autoBallGthDist;
             double dDistError = Math.sqrt((dXError*dXError)+(dYError*dYError))/ .020/*m_subsystem.dt*/;//might need to set to .020
 
             // strafe = Vector.fromXY(-distError * m_subsystem.m_drivetrain.k.autoBallDistKp 
             //                        - dDistError*m_subsystem.m_drivetrain.k.autoBallDistKd, 0);
-            double botAngle = m_subsystem.m_drivetrain.robotAng;
+            
             double robotAngleDiff = Util.angleDiff(botAngle, ballData.robotangle);
             double rotError = Util.angleDiff(Math.toDegrees(ballData.location[0].theta), robotAngleDiff);
             
             double x = ballData.location[0].r * Math.sin(Math.toRadians(rotError));
             double y = ballData.location[0].r * Math.cos(Math.toRadians(rotError));
             
-            if(!m_subsystem.m_input.stage2V3()){
+            if(true /*!m_subsystem.m_input.stage2V3()*/){
                 double xFactor = Math.max(2.15 - ballData.location[0].r/45.0, 0);
                 if(Math.abs(x) < 2){//constant is in inches
                     x = 2 * Math.signum(x);
@@ -165,10 +196,10 @@ public class AutoGather extends CommandBase {
             }
 
             prevPose=botPos;
-            boolean fieldOrient = m_subsystem.m_input.fieldOrient();
+            /*boolean fieldOrient = m_subsystem.m_input.fieldOrient();
             if(fieldOrient){
                 strafe.theta -= m_subsystem.m_drivetrain.robotAng;
-            }
+            }*/
 
             //if we are still gathering/indexing the first ball
             //dont drive into the second (but maybe still rotate)
@@ -197,16 +228,25 @@ public class AutoGather extends CommandBase {
                 2) subtract some y offset to target just before the next ball so that the gatherer can get it
                 3) normalize that vector, and use it as the strafe command
                 */
-                double x = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getX();
-                double y = initBallPos[m_subsystem.m_transporterCW.ballnumber].getX() - botPos.getY();
-                Vector v = Vector.fromXY(x, y-28);//Offset for robot width and gatherer
-                v.threshNorm();
-                strafe = v;
+                fieldOrient = true;
+                if(idx < 3){
+                    //index is defined above
+                    double x = initBallPos[idx].getX() - botPos.getX();
+                    double y = initBallPos[idx].getY() - botPos.getY();
+                    Vector v = Vector.fromXY(x, y-64);//Offset for robot width and gatherer
+                    //Vector offset = new Vector(v.r - 50, v.theta + Math.signum(v.theta)*90.0);
+                    //v.subtract(offset);
+                    v.threshNorm();
+                    strafe = v;
+                } else {
+                    strafe = new Vector(1, Math.PI/2);
+                }
                 maxPower = m_subsystem.m_drivetrain.k.autoDriveMaxPwr;
                 prevBotAngle = m_subsystem.m_drivetrain.robotAng;
                 prevPose = botPos;
 
             } else {//driver has control
+                fieldOrient = m_subsystem.m_input.fieldOrient();
                 strafe = m_subsystem.m_input.getXY();
                 maxPower = 1;
                 prevBotAngle = m_subsystem.m_drivetrain.robotAng;
@@ -214,7 +254,7 @@ public class AutoGather extends CommandBase {
             }
         }
         rot = m_subsystem.m_input.getRot();
-        m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower);
+        m_subsystem.m_drivetrain.driveStrafe(strafe, maxPower, fieldOrient);
         
         if(!masked && m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt && !m_subsystem.m_input.shift()){//limiting balls in tn to maximum
             m_subsystem.m_intake.dropIntake(false);
@@ -242,7 +282,7 @@ public class AutoGather extends CommandBase {
     public boolean isFinished(){
         if(auton){
             if(kpOverride) return m_subsystem.m_transporterCW.ballnumber > ballCount; //for other skills challenges
-            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt; //for galactic search
+            else return m_subsystem.m_transporterCW.ballnumber >= m_subsystem.m_transporterCW.tCals.maxBallCt-1 || idx == 3; //for galactic search
         }
         return false;
     }

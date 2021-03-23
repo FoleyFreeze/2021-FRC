@@ -43,6 +43,7 @@ import frc.robot.commands.auton.AutoSC_Test;
 import frc.robot.commands.AutoShoot;
 import frc.robot.commands.AutoShootGather;
 import frc.robot.commands.auton.AutonSquare;
+import frc.robot.commands.auton.BouncePath;
 import frc.robot.commands.auton.CWCombo;
 import frc.robot.commands.auton.GalacticSearch;
 import frc.robot.commands.Climb;
@@ -68,6 +69,8 @@ public class RobotContainer {
   public SendableChooser<CommandBase> autonChooser;
 
   public double dt;
+
+  public GalacticSearch galacticSearch;
   
   public RobotContainer() {
     CommandScheduler.getInstance().registerSubsystem(m_drivetrain, m_intake, 
@@ -87,8 +90,11 @@ public class RobotContainer {
     autonChooser.addOption("AutoSquare", new AutonSquare(this));
     autonChooser.addOption("AutoPath", new NewAutoPath(this, "CircleTest.txt"));
     autonChooser.addOption("AutonAward", new AutonAwardPath(this));
-    autonChooser.addOption("barrelTest", new NewAutoPath(this, "BarrelTest.txt"));
-    autonChooser.addOption("GalacticSearch", new GalacticSearch(this));
+    autonChooser.addOption("BarrelTest", new NewAutoPath(this, "BarrelTest.txt"));
+    galacticSearch = new GalacticSearch(this);
+    autonChooser.addOption("GalacticSearch", galacticSearch);
+    autonChooser.addOption("SlalomTest", new NewAutoPath(this, "Slalom.txt"));
+    autonChooser.addOption("BouncePath", new BouncePath(this));
 //    autonChooser.addOption("AutoArc", new AutoArcDrive(this, ));
     SmartDashboard.putData(autonChooser);
   }

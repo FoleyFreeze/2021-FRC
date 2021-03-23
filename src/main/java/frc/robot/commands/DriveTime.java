@@ -19,16 +19,18 @@ public class DriveTime extends CommandBase{
         this.x = x;
         this.y = y;
         this.r = r;
+        addRequirements(sub.m_drivetrain);
     }
 
     @Override
     public void initialize(){
         endTime = Timer.getFPGATimestamp() + time;
+        sub.m_drivetrain.setBrake(true);
     }
 
     @Override
     public void execute(){
-        sub.m_drivetrain.drive(Vector.fromXY(x, y), r);
+        sub.m_drivetrain.drive(Vector.fromXY(x, y), r, true);
     }
 
     @Override

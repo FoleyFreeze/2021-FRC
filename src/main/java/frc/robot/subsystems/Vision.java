@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -48,7 +49,7 @@ public class Vision extends SubsystemBase{
     public boolean hasTargetImage(){
         if(targetData.size() > 0){
             VisionData vd = targetData.getFirst();
-            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTime;
+            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTimeTgt;
         }
         return false;
     }
@@ -56,7 +57,7 @@ public class Vision extends SubsystemBase{
     public boolean hasBallImage(){
         if(ballData.size() > 0){
             VisionData vd = ballData.getFirst();
-            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTime;
+            return Timer.getFPGATimestamp() - vd.timestamp < cals.maxImageTimeBall  && Math.abs(vd.location[0].theta) < Math.toRadians(45);
         }
         return false;
     }
@@ -71,6 +72,7 @@ public class Vision extends SubsystemBase{
                 VisionData vd = new VisionData(1);
                 String data = value.getString();
                 String[] parts = data.split(",");
+                Pose2d botPos = m_subsystem.m_drivetrain.drivePos;
 
                 double dist = Double.parseDouble(parts[1]);
                 double angle = Double.parseDouble(parts[2]);
@@ -105,17 +107,17 @@ public class Vision extends SubsystemBase{
 
                 double dist = Double.parseDouble(parts[1]);
                 double angle = Double.parseDouble(parts[2]);
-                Vector v = new Vector(dist, angle);
+                Vector v = new Vector(dist, Math.toRadians(angle));
                 vd.location[0] = v;
 
                 dist = Double.parseDouble(parts[3]);
                 angle = Double.parseDouble(parts[4]);
-                v = new Vector(dist, angle);
+                v = new Vector(dist, Math.toRadians(angle));
                 vd.location[1] = v;
 
                 dist = Double.parseDouble(parts[5]);
                 angle = Double.parseDouble(parts[6]);
-                v = new Vector(dist, angle);
+                v = new Vector(dist, Math.toRadians(angle));
                 vd.location[2] = v;
                 
                 vd.robotangle = m_subsystem.m_drivetrain.robotAng;

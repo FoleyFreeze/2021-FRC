@@ -117,4 +117,11 @@ public class Vector{
     public boolean equals(Vector v){
         return v.r == r && v.theta == theta;
     }
+
+    //this turns a camera vector into a field relative vector
+    public Vector camToFieldVec(double botAngle, Vector botPos) {
+        double radius = r / Math.cos(theta);
+        double fieldTheta = Math.PI - theta + Math.toRadians(botAngle);
+        return new Vector(radius, fieldTheta).add(botPos);
+    }
 }

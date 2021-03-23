@@ -88,7 +88,7 @@ public class AutoArcDrive extends CommandBase{
             } else{//If the target isn't reached or close enough
                 circAng = tan.theta;    
                 //m_subsystem.m_drivetrain.driveStrafe(tan, k.autoDriveMaxPwr);
-                m_subsystem.m_drivetrain.drive(tan, 0, k.autoDriveMaxPwr);
+                m_subsystem.m_drivetrain.drive(tan, 0, k.autoDriveMaxPwr, true);
             }
 
             first = false;
