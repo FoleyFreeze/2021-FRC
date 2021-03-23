@@ -74,11 +74,12 @@ public class AutoGather extends CommandBase {
         double dXError = botPos.getX()-prevPose.getX();
         double dYError = botPos.getY()-prevPose.getY();
         boolean fieldOrient = false;
-        VisionData ballData = m_subsystem.m_vision.ballData.getFirst();
+        VisionData ballData = null;
+        if(m_subsystem.m_vision.ballData.size() != 0) ballData = m_subsystem.m_vision.ballData.getFirst();
 
 
         if(auton && initBallPos != null){
-            if(idx<3){       //if it's within a square foot
+            if(idx<3 && m_subsystem.m_vision.hasBallImage()){
                 Vector ballCoords = ballData.location[0].camToFieldVec(botAngle, Vector.fromPose(botPos));
                 double dist = Vector.subtract(initBallPos[idx], ballCoords).r;
 
@@ -98,7 +99,8 @@ public class AutoGather extends CommandBase {
                 oldImage = ballData;
                 System.out.println(rightBall + " " + initBallPos[idx] + " " + ballCoords  + " " + oldImage.location[0].r);
             }else{
-                rightBall = ballData.location[0].r <= 48.0;
+                //no ball in the current image
+                rightBall = false;
             }
         } else {
             rightBall = true;
