@@ -61,8 +61,8 @@ public class DriverCals extends CalSet {
 
     public double autoDriveLookahead = 36;
 
-    public double lookAheadCurve = 2.5;//8;//2.15;
-    public double circKp = 0.15;//0.2;//1/12.0;
+    public double lookAheadCurve = 1.5;//2.5;//8;//2.15;
+    public double circKp = 0.05;//0.15;//0.2;//1/12.0;
     public double minDistAutoCirc = 10;
     public double minAngDiffAuto = Math.toRadians(10);
 

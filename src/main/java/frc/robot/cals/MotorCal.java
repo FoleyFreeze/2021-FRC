@@ -20,7 +20,7 @@ public class MotorCal {
     public double currentLimit = 50;
     public int overCurrentCountLimit = 50;
     public double overCurrentRestTime = 5;
-    public double tempLimit = 60*9/5.0+32;//F
+    public double tempLimit = /*60C*/ 140/*F*/;
     public double overTempRestTime = 30;
     public int overCurrentCountDown = 1;
     public boolean resetEnc = true;

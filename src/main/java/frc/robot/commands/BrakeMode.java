@@ -10,7 +10,7 @@ public class BrakeMode extends CommandBase{
 
     public BrakeMode(RobotContainer subsystem, boolean on){
         m_subsystem = subsystem;
-        addRequirements(m_subsystem.m_drivetrain);
+        //addRequirements(m_subsystem.m_drivetrain);
         this.on = on;
     }
 

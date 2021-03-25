@@ -25,8 +25,10 @@ public class NewAutoPath extends CommandBase{
     
     public NewAutoPath(RobotContainer subsystem, String fileName){
         m_subsystem = subsystem;
-        addRequirements(subsystem.m_drivetrain);
+        addRequirements(subsystem.m_driveStrafe);
+        addRequirements(subsystem.m_driveRot);
         path = Circle.fromFile(fileName);
+        System.out.println(fileName + " length = " + path.size());
         k = m_subsystem.m_drivetrain.k;
     }   
 
@@ -48,7 +50,7 @@ public class NewAutoPath extends CommandBase{
         Vector tan;
 
         if(tgt.radius > 0){//circle
-            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), prevDriveAngle));
+            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), path.get(idx-1).end));
             Vector radial = Vector.fromXY(tgt.getCentX()-botPos.getX(), tgt.getCentY()-botPos.getY());
 
             //finishes segment when error less than cal and sign change
@@ -76,13 +78,17 @@ public class NewAutoPath extends CommandBase{
         }
 
         tan.r = k.autoDriveMaxPwr;
+
+        System.out.println("Idx: " + idx);
+        System.out.println(tan.toString());
+
         if(tgtReached){//If the target is close enough
             idx++;
             prevDist = 9999;
             prevSign = 0;
         } else{//If the target isn't reached or close enough
             prevDriveAngle = tan.theta;    
-            m_subsystem.m_drivetrain.drive(tan, 0);
+            m_subsystem.m_drivetrain.drive(tan, 0, true);//force field oriented
         }
     }
 

@@ -12,10 +12,6 @@ public class BouncePath extends SequentialCommandGroup {
 
     public BouncePath(RobotContainer subsystem){
         m_subsystem = subsystem;
-    }
-
-    @Override
-    public void initialize(){
         addCommands(
             new NewAutoPath(m_subsystem, "BouncePath1.txt"),
             new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.1)),
@@ -25,6 +21,10 @@ public class BouncePath extends SequentialCommandGroup {
             new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.1)),
             new NewAutoPath(m_subsystem, "BouncePath4.txt").alongWith(new BrakeMode(m_subsystem, false))
         );
+    }
+
+    @Override
+    public void initialize(){
         super.initialize();
     }
 }

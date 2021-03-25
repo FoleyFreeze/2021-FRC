@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 public class Circle {
     public double radius;
     Waypoint center;
-    Waypoint end;
+    public Waypoint end;
 
     //this is a circle
     public Circle(Waypoint end, Waypoint center){
@@ -26,10 +26,11 @@ public class Circle {
         radius = 0;
     }
 
-    public double tangentAngle(double botX, double botY, double botAngle){
+    public double tangentAngle(double botX, double botY, Waypoint start){
         //(botY - center.y)*(botY - center.y)=radius*radius-((botX - center.x)*(botX - center.x));
+        Vector v = Vector.fromXY(end.x - start.x, end.y - start.y);
         double radAngle = Math.atan2(botY-center.y, botX-center.x);
-        double delta = Util.angleDiffRad(radAngle+Math.PI/2, botAngle);
+        double delta = Util.angleDiffRad(radAngle+Math.PI/2, v.theta);
         if (Math.abs(delta)>Math.PI/2){
             return radAngle - Math.PI/2;
         } else {

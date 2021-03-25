@@ -93,7 +93,7 @@ public class RobotContainer {
     autonChooser.addOption("BarrelTest", new NewAutoPath(this, "BarrelTest.txt"));
     galacticSearch = new GalacticSearch(this);
     autonChooser.addOption("GalacticSearch", galacticSearch);
-    autonChooser.addOption("SlalomTest", new NewAutoPath(this, "Slalom.txt"));
+    autonChooser.addOption("SlalomTest", new NewAutoPath(this, "SlalomTest.txt"));
     autonChooser.addOption("BouncePath", new BouncePath(this));
 //    autonChooser.addOption("AutoArc", new AutoArcDrive(this, ));
     SmartDashboard.putData(autonChooser);

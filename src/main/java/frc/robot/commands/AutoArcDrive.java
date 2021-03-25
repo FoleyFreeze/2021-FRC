@@ -9,6 +9,7 @@ import frc.robot.cals.DriverCals;
 import frc.robot.util.Circle;
 import frc.robot.util.Util;
 import frc.robot.util.Vector;
+import frc.robot.util.Waypoint;
 
 public class AutoArcDrive extends CommandBase{
     
@@ -19,6 +20,7 @@ public class AutoArcDrive extends CommandBase{
     DriverCals k;
     boolean stop;
     double maxPwr;
+    Waypoint start;
 
     public AutoArcDrive(RobotContainer subsystem, String path, boolean stop, double maxPwr){
         tgtCirc = Circle.fromFile(path);
@@ -28,9 +30,10 @@ public class AutoArcDrive extends CommandBase{
         k = m_subsystem.m_drivetrain.k;
         this.stop = stop;
         this.maxPwr = maxPwr;
+        start = tgtCirc.get(0).end;
     }
 
-    public AutoArcDrive(RobotContainer subsystem, Circle circle, boolean stop, double maxPwr){
+    public AutoArcDrive(RobotContainer subsystem, Circle circle, boolean stop, double maxPwr, Waypoint start){
         m_subsystem = subsystem;
         tgtCirc = new ArrayList<>();
         botPos = m_subsystem.m_drivetrain.drivePos;
@@ -39,6 +42,7 @@ public class AutoArcDrive extends CommandBase{
         k = m_subsystem.m_drivetrain.k;
         this.stop = stop;
         this.maxPwr = maxPwr;
+        this.start = start;
     }
 
     double prevSign;
@@ -64,7 +68,7 @@ public class AutoArcDrive extends CommandBase{
             botPos = m_subsystem.m_drivetrain.drivePos;
             Vector tan;
 
-            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), circAng));
+            tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), start));
             Vector radial = Vector.fromXY(tgt.getCentX()-botPos.getX(), tgt.getCentY()-botPos.getY());
 
             //finishes segment when error less than cal and sign change
