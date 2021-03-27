@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -208,7 +209,7 @@ public class Inputs{
 
     public boolean driveStraight(){
         if(flySky){
-            return joy.getRawButton(cals.FS_DRIVESTRAIGHT);
+            return joy.getRawButton(cals.FS_DRIVESTRAIGHT) || DriverStation.getInstance().isAutonomous();
         } else {
             return joy.getRawButton(cals.XB_DRIVESTRAIGHT);
         }

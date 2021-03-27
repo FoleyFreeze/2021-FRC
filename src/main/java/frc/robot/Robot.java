@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     Display.init();
     CalSet.identifyBot();
-    
+    SmartDashboard.putNumber("DistError",0);
     m_subsystem = new RobotContainer();
   }
 

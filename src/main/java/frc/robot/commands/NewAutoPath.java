@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.cals.DriverCals;
@@ -48,6 +49,7 @@ public class NewAutoPath extends CommandBase{
         Circle tgt = path.get(idx);
         botPos = m_subsystem.m_drivetrain.drivePos;
         Vector tan;
+        double distError;
 
         if(tgt.radius > 0){//circle
             tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), path.get(idx-1).end));
@@ -60,6 +62,7 @@ public class NewAutoPath extends CommandBase{
 
             //apply correction for being too far/close from the center
             radial.r -= tgt.radius;
+            distError = radial.r;
             radial.r*= k.circKp;
             //apply correction depending on how fast we are moving
             radial.r += k.lookAheadCurve*(k.autoDriveMaxPwr/tgt.radius);
@@ -74,13 +77,23 @@ public class NewAutoPath extends CommandBase{
             tgtReached = dist < k.minDistAutoCirc && dist > prevDist;
             prevDist = dist;
 
+            Circle prev = path.get(idx-1);
+            double dx = prev.getX() - tgt.getX();
+            double dy = prev.getY() - tgt.getY();
+            double top = Math.abs(-dy*botPos.getX() + dx*botPos.getY() + dy*tgt.getX() - dx*tgt.getY());
+            double bot = Math.sqrt(dy*dy + dx*dx);
+            distError = top / bot;
+
+
             tan = Vector.fromXY(tgt.getX() - botPos.getX(), tgt.getY() - botPos.getY());
         }
 
-        tan.r = k.autoDriveMaxPwr;
+        if(tgt.maxPwr == 0)tan.r = k.autoDriveMaxPwr;
+        else tan.r = tgt.maxPwr;
 
-        System.out.println("Idx: " + idx);
-        System.out.println(tan.toString());
+        SmartDashboard.putNumber("DistError",distError);
+        //System.out.println("Idx: " + idx);
+        //System.out.println(tan.toString());
 
         if(tgtReached){//If the target is close enough
             idx++;
@@ -95,7 +108,7 @@ public class NewAutoPath extends CommandBase{
     @Override
     public void end(boolean interrupted){
         m_subsystem.m_drivetrain.drive(new Vector(0, 0), 0, 0, 0, true);
-        m_subsystem.m_drivetrain.setBrake(true);
+        //m_subsystem.m_drivetrain.setBrake(true);
     }
 
     @Override
