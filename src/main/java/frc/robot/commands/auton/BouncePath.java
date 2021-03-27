@@ -14,12 +14,12 @@ public class BouncePath extends SequentialCommandGroup {
         m_subsystem = subsystem;
         addCommands(
             new NewAutoPath(m_subsystem, "BouncePath1.txt"),
-            new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.1)),
-            new NewAutoPath(m_subsystem, "BouncePath2.txt").alongWith(new BrakeMode(m_subsystem, false)),
-            new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.1)),
-            new NewAutoPath(m_subsystem, "BouncePath3.txt").alongWith(new BrakeMode(m_subsystem, false)),
-            new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.1)),
-            new NewAutoPath(m_subsystem, "BouncePath4.txt").alongWith(new BrakeMode(m_subsystem, false))
+            new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.3)),
+            new NewAutoPath(m_subsystem, "BouncePath2.txt", false).alongWith(new BrakeMode(m_subsystem, false)),
+            new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.3)),
+            new NewAutoPath(m_subsystem, "BouncePath3.txt", false).alongWith(new BrakeMode(m_subsystem, false)),
+            new BrakeMode(m_subsystem, true).alongWith(new WaitCommand(0.3)),
+            new NewAutoPath(m_subsystem, "BouncePath4.txt", false).alongWith(new BrakeMode(m_subsystem, false))
         );
     }
 

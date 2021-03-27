@@ -21,6 +21,7 @@ public class NewAutoPath extends CommandBase{
     double prevSign;
     boolean tgtReached;
     DriverCals k;
+    boolean reset = true;
     
     private RobotContainer m_subsystem;   
     
@@ -31,13 +32,24 @@ public class NewAutoPath extends CommandBase{
         path = Circle.fromFile(fileName);
         System.out.println(fileName + " length = " + path.size());
         k = m_subsystem.m_drivetrain.k;
+        reset = true;
     }   
+
+    public NewAutoPath(RobotContainer subsystem, String fileName, boolean reset){
+        m_subsystem = subsystem;
+        addRequirements(subsystem.m_driveStrafe);
+        addRequirements(subsystem.m_driveRot);
+        path = Circle.fromFile(fileName);
+        System.out.println(fileName + " length = " + path.size());
+        k = m_subsystem.m_drivetrain.k;
+        this.reset = reset;
+    }
 
     @Override
     public void initialize(){
         if(path == null) return;
         idx = 1;
-        m_subsystem.m_drivetrain.setStartPosition(path.get(0).getX(), path.get(0).getY());
+        if(reset)m_subsystem.m_drivetrain.setStartPosition(path.get(0).getX(), path.get(0).getY());
 
         prevDist = 9999;
         prevSign = 0;
@@ -50,6 +62,10 @@ public class NewAutoPath extends CommandBase{
         botPos = m_subsystem.m_drivetrain.drivePos;
         Vector tan;
         double distError;
+
+        double maxPower;
+        if(tgt.maxPwr == 0) maxPower = k.autoDriveMaxPwr;
+        else maxPower = tgt.maxPwr;
 
         if(tgt.radius > 0){//circle
             tan = new Vector(1, tgt.tangentAngle(botPos.getX(), botPos.getY(), path.get(idx-1).end));
@@ -65,7 +81,7 @@ public class NewAutoPath extends CommandBase{
             distError = radial.r;
             radial.r*= k.circKp;
             //apply correction depending on how fast we are moving
-            radial.r += k.lookAheadCurve*(k.autoDriveMaxPwr/tgt.radius);
+            radial.r += k.lookAheadCurve*(maxPower/tgt.radius);
 
             tan.add(radial);
             
@@ -88,8 +104,7 @@ public class NewAutoPath extends CommandBase{
             tan = Vector.fromXY(tgt.getX() - botPos.getX(), tgt.getY() - botPos.getY());
         }
 
-        if(tgt.maxPwr == 0)tan.r = k.autoDriveMaxPwr;
-        else tan.r = tgt.maxPwr;
+        tan.r = maxPower;
 
         SmartDashboard.putNumber("DistError",distError);
         //System.out.println("Idx: " + idx);

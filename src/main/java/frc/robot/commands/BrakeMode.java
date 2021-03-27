@@ -31,6 +31,7 @@ public class BrakeMode extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        return on == m_subsystem.m_drivetrain.getBrake();
+        //return on == m_subsystem.m_drivetrain.getBrake();
+        return true;
     }
 }

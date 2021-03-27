@@ -54,11 +54,11 @@ public class TransporterCW extends SubsystemBase{
 
         }
         targetpos = rotateMotor.getPosition();
-        SmartDashboard.putNumber("Testing",targetpos);
+        //SmartDashboard.putNumber("Testing",targetpos);
         targetpos = Math.round(targetpos / tCals.countsPerIndex);
-        SmartDashboard.putNumber("Testing1",targetpos);
+        //SmartDashboard.putNumber("Testing1",targetpos);
         targetpos = targetpos * tCals.countsPerIndex;
-        SmartDashboard.putNumber("Testing2",targetpos);
+        //SmartDashboard.putNumber("Testing2",targetpos);
 
         loadMotor = Motor.initMotor(tCals.loadMotor);
         ballSensor = new AnalogInput(tCals.sensorValue);

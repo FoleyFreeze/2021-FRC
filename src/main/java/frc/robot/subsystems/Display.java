@@ -88,26 +88,30 @@ public class Display extends SubsystemBase{
             addToTab(tab, "CLError", 0, 9, 0);
         
         tab = Shuffleboard.getTab("DriveTrain");
-            addToTab(tab, "DMotorCurrent 0", 0, 0, 0);
-            addToTab(tab, "DMotorCurrent 1", 0, 0, 1);
-            addToTab(tab, "DMotorCurrent 2", 0, 0, 2);
-            addToTab(tab, "DMotorCurrent 3", 0, 0, 3);
-            addToTab(tab, "DMotorTemp 0", 0, 1, 0);
-            addToTab(tab, "DMotorTemp 1", 0, 1, 1);
-            addToTab(tab, "DMotorTemp 2", 0, 1, 2);
-            addToTab(tab, "DMotorTemp 3", 0, 1, 3);
-            addToTab(tab, "TMotorCurrent 0", 0, 2, 0);
-            addToTab(tab, "TMotorCurrent 1", 0, 2, 1);
-            addToTab(tab, "TMotorCurrent 2", 0, 2, 2);
-            addToTab(tab, "TMotorCurrent 3", 0, 2, 3);
-            addToTab(tab, "TMotorTemp 0", 0, 3, 0);
-            addToTab(tab, "TMotorTemp 1", 0, 3, 1);
-            addToTab(tab, "TMotorTemp 2", 0, 3, 2);
-            addToTab(tab, "TMotorTemp 3", 0, 3, 3);
+            addToTab(tab, "DMotorCurrent FL", 0, 0, 0);
+            addToTab(tab, "DMotorCurrent FR", 0, 0, 1);
+            addToTab(tab, "DMotorCurrent BL", 0, 0, 2);
+            addToTab(tab, "DMotorCurrent BR", 0, 0, 3);
+            addToTab(tab, "DMotorTemp FL", 0, 1, 0);
+            addToTab(tab, "DMotorTemp FR", 0, 1, 1);
+            addToTab(tab, "DMotorTemp BL", 0, 1, 2);
+            addToTab(tab, "DMotorTemp BR", 0, 1, 3);
+            addToTab(tab, "TMotorCurrent FL", 0, 2, 0);
+            addToTab(tab, "TMotorCurrent FR", 0, 2, 1);
+            addToTab(tab, "TMotorCurrent BL", 0, 2, 2);
+            addToTab(tab, "TMotorCurrent BR", 0, 2, 3);
+            addToTab(tab, "TMotorTemp FL", 0, 3, 0);
+            addToTab(tab, "TMotorTemp FR", 0, 3, 1);
+            addToTab(tab, "TMotorTemp BL", 0, 3, 2);
+            addToTab(tab, "TMotorTemp BR", 0, 3, 3);
             addToTab(tab, "Field Relative Pos","x, y", 4,1);
             addToTab(tab, "NavX Ang", 0, 4,0);
             addToTab(tab, "DistSenseInfo Ri", "n/a", 4,2);
             addToTab(tab, "DistSenseInfo Re", "n/a", 4,3);
+            addToTab(tab, "WheelAngFL", "0,0", 5,0);
+            addToTab(tab, "WheelAngFR", "0,0", 5,1);
+            addToTab(tab, "WheelAngBL", "0,0", 5,2);
+            addToTab(tab, "WheelAngBR", "0,0", 5,3);
 
         tab = Shuffleboard.getTab("Climber");
             addToTab(tab, "Elevator Pos", 0, 0, 0);
@@ -150,7 +154,7 @@ public class Display extends SubsystemBase{
             addToTab(tab, "MaskedBallSenseV", 0,4,2);
 
         tab = Shuffleboard.getTab("Color Wheel");
-            addToTab(tab, "TCMotorCurrent0", 0, 0, 0);
+            addToTab(tab, "TCMotorCurrent", 0, 0, 0);
             addToTab(tab, "TCMotorCurrent1", 0, 0, 1);
             addToTab(tab, "TC Motor Temp 0", 0, 0, 2);
             addToTab(tab, "TC Motor Temp 1", 0, 0, 3);

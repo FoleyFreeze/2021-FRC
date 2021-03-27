@@ -93,7 +93,7 @@ public class AutoShoot extends CommandBase{
             double dt = (time - prevTime);
             double d = deltaAngle / dt;
             sumError += error * dt;
-            SmartDashboard.putNumber("SumI",sumError);
+            //SmartDashboard.putNumber("SumI",sumError);
             if(Math.abs(sumError) > m_cals.maxI){
                 sumError = m_cals.maxI * Math.signum(sumError);
             }
@@ -167,7 +167,7 @@ public class AutoShoot extends CommandBase{
 
     @Override
     public boolean isFinished(){
-        SmartDashboard.putNumber("shootFinTime",shootFinTime - Timer.getFPGATimestamp());
+        //SmartDashboard.putNumber("shootFinTime",shootFinTime - Timer.getFPGATimestamp());
         if(auton) return Timer.getFPGATimestamp() >= shootFinTime && m_subsystem.m_transporterCW.ballnumber == 0;
         return false;
     }

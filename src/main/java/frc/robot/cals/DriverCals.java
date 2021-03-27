@@ -19,6 +19,7 @@ public class DriverCals extends CalSet {
     public double[] xPos = {-10.75, 10.75, -10.75, 10.75};
     public double[] yPos = {12.5, 12.5, -12.5, -12.5};
     public double[] angleOffset;
+    public String[] label = {"FL","FR","BL","BR"};
     
     public boolean analogVTicks = false;
 
@@ -53,7 +54,7 @@ public class DriverCals extends CalSet {
     public double autoDriveAngKp = 0.02; //50deg is full power
     public double autoDriveStrafeRange = 5;
     public double autoDriveAngRange = 2;
-    public double autoDriveMaxPwr = 0.7;
+    public double autoDriveMaxPwr = 0.6;
     public double autoDriveStartPwr = 0.15;
     public double autoDriveEndPwr = 0.15;
     public double autoDriveStartDist = 6;
@@ -72,7 +73,7 @@ public class DriverCals extends CalSet {
     public double gathererDist = 6.75;
     public double climberDist = 8.5;
 
-    public final double DRV_TURNDEADBND = 0.6;
+    public final double DRV_TURNDEADBND = 0.2;//0.6
 
     public final double DRV_GATHERKP = 0.01;
 
@@ -84,11 +85,12 @@ public class DriverCals extends CalSet {
             case COMPETITION:
                                 //2130 these are in encoder order (not wheel order) 
                                 //gears face forward
-                                //0 = RR, 1 = FR, 2 = FL, 3 = RL
+                                //BR, FR, FL, BL
                 //angleOffset = new double[]{2.802, 3.662, 3.603, 0.023};
                 //angleOffset = new double[]{2.766, 3.664, 3.566, 0.035};
                 //angleOffset = new double[]{2.766, 3.674, 3.571, 0.047};
-                angleOffset = new double[]{2.768, 3.664, 3.571, 0.056};
+                //angleOffset = new double[]{2.768, 3.664, 3.571, 0.056};
+                angleOffset = new double[]{2.763, 3.670, 3.571, 0.052};
             break;
 
             case PRACTICE:

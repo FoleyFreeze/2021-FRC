@@ -37,6 +37,8 @@ public class Drivetrain extends SubsystemBase{
         double prevPos;
         SwerveModuleState state;
         double initialAng;
+        double angleSetpoint;
+        double actualAngle;
         
         //create a wheel object to make assigning motor values easier
         public Wheel(DriverCals cals, int idx){
@@ -104,6 +106,10 @@ public class Drivetrain extends SubsystemBase{
             double deltaTicks = angleDiff / (2*Math.PI) * k.turnTicksPerRev;
             double targetTicks = turnMotor.getPosition();
             if((Math.abs(wheelVec.r) > 0.05 /*|| parkMode*/) && Math.abs(deltaTicks) > k.DRV_TURNDEADBND){ //don't turn unless we actually want to move
+                //for display only
+                angleSetpoint = Math.toDegrees(wheelVec.theta);
+                actualAngle = angleSetpoint + Math.toDegrees(angleDiff);
+
                 targetTicks += deltaTicks;
             } 
             //SmartDashboard.putNumber("TargetTicks" + idx, targetTicks);
@@ -332,7 +338,7 @@ public class Drivetrain extends SubsystemBase{
 
     public void driveStrafe(Vector strafePwr, double maxPwr){
         strafeGood = true;
-        SmartDashboard.putString("StrafeCmd",strafePwr.toString());
+        //SmartDashboard.putString("StrafeCmd",strafePwr.toString());
         if(rotGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr));
         this.strafePwr = strafePwr;
         this.maxPwr = maxPwr;
@@ -340,7 +346,7 @@ public class Drivetrain extends SubsystemBase{
 
     public void driveStrafe(Vector strafePwr, double maxPwr, boolean fieldOrient){
         strafeGood = true;
-        SmartDashboard.putString("StrafeCmd",strafePwr.toString());
+        //SmartDashboard.putString("StrafeCmd",strafePwr.toString());
         if(rotGood) drive(strafePwr, rotPwr, Math.min(maxPwr, this.maxPwr), fieldOrient);
         this.strafePwr = strafePwr;
         this.maxPwr = maxPwr;
@@ -379,10 +385,12 @@ public class Drivetrain extends SubsystemBase{
         
         for(Wheel w: wheels){
             if(w.idx == 0) motorsGood = true;
-            Display.put("DMotorCurrent " + w.idx, wheels[w.idx].driveMotor.getCurrent());
-            Display.put("TMotorCurrent " + w.idx, wheels[w.idx].turnMotor.getCurrent());
-            Display.put("DMotorTemp " + w.idx, wheels[w.idx].driveMotor.getTemp());
-            Display.put("TMotorTemp " + w.idx, wheels[w.idx].turnMotor.getTemp());
+            Display.put("DMotorCurrent " + k.label[w.idx], wheels[w.idx].driveMotor.getCurrent());
+            Display.put("TMotorCurrent " + k.label[w.idx], wheels[w.idx].turnMotor.getCurrent());
+            Display.put("DMotorTemp " + k.label[w.idx], wheels[w.idx].driveMotor.getTemp());
+            Display.put("TMotorTemp " + k.label[w.idx], wheels[w.idx].turnMotor.getTemp());
+            String tmp = String.format("%.0f,%.0f", wheels[w.idx].actualAngle, wheels[w.idx].angleSetpoint);
+            Display.put("WheelAng" + k.label[w.idx], tmp);
             if(wheels[w.idx].driveMotor.getTemp() >= 70) motorsGood = false;
             //SmartDashboard.putNumber("Turn Pwr "+w.idx, wheels[w.idx].turnMotor.getSpeed());
             //SmartDashboard.putNumber("Turn Curr "+w.idx, wheels[w.idx].turnMotor.getCurrent());

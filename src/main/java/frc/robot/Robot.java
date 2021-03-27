@@ -58,9 +58,11 @@ public class Robot extends TimedRobot {
     
   }
 
+  PowerDistributionPanel pdp = new PowerDistributionPanel();
   @Override
   public void disabledPeriodic() {
     m_subsystem.galacticSearch.updateBallVector();
+    SmartDashboard.putNumber("TotalCurrent", pdp.getTotalCurrent());
   }
 
   @Override

@@ -223,7 +223,7 @@ public class Inputs{
         else val = expo(scaleDeadband(joy.getRawAxis(cals.XB_XAXIS), 
             cals.XB_LOWDEADBND, cals.XB_HIGHDEADBND), cals.XB_EXPONENT);
 
-        SmartDashboard.putNumber("X", val);
+        //SmartDashboard.putNumber("X", val);
         return val;
     }
 
@@ -235,7 +235,7 @@ public class Inputs{
         else val = -expo(scaleDeadband(joy.getRawAxis(cals.XB_YAXIS), 
             cals.XB_LOWDEADBND, cals.XB_HIGHDEADBND), cals.XB_EXPONENT);
 
-        SmartDashboard.putNumber("Y", val);
+        //SmartDashboard.putNumber("Y", val);
         return val;
     }
 
@@ -247,7 +247,7 @@ public class Inputs{
         else val = expo(scaleDeadband(joy.getRawAxis(cals.XB_ROTAXIS),
              cals.XB_LOWDEADBND, cals.XB_HIGHDEADBND), cals.XB_EXPONENT);
 
-        SmartDashboard.putNumber("R", val);
+        //SmartDashboard.putNumber("R", val);
         return val;
     }
 

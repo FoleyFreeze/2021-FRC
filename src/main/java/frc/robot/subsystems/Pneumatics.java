@@ -50,6 +50,6 @@ public class Pneumatics extends SubsystemBase{
 
         Display.put("Pressure", pressure);
         Display.put("CompressorRun", mCompressor.getCompressorCurrent() > 4);
-        SmartDashboard.putNumber("CompCurr",mCompressor.getCompressorCurrent());
+        //SmartDashboard.putNumber("CompCurr",mCompressor.getCompressorCurrent());
     }
 }

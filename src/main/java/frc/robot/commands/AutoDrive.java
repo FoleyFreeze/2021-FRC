@@ -75,12 +75,14 @@ public class AutoDrive extends CommandBase{
 
         m_subsystem.m_drivetrain.drive(strafe, -errorRot * mCals.autoDriveAngKp, 0, 0, true, power);
 
+        /*
         SmartDashboard.putNumber("AutoXerr",errorX);
         SmartDashboard.putNumber("AutoYerr",errorY);
         SmartDashboard.putNumber("AutoAngerr",errorRot);
         SmartDashboard.putNumber("DistFromStart",distFromStart);
         SmartDashboard.putNumber("DistToTarget",distToTarget);
         SmartDashboard.putNumber("AutoPower",power);
+        */
     }
 
     @Override
