@@ -84,6 +84,7 @@ public class DriverCals extends CalSet {
             case COMPETITION:
                                 //2130 these are in encoder order (not wheel order) 
                                 //gears face forward
+                                //0 = RR, 1 = FR, 2 = FL, 3 = RL
                 //angleOffset = new double[]{2.802, 3.662, 3.603, 0.023};
                 //angleOffset = new double[]{2.766, 3.664, 3.566, 0.035};
                 //angleOffset = new double[]{2.766, 3.674, 3.571, 0.047};
