@@ -91,7 +91,8 @@ public class DriverCals extends CalSet {
                 //angleOffset = new double[]{2.766, 3.674, 3.571, 0.047};
                 //angleOffset = new double[]{2.768, 3.664, 3.571, 0.056};
                 //angleOffset = new double[]{2.763, 3.670, 3.571, 0.052};
-                angleOffset = new double[]{2.757, 3.699, 3.594, 0.061};
+                //angleOffset = new double[]{2.757, 3.699, 3.594, 0.061};
+                angleOffset = new double[]{2.768, 3.674, 3.576, 0.051};
             break;
 
             case PRACTICE:
