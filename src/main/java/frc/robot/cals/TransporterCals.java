@@ -19,6 +19,7 @@ public class TransporterCals extends CalSet {
     public double maxGateCurr = 29; //MrC 7.5;
     public double ballSenseDelay = 0.1;//0.9;// MrC 0.1;//.4 //Tried 3 and it never stopped - Mr C
     public double jamRestTime = 2;
+    public double revWaitTime = 1;
     public int maxBallCt;
 
     public TransporterCals(PneumaticsCals pneumaticsCals){

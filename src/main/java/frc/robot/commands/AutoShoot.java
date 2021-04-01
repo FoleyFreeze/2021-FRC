@@ -81,7 +81,9 @@ public class AutoShoot extends CommandBase{
                 //toTarget = applyLatencyOffset(toTarget, image);
                 toTarget = apply3ptProjection(toTarget); //assumes that robot angle is zerod to the target
                 //toTarget = applyMovementCompensation(toTarget, m_subsystem.m_drivetrain.recentVelocity);
-            } 
+            } else {
+                toTarget = new Vector(0, Math.toRadians(botAngle));
+            }
 
             //error = rotError;
             //dist = image.dist;

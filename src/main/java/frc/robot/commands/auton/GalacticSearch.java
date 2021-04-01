@@ -1,6 +1,8 @@
 package frc.robot.commands.auton;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
@@ -51,7 +53,7 @@ public class GalacticSearch extends SequentialCommandGroup {
                 tempVectors[i] = ball;
 
                 //if some data is bad, dont use it
-                if(ball.r < 3) {
+                if(ball.r < 3 || ball.r > 300) {
                     allgood = false;
                 }
             }
@@ -60,6 +62,7 @@ public class GalacticSearch extends SequentialCommandGroup {
                 for(int i=0; i<ballVector.length; i++){
                     ballVector[i] = tempVectors[i];
                 }
+                SmartDashboard.putString("GSearchCoords", String.format("%.0f| %s : %s : %s", Timer.getFPGATimestamp(), ballVector[0].toStringXY(), ballVector[1].toStringXY(), ballVector[2].toStringXY()));
             }
         }
     }

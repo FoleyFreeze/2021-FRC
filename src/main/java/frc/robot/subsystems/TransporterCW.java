@@ -99,7 +99,7 @@ public class TransporterCW extends SubsystemBase{
     double jamTime;
     boolean prevJammed;
     public void periodic(){
-        if(first && DriverStation.getInstance().isAutonomous()){
+        if(first && DriverStation.getInstance().isAutonomous() || mSubsystem.m_input.dropFoot()){
             first = false;
 
             //TODO: This should only be 3 for the skills challenge
@@ -248,12 +248,21 @@ public class TransporterCW extends SubsystemBase{
         }
     }
 
+    double revTime = 0;
     public void shootAll(){
         if(tCals.disabled) return;
         enablefire(ballnumber > 0);
         double error = targetpos - rotateMotor.getPosition();
-        if(Math.abs(error) < tCals.countsPerIndex && ballnumber > 0){
-            index(ballnumber);
+        if(tCals.revWaitTime == 0){
+            if(Math.abs(error) < tCals.countsPerIndex && ballnumber > 0){
+                index(ballnumber);
+            }
+        } else {
+            if(Timer.getFPGATimestamp() >= revTime && ballnumber > 0 
+                    && Math.abs(error) < tCals.countsPerIndex){
+                index(1);
+                revTime = Timer.getFPGATimestamp() + tCals.revWaitTime;
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -84,7 +85,7 @@ public class AutoGather extends CommandBase {
                 double dist = Vector.subtract(initBallPos[idx], ballCoords).r;
 
                 //is the ball we see the next ball we should gather
-                if(Math.abs(dist) <= 45){
+                if(Math.abs(dist) <= 30){
                     rightBall = true;
                 }else{
                     //if we just lost it, that means we probably gathered it
@@ -97,7 +98,7 @@ public class AutoGather extends CommandBase {
                 }
 
                 oldImage = ballData;
-                System.out.println(rightBall + " " + initBallPos[idx] + " " + ballCoords  + " " + oldImage.location[0].r);
+                //System.out.println(rightBall + " " + initBallPos[idx] + " " + ballCoords  + " " + oldImage.location[0].r);
             }else{
                 //no ball in the current image
                 rightBall = false;
@@ -233,9 +234,12 @@ public class AutoGather extends CommandBase {
                     //index is defined above
                     double x = initBallPos[idx].getX() - botPos.getX();
                     double y = initBallPos[idx].getY() - botPos.getY();
-                    Vector v = Vector.fromXY(x, y-64);//Offset for robot width and gatherer
-                    //Vector offset = new Vector(v.r - 50, v.theta + Math.signum(v.theta)*90.0);
+                    //a hack to force the robot to see the next ball
+                    //requires the robot be zero'd 90deg to the balls/field
+                    Vector v = Vector.fromXY(x+64, y/*-64*/);//Offset for robot width and gatherer
+                    //Vector offset = new Vector(64, Math.toRadians(botAngle + 90));//subtract the offset in the direction the robot is facing
                     //v.subtract(offset);
+                    SmartDashboard.putString("GS_Vec", String.format("%.1f| %s", Timer.getFPGATimestamp(), v.toStringXY()));
                     v.threshNorm();
                     strafe = v;
                 } else {
