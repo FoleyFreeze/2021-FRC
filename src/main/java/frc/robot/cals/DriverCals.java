@@ -44,7 +44,7 @@ public class DriverCals extends CalSet {
     public double autoBallAngKd = 20/60;
     public double autoBallMaxD = 120;
     public double autoBallDistKp = .45/12;//.60/12;//.30/12;//20% power applied at 12"
-    public double autoBallMaxPwr = .8;//.95;//5;
+    public double autoBallMaxPwr = 0.6;//.8;//.95;//5;
     public double autoBallDistKd = 0;
     public double autoBallGthDist = 10;//distance the gatherer sticks out(inches)
     public double autoBallMinDist = 60;//only used for auton award routine for autogather
@@ -92,7 +92,8 @@ public class DriverCals extends CalSet {
                 //angleOffset = new double[]{2.768, 3.664, 3.571, 0.056};
                 //angleOffset = new double[]{2.763, 3.670, 3.571, 0.052};
                 //angleOffset = new double[]{2.757, 3.699, 3.594, 0.061};
-                angleOffset = new double[]{2.768, 3.674, 3.576, 0.051};
+                //angleOffset = new double[]{2.768, 3.674, 3.576, 0.051};
+                angleOffset = new double[]{2.764, 3.730, 3.571, 0.062};
             break;
 
             case PRACTICE:

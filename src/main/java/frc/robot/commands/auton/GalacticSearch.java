@@ -23,7 +23,7 @@ public class GalacticSearch extends SequentialCommandGroup {
 
         addCommands(/*new DriveTime(0.1, subsystem, 1, 0, 0).raceWith(new WaitCommand(0.1)),*/
                 new AutoGather(subsystem, ballVector).raceWith(new JoystickDriveRot(subsystem)), 
-                new DriveTime(0.3, subsystem, 0, 0.5, 0));
+                new DriveTime(1.0, subsystem, -0.5, 0, 0));
     }
 
     @Override

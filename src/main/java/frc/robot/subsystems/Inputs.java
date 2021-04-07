@@ -208,6 +208,9 @@ public class Inputs{
     }
 
     public boolean driveStraight(){
+        //FIXME: this is a hack for galactic search
+        if(DriverStation.getInstance().isAutonomous()) return true;
+
         if(flySky){
             return joy.getRawButton(cals.FS_DRIVESTRAIGHT) || DriverStation.getInstance().isAutonomous();
         } else {

@@ -67,6 +67,8 @@ public class AutoGather extends CommandBase {
     boolean rightBall;
     VisionData oldImage;
 
+    double[] distThresh = {30,55,60};
+
     @Override
     public void execute(){
         double rot;
@@ -85,7 +87,8 @@ public class AutoGather extends CommandBase {
                 double dist = Vector.subtract(initBallPos[idx], ballCoords).r;
 
                 //is the ball we see the next ball we should gather
-                if(Math.abs(dist) <= 30){
+                SmartDashboard.putNumber("GSDist", dist);
+                if(Math.abs(dist) <= distThresh[idx]){
                     rightBall = true;
                 }else{
                     //if we just lost it, that means we probably gathered it
@@ -236,7 +239,7 @@ public class AutoGather extends CommandBase {
                     double y = initBallPos[idx].getY() - botPos.getY();
                     //a hack to force the robot to see the next ball
                     //requires the robot be zero'd 90deg to the balls/field
-                    Vector v = Vector.fromXY(x+64, y/*-64*/);//Offset for robot width and gatherer
+                    Vector v = Vector.fromXY(x+100, y/*-64*/);//Offset for robot width and gatherer
                     //Vector offset = new Vector(64, Math.toRadians(botAngle + 90));//subtract the offset in the direction the robot is facing
                     //v.subtract(offset);
                     SmartDashboard.putString("GS_Vec", String.format("%.1f| %s", Timer.getFPGATimestamp(), v.toStringXY()));

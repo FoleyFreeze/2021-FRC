@@ -4,7 +4,7 @@ public class TransporterCals extends CalSet {
 
     public boolean disabled = false;
     //public MotorCal rotateMotor = MotorCal.spark(12).pid(0.2, 0, 0.2, 0).invert().limit(0.6).ramp(0.3).currLim(30).currLimCount(25).currLimTime(1);
-    public MotorCal rotateMotor = MotorCal.spark(12).pid(0.2, 0, 0.2, 0).invert().limit(0.5).ramp(0.3).currLim(35).currLimCount(30).currLimTime(1).resetEnc(false); 
+    public MotorCal rotateMotor = MotorCal.spark(12).pid(0.2, 0, 0.2, 0).invert().limit(0.6).ramp(0.3).currLim(40).currLimCount(40).currLimTime(1).resetEnc(false); 
     public MotorCal loadMotor = MotorCal.srx(13).invert(); //this is the gate wheels and the CW motor
     public int CWNotTransport = 5;//3 4 or 5
     public int sensorValue = 5;
@@ -19,7 +19,7 @@ public class TransporterCals extends CalSet {
     public double maxGateCurr = 29; //MrC 7.5;
     public double ballSenseDelay = 0.1;//0.9;// MrC 0.1;//.4 //Tried 3 and it never stopped - Mr C
     public double jamRestTime = 2;
-    public double revWaitTime = 0.2;//was 1
+    public double revWaitTime = 0.0;//was 1
     public int maxBallCt;
 
     public TransporterCals(PneumaticsCals pneumaticsCals){

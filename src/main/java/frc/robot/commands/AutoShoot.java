@@ -134,9 +134,17 @@ public class AutoShoot extends CommandBase{
         m_subsystem.m_drivetrain.driveRot(rot, m_subsystem.m_drivetrain.k.autoBallMaxPwr);
 
         if(!masked){
-
-            m_subsystem.m_cannonClimber.prime(dist);
+            
             boolean ready = m_subsystem.m_cannonClimber.ready();
+            m_subsystem.m_cannonClimber.prime(dist);
+
+            /*
+            //this is a hack to assist with the power port challenge //FIXME: remove me
+            if(dist > 165) {
+                dist = 0;
+                ready = false;
+            }
+            */
 
             //ensure we are within rpm target 2x in a row
             if(prevReady && ready && dist != 0 && aligned && m_subsystem.m_transporterCW.ballnumber > 0){

@@ -30,7 +30,7 @@ public class CannonCals extends CalSet {
     public double distJog = 0.5;
     public double distJogShift = .25;
     public double angJog = 0.5;
-    public double shootTime = 1.5;//TODO figure out how short this can be
+    public double shootTime = 1.0;//TODO figure out how short this can be
     public double shootCentX = 0.0;
     public double shootCentY = 0.0;
     public double[][] pnuRpm = {{2700.0, 2775.0, 3000.0},
@@ -41,14 +41,14 @@ public class CannonCals extends CalSet {
                               { -0.5, 0.0, 35.0},
                               { 30.0, 60.0, 70.0},
                               {60.0, 83.0, 500.0}};
-    public double allowedRpmError = 25;
-    public double allowedRpmHyst = 25;
+    public double allowedRpmError = 35;
+    public double allowedRpmHyst = 35;
     public final double SOL_RESTTIME = 0.2; 
     public boolean pneumaticHood = false;
     public MotorCal hoodMotor = new MotorCal(MotorType.SPARK_MAX, 7).pid(0.1, 0.0001, 0.0, 0).iLim(2).limit(0.3).resetEnc(false).invert();//.brake();
     public double hoodTicksPerInch = 4 * 30/8.0; //30 revs in 8 in * gear ratio of 4:1
     public double[] screwDist = {0, 22, 44, 96, 118, 156, 214};
-    public double[] screwRpm = {2900, 3050, 3200, 3775, 3875, 4100, 4900};
+    public double[] screwRpm = {4100/*2900*/, 3050, 3200, 3775, 3875, 4100, 4900};
     public double[] screwHoodHeight = {0, -0.2, 0.5, 2, 2.182, 2.5, 3.5};
     double x = 0.0;
     public double[] flightTime = {0.4+x, 0.04+x, 0.45+x, 0.5+x, 0.6+x, 0.7+x, 0.8+x};
