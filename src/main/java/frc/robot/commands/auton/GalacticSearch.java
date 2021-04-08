@@ -23,7 +23,7 @@ public class GalacticSearch extends SequentialCommandGroup {
 
         addCommands(/*new DriveTime(0.1, subsystem, 1, 0, 0).raceWith(new WaitCommand(0.1)),*/
                 new AutoGather(subsystem, ballVector).raceWith(new JoystickDriveRot(subsystem)), 
-                new DriveTime(1.0, subsystem, -0.5, 0, 0));
+                new DriveTime(6.0, subsystem, -1, 0, 0));
     }
 
     @Override
@@ -32,7 +32,15 @@ public class GalacticSearch extends SequentialCommandGroup {
         super.initialize();
     }
 
+    Vector[][] routes = {{Vector.fromXY(-30,0), Vector.fromXY(-90,30), Vector.fromXY(-120,-60)},  //redA
+                            {Vector.fromXY(-30,0), Vector.fromXY(-90,60), Vector.fromXY(-150,0)},    //redB
+                            {Vector.fromXY(-150,0), Vector.fromXY(-180,-90), Vector.fromXY(-240,-60)},//blueA
+                            {Vector.fromXY(-150,0), Vector.fromXY(-210,-60), Vector.fromXY(-270,0)}}; //blueB
+    String[] routenames = {"RedA","RedB","BlueA","BlueB"};    
+    boolean hardcodedDists = true;
+    
     public void updateBallVector(){
+        boolean allgood = false;
         //save the most recent image with 3 balls
         if(m_subsystem.m_vision.hasBallImage()) {
             Pose2d pos = m_subsystem.m_drivetrain.drivePos;
@@ -40,7 +48,7 @@ public class GalacticSearch extends SequentialCommandGroup {
             double angle = m_subsystem.m_drivetrain.robotAng;
 
             Vector[] tempVectors = new Vector[3];
-            boolean allgood = true;
+            allgood = true;
             VisionData initialImage = m_subsystem.m_vision.ballData.getFirst();
             Vector robot = Vector.fromPose(pos);
             for(int i = 0; i < tempVectors.length; i++){
@@ -63,6 +71,32 @@ public class GalacticSearch extends SequentialCommandGroup {
                     ballVector[i] = tempVectors[i];
                 }
                 SmartDashboard.putString("GSearchCoords", String.format("%.0f| %s : %s : %s", Timer.getFPGATimestamp(), ballVector[0].toStringXY(), ballVector[1].toStringXY(), ballVector[2].toStringXY()));
+            }
+        }
+
+
+        if(hardcodedDists && allgood){
+            double minError = 1e9;
+            int minIdx = 0;
+
+            //loop through all routes
+            for(int idx = 0; idx < routes.length; idx++){
+                double sum = 0;
+                //sum error of each ball on the route
+                for(int i = 0; i<routes[idx].length; i++){
+                    sum += Math.abs(Vector.subtract(ballVector[i], routes[idx][i]).r);
+                }
+
+                //save the route with the smallest error
+                if(sum < minError){
+                    minError = sum;
+                    minIdx = idx;
+                }
+            }
+
+            SmartDashboard.putString("GSRoute",String.format("%s %.0f",routenames[minIdx],minError));
+            for(int i=0;i<ballVector.length;i++){
+                ballVector[i] = routes[minIdx][i];
             }
         }
     }

@@ -67,7 +67,7 @@ public class AutoGather extends CommandBase {
     boolean rightBall;
     VisionData oldImage;
 
-    double[] distThresh = {30,55,60};
+    double[] distThresh = {30,30,30};
 
     @Override
     public void execute(){
@@ -83,6 +83,8 @@ public class AutoGather extends CommandBase {
 
         if(auton && initBallPos != null){
             if(idx<3 && m_subsystem.m_vision.hasBallImage()){
+                if(idx < m_subsystem.m_transporterCW.ballnumber) idx = m_subsystem.m_transporterCW.ballnumber;
+
                 Vector ballCoords = ballData.location[0].camToFieldVec(botAngle, Vector.fromPose(botPos));
                 double dist = Vector.subtract(initBallPos[idx], ballCoords).r;
 
@@ -110,7 +112,7 @@ public class AutoGather extends CommandBase {
             rightBall = true;
         }
 
-        if(m_subsystem.m_input.enableBallCam() && m_subsystem.m_vision.hasBallImage() 
+        if((m_subsystem.m_input.enableBallCam() || auton) && m_subsystem.m_vision.hasBallImage() 
                 && rightBall){/*m_subsystem.m_vision.ballData.getFirst().location[0].r <= 48.0)*///robot has control
 
             fieldOrient = false;
@@ -239,7 +241,7 @@ public class AutoGather extends CommandBase {
                     double y = initBallPos[idx].getY() - botPos.getY();
                     //a hack to force the robot to see the next ball
                     //requires the robot be zero'd 90deg to the balls/field
-                    Vector v = Vector.fromXY(x+100, y/*-64*/);//Offset for robot width and gatherer
+                    Vector v = Vector.fromXY(x+60, y/*-64*/);//Offset for robot width and gatherer
                     //Vector offset = new Vector(64, Math.toRadians(botAngle + 90));//subtract the offset in the direction the robot is facing
                     //v.subtract(offset);
                     SmartDashboard.putString("GS_Vec", String.format("%.1f| %s", Timer.getFPGATimestamp(), v.toStringXY()));
